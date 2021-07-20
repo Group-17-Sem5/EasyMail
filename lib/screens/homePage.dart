@@ -20,6 +20,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Image.asset('../../assets/images/postMan.jpg',
+                width: 200, height: 200),
             Text(
               'Easy mail',
             ),
