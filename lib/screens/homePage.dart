@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -24,6 +25,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 width: 200, height: 200),
             Text(
               'Easy mail',
+              style: GoogleFonts.laila(
+                fontSize: 38,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ],
         ),
