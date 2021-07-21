@@ -1,4 +1,7 @@
 import 'package:easy_mail_app_frontend/screens/homePage.dart';
+import 'package:easy_mail_app_frontend/screens/mailListPage.dart';
+import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -56,10 +59,8 @@ class _PostManLoginState extends State<PostManLogin> {
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => MyHomePage(
-                    title: 'easyMail',
-                  )));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => MailListPage()));
         },
         child: Text("Back",
             textAlign: TextAlign.center,
@@ -68,16 +69,8 @@ class _PostManLoginState extends State<PostManLogin> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Easy Mail-PostMan',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.laila(
-            fontSize: 34,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
+      appBar: postmanAppBar(context),
+      //drawer: postManDrawer(context),
       body: Center(
         child: Container(
           color: Colors.white,

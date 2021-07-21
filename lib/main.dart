@@ -1,4 +1,5 @@
 import 'package:easy_mail_app_frontend/screens/homePage.dart';
+import 'package:easy_mail_app_frontend/screens/mailListPage.dart';
 import 'package:easy_mail_app_frontend/screens/postManLogin.dart';
 import 'package:flutter/material.dart';
 
@@ -11,15 +12,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
       initialRoute: MyHomePage.route,
       routes: {
-        MyHomePage.route: (context) => MyHomePage(title: 'easyMail'),
+        MyHomePage.route: (context) => MyHomePage(title: 'Easy Mail'),
         PostManLogin.route: (context) => PostManLogin(),
-        // SeekerManaging.route: (context) => SeekerManaging(),
+        MailListPage.route: (context) => MailListPage(),
         // WriterManaging.route: (context) => WriterManaging(),
         // PrivateTagManaging.route: (context) => PrivateTagManaging(),
         // EventManaging.route: (context) => EventManaging(),
