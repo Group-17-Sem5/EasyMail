@@ -3,6 +3,9 @@ import 'package:easy_mail_app_frontend/shared_widgets/postManDrawer.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/searchBox.dart';
 import "package:flutter/material.dart";
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'dart:io';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class MailListPage extends StatefulWidget {
   MailListPage({Key? key}) : super(key: key);
@@ -112,7 +115,7 @@ class _MailListPageState extends State<MailListPage> {
       width: isPortrait ? 600 : 500,
       debounceDelay: const Duration(milliseconds: 200),
       onQueryChanged: (query) {
-        // Call your model, bloc, controller here.
+        print(query);
       },
       // Specify a custom transition to be used for
       // animating between opened and closed stated.
@@ -126,6 +129,7 @@ class _MailListPageState extends State<MailListPage> {
               setState(() {
                 searchResult = _searchController.query.toString();
                 isSearched = true;
+                print(searchResult);
               });
             },
           ),
@@ -148,6 +152,9 @@ class _MailListPageState extends State<MailListPage> {
                   child: ListTile(
                     title: Text(mails.toString()),
                     onTap: () {
+                      tapped(
+                        mails.toString(),
+                      );
                       print(mails.toString());
                     },
                   ),
@@ -158,5 +165,28 @@ class _MailListPageState extends State<MailListPage> {
         );
       },
     );
+  }
+
+  Future tapped(String mailName) async {
+    //var url = 'localhost:5000/postMan';
+    // var httpClient = new HttpClient();
+    // var uri = new Uri.https('http://127.0.0.1:5000', '/api/postMan/addresses');
+    // var request = await httpClient.getUrl(uri);
+    // var response = await request.close();
+
+    // var responseBody = await response.transform(utf8.decoder).join();
+
+    // print(responseBody.toString());
+    //return responseBody;
+
+    String base_api = "http://localhost:5000/api/postMan";
+    String all_authors_api = "/address";
+    String allAuthorsApi = base_api + all_authors_api;
+    var url = Uri.parse(allAuthorsApi);
+
+    var responses = await http.get(url);
+    print(responses.statusCode);
+    print("*****************");
+    print(responses.body);
   }
 }

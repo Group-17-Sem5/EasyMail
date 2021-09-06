@@ -1,9 +1,13 @@
 import 'package:easy_mail_app_frontend/screens/homePage.dart';
 import 'package:easy_mail_app_frontend/screens/mailListPage.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
-
+import 'package:get/utils.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:async/async.dart';
+import 'dart:async';
+import 'dart:convert';
 
 class PostManLogin extends StatefulWidget {
   PostManLogin({Key? key}) : super(key: key);
@@ -58,7 +62,8 @@ class _PostManLoginState extends State<PostManLogin> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {
+        onPressed: () async {
+          getData();
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => MailListPage()));
         },
@@ -81,7 +86,7 @@ class _PostManLoginState extends State<PostManLogin> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
-                  height: 155.0,
+                  height: 135.0,
                   child: Image.asset(
                     "assets/images/postMan.jpg",
                     fit: BoxFit.contain,
@@ -95,13 +100,7 @@ class _PostManLoginState extends State<PostManLogin> {
                   height: 35.0,
                 ),
                 loginButon,
-                SizedBox(
-                  height: 15.0,
-                ),
                 cancelButton,
-                SizedBox(
-                  height: 15.0,
-                ),
               ],
             ),
           ),
@@ -112,5 +111,17 @@ class _PostManLoginState extends State<PostManLogin> {
 
   void checkLogin(String email, String password) {
     print(email);
+  }
+
+  Future<String> getData() async {
+    List data;
+    var response = await http.get(
+        Uri.parse("https://jsonplaceholder.typicode.com/posts"),
+        headers: {"accept": "applicati"});
+    data = json.decode(response.body);
+
+    print(data[1]["title"]);
+
+    return "Success!";
   }
 }
