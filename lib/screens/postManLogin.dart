@@ -9,6 +9,8 @@ import 'package:async/async.dart';
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class PostManLogin extends StatefulWidget {
   PostManLogin({Key? key}) : super(key: key);
   static const String route = '/postMan/login';
@@ -18,61 +20,9 @@ class PostManLogin extends StatefulWidget {
 }
 
 class _PostManLoginState extends State<PostManLogin> {
+  var _emailController = TextEditingController();
+  var _passwordController = TextEditingController();
   Widget build(BuildContext context) {
-    var _emailController = TextEditingController();
-    var _passwordController = TextEditingController();
-    @override
-    final emailField = TextField(
-      controller: _emailController,
-      obscureText: false,
-      decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Email",
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-    );
-    final passwordField = TextField(
-      controller: _passwordController,
-      obscureText: true,
-      decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Password",
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-    );
-    final loginButon = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(30.0),
-      color: Color(0xFF014D30),
-      child: MaterialButton(
-        minWidth: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {
-          checkLogin(_emailController.text, _passwordController.text);
-        },
-        child: Text("Login",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-      ),
-    );
-    final cancelButton = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(30.0),
-      color: Color(0xFF000000),
-      child: MaterialButton(
-        minWidth: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () async {
-          getData();
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => MailListPage()));
-        },
-        child: Text("Back",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-      ),
-    );
-
     return Scaffold(
       appBar: postmanAppBar(context),
       //drawer: postManDrawer(context),
@@ -93,14 +43,14 @@ class _PostManLoginState extends State<PostManLogin> {
                   ),
                 ),
                 SizedBox(height: 45.0),
-                emailField,
+                emailField(),
                 SizedBox(height: 25.0),
-                passwordField,
+                passwordField(),
                 SizedBox(
                   height: 35.0,
                 ),
-                loginButon,
-                cancelButton,
+                loginButon(),
+                cancelButton(),
               ],
             ),
           ),
@@ -109,18 +59,104 @@ class _PostManLoginState extends State<PostManLogin> {
     );
   }
 
-  void checkLogin(String email, String password) {
+  Widget emailField() {
+    return (TextField(
+      controller: _emailController,
+      obscureText: false,
+      decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "Email",
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+    ));
+  }
+
+  Widget passwordField() {
+    return TextField(
+      controller: _passwordController,
+      obscureText: true,
+      decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "Password",
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+    );
+  }
+
+  Widget loginButon() {
+    return Material(
+      elevation: 5.0,
+      borderRadius: BorderRadius.circular(30.0),
+      color: Color(0xFF014D30),
+      child: MaterialButton(
+        minWidth: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        onPressed: () {
+          checkLogin(_emailController.text, _passwordController.text);
+        },
+        child: Text("Login",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      ),
+    );
+  }
+
+  Widget cancelButton() {
+    return Material(
+      elevation: 5.0,
+      borderRadius: BorderRadius.circular(30.0),
+      color: Color(0xFF000000),
+      child: MaterialButton(
+        minWidth: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        onPressed: () async {
+          getData();
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => MailListPage()));
+        },
+        child: Text("Back",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      ),
+    );
+  }
+
+  void checkLogin(String email, String password) async {
+    List data;
+    var response =
+        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/posts/")
+            //headers: {"accept": "applicati"}
+            );
+
+    data = json.decode(response.body);
+    if (data[0]['error'] == 1) {
+      print('Check again');
+    } else {
+      var token = data[0]['title'];
+      print(token);
+    }
+
+    //print(data[1]["title"]);
+
     print(email);
   }
 
-  Future<String> getData() async {
+  Future getData() async {
     List data;
-    var response = await http.get(
-        Uri.parse("https://jsonplaceholder.typicode.com/posts"),
-        headers: {"accept": "applicati"});
-    data = json.decode(response.body);
+    var response =
+        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/users")
+            //headers: {"accept": "applicati"}
+            );
 
-    print(data[1]["title"]);
+    data = json.decode(response.body);
+    if (data[0]['error'] == 1) {
+      print('Check again');
+    } else {
+      var token = data[0]['id'];
+      print(token);
+    }
+
+    //print(data[1]["title"]);
 
     return "Success!";
   }

@@ -168,25 +168,22 @@ class _MailListPageState extends State<MailListPage> {
   }
 
   Future tapped(String mailName) async {
-    //var url = 'localhost:5000/postMan';
-    // var httpClient = new HttpClient();
-    // var uri = new Uri.https('http://127.0.0.1:5000', '/api/postMan/addresses');
-    // var request = await httpClient.getUrl(uri);
-    // var response = await request.close();
+    List data;
+    var response =
+        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/posts/")
+            //headers: {"accept": "applicati"}
+            );
 
-    // var responseBody = await response.transform(utf8.decoder).join();
+    data = json.decode(response.body);
+    if (data[0]['error'] == 1) {
+      print('Check again');
+    } else {
+      var token = data[0]['title'];
+      print(token);
+    }
 
-    // print(responseBody.toString());
-    //return responseBody;
+    //print(data[1]["title"]);
 
-    String base_api = "http://localhost:5000/api/postMan";
-    String all_authors_api = "/address";
-    String allAuthorsApi = base_api + all_authors_api;
-    var url = Uri.parse(allAuthorsApi);
-
-    var responses = await http.get(url);
-    print(responses.statusCode);
-    print("*****************");
-    print(responses.body);
+    print(mailName);
   }
 }
