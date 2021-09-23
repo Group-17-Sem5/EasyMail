@@ -1,15 +1,17 @@
-
 class MailModel{
-  String mailID;
-  String addressID;
-  String lastAppearedBranch;
-  String postManID;
-  String sourceBranchID;
-  String receivingBranchID;
-  String senderID;
-  String receiverID;
-  bool isAssigned;
-  bool isDelivered;
+  var mailID;
+  var addressID;
+  var lastAppearedBranch;
+  var postManID;
+  var sourceBranchID;
+  var receivingBranchID;
+  var senderID;
+  var receiverID;
+  var isAssigned;
+  var isDelivered;
+
+
+
   MailModel({
     this.mailID,
     this.addressID,

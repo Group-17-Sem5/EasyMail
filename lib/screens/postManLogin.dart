@@ -92,7 +92,19 @@ class _PostManLoginState extends State<PostManLogin> {
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {
-          checkLogin(_emailController.text, _passwordController.text);
+          bool _validate = true;
+          setState(() {
+            _emailController.text.isEmpty
+                ? _validate = false
+                : _validate = true;
+          });
+
+          if (_validate) {
+            checkLogin(_emailController.text, _passwordController.text);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('check the email again')));
+          }
         },
         child: Text("Login",
             textAlign: TextAlign.center,
@@ -144,9 +156,9 @@ class _PostManLoginState extends State<PostManLogin> {
   Future getData() async {
     List data;
     var response =
-        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/users")
-            //headers: {"accept": "applicati"}
-            );
+        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/users"),
+            //body:{"username":"kusd"},
+            headers: {"accept": "applicati"});
 
     data = json.decode(response.body);
     if (data[0]['error'] == 1) {

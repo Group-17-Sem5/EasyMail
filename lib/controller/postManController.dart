@@ -14,6 +14,30 @@ class PostManController extends GetxController {
   }
 
   Future getMails(String userName) async {
+    var response =
+        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/users"),
+            //body:{"username":"kusd"},
+            headers: {"id": "Kamal002", "mailID": "mail002"});
+
+    List data = json.decode(response.body);
+
+    for (var oneMail in data) {
+      MailModel mail = new MailModel(
+        mailID: oneMail['id'].toString(), //oneMail['mailID'],
+        addressID: oneMail['id'].toString(), // oneMail['addressID'],
+        lastAppearedBranch:
+            oneMail['id'].toString(), // oneMail['lastAppearedBranch'],
+        postManID: oneMail['id'].toString(), // oneMail['postManID'],
+        sourceBranchID: oneMail['id'].toString(), // oneMail['sourceBranchID'],
+        receivingBranchID:
+            oneMail['id'].toString(), //oneMail['receivingBranchID'],
+        senderID: oneMail['id'].toString(), // oneMail['senderID'],
+        receiverID: oneMail['id'].toString(), // oneMail['receiverID'],
+        isAssigned: oneMail['id'].toString(), //oneMail['isAssigned'],
+        isDelivered: oneMail['id'].toString(), // oneMail['isDelivered']
+      );
+      mails.add(mail);
+    }
     return;
   }
 

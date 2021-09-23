@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      initialRoute: PlaceMarkerBody.route,
+      initialRoute: MyHomePage.route,
       routes: {
         MyHomePage.route: (context) => MyHomePage(title: 'Easy Mail'),
         PostManLogin.route: (context) => PostManLogin(),
