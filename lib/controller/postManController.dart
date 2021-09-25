@@ -1,3 +1,4 @@
+import 'package:easy_mail_app_frontend/model/postManModel.dart';
 import 'package:get/get.dart';
 import '../model/mailModel.Dart';
 import '../model/addressModel.dart';
@@ -6,11 +7,43 @@ import 'dart:convert';
 
 class PostManController extends GetxController {
   var mails = <MailModel>[].obs;
+  var addresses = <AddressModel>[].obs;
+  PostManModel postMan = new PostManModel();
   static var token;
 
   Future login(String username, String password) async {
     var token = "ddd";
     return token;
+  }
+
+  Future getLocations() async {
+    var response =
+        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/users"),
+            //body:{"username":"kusd"},
+            headers: {"id": "Kamal002", "mailID": "mail002"});
+
+    List data = json.decode(response.body);
+
+    for (var oneAddress in data) {
+      AddressModel address = new AddressModel(
+        addressID: oneAddress['id'].toString(), //oneMail['mailID'],
+        description: oneAddress['id'].toString(), // oneMail['addressID'],
+        branchID: oneAddress['id'].toString(), // oneMail['lastAppearedBranch'],
+        lat: oneAddress['id'],
+        lng: oneAddress['id'], // oneMail['postManID'],
+        userIDList: oneAddress['id'], // oneMail['sourceBranchID'],
+      );
+      addresses.add(address);
+    }
+    return;
+  }
+
+  Future confirmDelivery(String mailID) async {
+    return;
+  }
+
+  Future cancelDelivery(String mailID) async {
+    return;
   }
 
   Future getMails(String userName) async {
@@ -38,18 +71,6 @@ class PostManController extends GetxController {
       );
       mails.add(mail);
     }
-    return;
-  }
-
-  Future confirmDelivery(String mailID) async {
-    return;
-  }
-
-  Future cancelDelivery(String mailID) async {
-    return;
-  }
-
-  Future getLocations() async {
     return;
   }
 

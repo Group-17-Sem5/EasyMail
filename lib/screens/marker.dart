@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 import 'dart:typed_data';
-
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:easy_mail_app_frontend/controller/postManController.dart';
 
 class PlaceMarkerBody extends StatefulWidget {
   const PlaceMarkerBody();
@@ -16,15 +17,19 @@ class PlaceMarkerBody extends StatefulWidget {
 typedef Marker MarkerUpdateAction(Marker marker);
 
 class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
+  void initstate() {
+    getLocations();
+  }
+
   PlaceMarkerBodyState();
-  static final LatLng center =
-      const LatLng(6.500533840690815, 80.12186606879841);
+  static final LatLng center = const LatLng(
+      6.500533840690815, 80.12186606879841); //!enter lat lng of the branch
 
   GoogleMapController? controller;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   MarkerId? selectedMarker;
   int _markerIdCounter = 1;
-
+  PostManController postManController = new PostManController();
   void _onMapCreated(GoogleMapController controller) {
     this.controller = controller;
   }
@@ -75,6 +80,15 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                       children: <Widget>[
                         Text('Old position: ${tappedMarker.position}'),
                         Text('New position: $newPosition'),
+                        Text('press the button to change the address'),
+                        IconButton(
+                            tooltip: "view",
+                            icon: Icon(Icons.check_circle),
+                            color: Colors.black,
+                            hoverColor: Colors.white,
+                            onPressed: () {
+                              //acceptEvent(event.eventID, index);
+                            }),
                       ],
                     )));
           });
@@ -85,6 +99,8 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     final int markerCount = markers.length;
 
     if (markerCount == 12) {
+      //!change this to addresses list length
+      //!changed
       return;
     }
 
@@ -98,6 +114,8 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
         center.latitude + sin(_markerIdCounter * pi / 6.0) / 20.0,
         center.longitude + cos(_markerIdCounter * pi / 6.0) / 20.0,
       ),
+      // position: LatLng(postManController.addresses[_markerIdCounter - 1].lat,
+      //     postManController.addresses[_markerIdCounter - 1].lng),
       infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
       onTap: () {
         _onMarkerTapped(markerId);
@@ -387,5 +405,9 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
         ),
       ],
     );
+  }
+
+  Future getLocations() async {
+    await postManController.getLocations();
   }
 }

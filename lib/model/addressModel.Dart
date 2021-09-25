@@ -2,7 +2,8 @@ class AddressModel {
   var addressID;
   var description;
   var branchID;
-  var location;
+  var lat;
+  var lng;
   var userIDList;
 
   // AddressModel(String addressID, String description, String branchID,
@@ -17,7 +18,8 @@ class AddressModel {
     this.addressID,
     this.description,
     this.branchID,
-    this.location,
+    this.lat,
+    this.lng,
     this.userIDList,
   });
 }
