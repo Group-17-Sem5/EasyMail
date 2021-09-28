@@ -1,4 +1,5 @@
 import 'package:easy_mail_app_frontend/screens/postManLogin.dart';
+import 'package:easy_mail_app_frontend/screens/userLogin.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -22,8 +23,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset('assets/images/postMan.jpg',
-                width: 150, height: 150),
+            Image.asset('assets/images/postMan.jpg', width: 150, height: 150),
             Text(
               'Easy mail',
               style: GoogleFonts.laila(
@@ -65,5 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   startAsCustomer() {
     print('start as customer');
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => UserLogin()));
   }
 }

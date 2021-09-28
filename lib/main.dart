@@ -5,7 +5,9 @@ import 'package:easy_mail_app_frontend/screens/mailListPage.dart';
 import 'package:easy_mail_app_frontend/screens/marker.dart';
 import 'package:easy_mail_app_frontend/screens/postManLogin.dart';
 import 'package:easy_mail_app_frontend/screens/userLogin.dart';
+import 'package:easy_mail_app_frontend/screens/userMailBox.dart';
 import 'package:easy_mail_app_frontend/screens/userProfile.dart';
+import 'package:easy_mail_app_frontend/screens/userSentMails.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      initialRoute: ProfilePage.route,
+      initialRoute: PostManLogin.route,
       routes: {
         MyHomePage.route: (context) => MyHomePage(title: 'Easy Mail'),
         PostManLogin.route: (context) => PostManLogin(),
@@ -32,6 +34,8 @@ class MyApp extends StatelessWidget {
         ProfilePage.route: (context) => ProfilePage(),
         EditProfilePage.route: (context) => EditProfilePage(),
         UserLogin.route: (context) => UserLogin(),
+        UserMailBox.route: (context) => UserMailBox(),
+        UserSentMails.route: (context) => UserSentMails(),
 
         // WriterManaging.route: (context) => WriterManaging(),
         // PrivateTagManaging.route: (context) => PrivateTagManaging(),

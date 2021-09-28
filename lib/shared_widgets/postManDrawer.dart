@@ -1,3 +1,5 @@
+import 'package:easy_mail_app_frontend/screens/marker.dart';
+import 'package:easy_mail_app_frontend/screens/userProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -23,17 +25,17 @@ Widget postManDrawer(BuildContext context) {
         ),
         ListTile(
           tileColor: Color(0xFF69F8C1),
-          title: Text('Dashboard'),
+          title: Text('Locations'),
           onTap: () {
-            // Navigator.of(context).pushReplacement(
-            //     MaterialPageRoute(builder: (context) => DashboardPage()));
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => PlaceMarkerBody()));
           },
         ),
         ListTile(
-          title: Text('User Controller'),
+          title: Text('User Profile'),
           onTap: () {
-            // Navigator.of(context).pushReplacement(
-            //     MaterialPageRoute(builder: (context) => SeekerManaging()));
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => ProfilePage()));
           },
         ),
         ListTile(

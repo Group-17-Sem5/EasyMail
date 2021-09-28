@@ -1,42 +1,28 @@
+import 'package:easy_mail_app_frontend/controller/userController.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/postManDrawer.dart';
-import 'package:easy_mail_app_frontend/shared_widgets/searchBox.dart';
-import "package:flutter/material.dart";
-import 'package:get/get.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'dart:io';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:easy_mail_app_frontend/controller/postManController.dart';
-import 'package:easy_mail_app_frontend/controller/appBinding.dart';
+import 'package:flutter/material.dart';
 import 'package:easy_mail_app_frontend/model/mailModel.Dart';
+import 'package:get/get.dart';
 
-class MailListPage extends StatefulWidget {
-  MailListPage({Key? key}) : super(key: key);
-  static const String route = '/postMan/mailList';
-
+class UserSentMails extends StatefulWidget {
+  const UserSentMails({Key? key}) : super(key: key);
+  static const String route = '/user/sentMails';
   @override
-  _MailListPageState createState() => _MailListPageState();
+  _UserSentMailsState createState() => _UserSentMailsState();
 }
 
-class _MailListPageState extends State<MailListPage> {
-  //var _searchController = FloatingSearchBarController();
-  var postManController = new PostManController();
-  //var searchResult = '';
+class _UserSentMailsState extends State<UserSentMails> {
   bool isLoading = false;
-  bool isSearched = false;
-  bool isTouched = false;
-
+  String type = "sentMails";
   var selectedMail = <MailModel>[].obs;
-  @override
+  var userController = new UserController();
+  bool isTouched = false;
   void initState() {
-    // TODO: implement initState
-
-    getMailsList();
+    getSentMails("default");
     super.initState();
   }
 
-  //List mails = ["mail1", "mail2", "mail3"];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -107,7 +93,7 @@ class _MailListPageState extends State<MailListPage> {
                             hoverColor: Colors.white,
                             onPressed: () {
                               // deliverMail(
-                              //     postManController.mails[index].mailID);
+                              //     userController.sentMails[index].mailID);
                             }),
                         IconButton(
                             tooltip: "Cancelled",
@@ -126,74 +112,6 @@ class _MailListPageState extends State<MailListPage> {
     );
   }
 
-  // Widget searchBox(BuildContext context) {
-  //   final isPortrait =
-  //       MediaQuery.of(context).orientation == Orientation.portrait;
-
-  //   return FloatingSearchBar(
-  //     hint: 'Search...',
-  //     scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
-  //     transitionDuration: const Duration(milliseconds: 200),
-  //     controller: _searchController,
-  //     transitionCurve: Curves.easeInOut,
-  //     physics: const BouncingScrollPhysics(),
-  //     axisAlignment: isPortrait ? 0.0 : -1.0,
-  //     openAxisAlignment: 0.0,
-  //     width: isPortrait ? 600 : 500,
-  //     debounceDelay: const Duration(milliseconds: 200),
-  //     onQueryChanged: (query) {
-  //       print(query);
-  //     },
-  //     // Specify a custom transition to be used for
-  //     // animating between opened and closed stated.
-  //     transition: CircularFloatingSearchBarTransition(),
-  //     actions: [
-  //       FloatingSearchBarAction(
-  //         showIfOpened: true,
-  //         child: CircularButton(
-  //           icon: const Icon(Icons.mail),
-  //           onPressed: () {
-  //             setState(() {
-  //               searchResult = _searchController.query.toString();
-  //               isSearched = true;
-  //               print(searchResult);
-  //             });
-  //           },
-  //         ),
-  //       ),
-  //       FloatingSearchBarAction.searchToClear(
-  //         showIfClosed: false,
-  //       ),
-  //     ],
-  //     builder: (context, transition) {
-  //       return ClipRRect(
-  //         borderRadius: BorderRadius.circular(20),
-  //         child: Material(
-  //           color: Colors.white,
-  //           elevation: 4.0,
-  //           child: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: postManController.mails.map((mail) {
-  //               return Container(
-  //                 height: 50,
-  //                 child: ListTile(
-  //                   title: Text(mail.toString()),
-  //                   onTap: () {
-  //                     tapped(
-  //                       mail.toString(),
-  //                     );
-  //                     print(mail.toString());
-  //                   },
-  //                 ),
-  //               );
-  //             }).toList(),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
   Widget tileList() {
     return Expanded(
       child: isLoading
@@ -208,15 +126,15 @@ class _MailListPageState extends State<MailListPage> {
           : Obx(() {
               if (isLoading) {
                 return Text('Loading');
-              } else if (postManController.mails.isEmpty) {
+              } else if (userController.sentMails.isEmpty) {
                 return Text('Empty List');
               } else {
                 return ListView.builder(
-                  itemCount: postManController.mails.length,
+                  itemCount: userController.sentMails.length,
                   itemBuilder: (context, index) {
                     return Container(
                       child: tagCard(
-                          context, postManController.mails.value[index], index),
+                          context, userController.sentMails[index], index),
                     );
                   },
                 );
@@ -240,7 +158,7 @@ class _MailListPageState extends State<MailListPage> {
           //     print(mail.mailID.toString());
           //   },
           // ),
-          Container(width: 100, child: Text(mail.mailId)),
+          Container(width: 100, child: Text('mail.mailID')),
           // Container(width: 100, child: Text(mail.isDelivered.toString())),
           // Container(width: 100, child: Text(mail.addressID.toString())),
           // Container(width: 100, child: Text(mail.receiverID.toString())),
@@ -254,7 +172,7 @@ class _MailListPageState extends State<MailListPage> {
               onPressed: () {
                 isTouched = true;
                 selectedMail.clear();
-                selectedMail.add(postManController.mails.value[index]);
+                selectedMail.add(userController.sentMails.value[index]);
                 //acceptEvent(event.eventID, index);
               }),
           // SizedBox(
@@ -306,32 +224,8 @@ class _MailListPageState extends State<MailListPage> {
     );
   }
 
-  //methods
-  Future tapped(String mailName) async {
-    List data;
-    var response =
-        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/posts/")
-            //headers: {"accept": "applicati"}
-            );
-
-    data = json.decode(response.body);
-    if (data[0]['error'] == 1) {
-      print('Check again');
-    } else {
-      var token = data[0]['title'];
-      print(token);
-    }
-
-    //print(data[1]["title"]);
-
-    print(mailName);
-  }
-
-  Future getMailsList() async {
-    await postManController.getMails();
-  }
-
-  Future deliverMail(String mailID) async {
-    // await postManController.deliverMail(mailID);
+  Future getSentMails(String userName) async {
+    await userController.getSentMails(userName);
+    return;
   }
 }

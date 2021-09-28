@@ -1,3 +1,4 @@
+import 'package:easy_mail_app_frontend/controller/postManController.dart';
 import 'package:easy_mail_app_frontend/screens/homePage.dart';
 import 'package:easy_mail_app_frontend/screens/mailListPage.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
@@ -22,6 +23,7 @@ class PostManLogin extends StatefulWidget {
 class _PostManLoginState extends State<PostManLogin> {
   var _emailController = TextEditingController();
   var _passwordController = TextEditingController();
+  PostManController postManController = new PostManController();
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: postmanAppBar(context),
@@ -98,7 +100,6 @@ class _PostManLoginState extends State<PostManLogin> {
                 ? _validate = false
                 : _validate = true;
           });
-
           if (_validate) {
             checkLogin(_emailController.text, _passwordController.text);
           } else {
@@ -122,7 +123,6 @@ class _PostManLoginState extends State<PostManLogin> {
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
-          getData();
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => MailListPage()));
         },
@@ -133,43 +133,20 @@ class _PostManLoginState extends State<PostManLogin> {
     );
   }
 
-  void checkLogin(String email, String password) async {
-    List data;
-    var response =
-        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/posts/")
-            //headers: {"accept": "applicati"}
-            );
-
-    data = json.decode(response.body);
-    if (data[0]['error'] == 1) {
-      print('Check again');
-    } else {
-      var token = data[0]['title'];
-      print(token);
+  void checkLogin(String username, String password) async {
+    try {
+      var err = await postManController.login(username, password);
+      if (err == 0) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => MailListPage()));
+      } else {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => PostManLogin()));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Check the details again')));
+      }
+    } on Exception catch (e) {
+      print(e);
     }
-
-    //print(data[1]["title"]);
-
-    print(email);
-  }
-
-  Future getData() async {
-    List data;
-    var response =
-        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/users"),
-            //body:{"username":"kusd"},
-            headers: {"accept": "applicati"});
-
-    data = json.decode(response.body);
-    if (data[0]['error'] == 1) {
-      print('Check again');
-    } else {
-      var token = data[0]['id'];
-      print(token);
-    }
-
-    //print(data[1]["title"]);
-
-    return "Success!";
   }
 }

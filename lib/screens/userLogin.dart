@@ -1,5 +1,6 @@
 import 'package:easy_mail_app_frontend/screens/homePage.dart';
 import 'package:easy_mail_app_frontend/screens/mailListPage.dart';
+import 'package:easy_mail_app_frontend/screens/userMailBox.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
 import 'package:get/utils.dart';
 import 'package:http/http.dart' as http;
@@ -94,7 +95,7 @@ class _UserLoginState extends State<UserLogin> {
         onPressed: () {
           bool _validate = true;
           setState(() {
-            _emailController.text.isEmpty
+            _emailController.text.isEmpty || _passwordController.text.isEmpty
                 ? _validate = false
                 : _validate = true;
           });
@@ -124,7 +125,7 @@ class _UserLoginState extends State<UserLogin> {
         onPressed: () async {
           getData();
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => MailListPage()));
+              MaterialPageRoute(builder: (context) => UserMailBox()));
         },
         child: Text("Back",
             textAlign: TextAlign.center,
