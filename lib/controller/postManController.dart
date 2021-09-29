@@ -1,3 +1,4 @@
+import 'package:easy_mail_app_frontend/model/addressesModel.dart';
 import 'package:easy_mail_app_frontend/model/postManModel.dart';
 import 'package:easy_mail_app_frontend/model/tokenModel.dart';
 import 'package:easy_mail_app_frontend/model/updatingMsgModel.dart';
@@ -9,7 +10,7 @@ import 'dart:convert';
 
 class PostManController extends GetxController {
   var mails = <MailModel>[].obs;
-  var addresses = <AddressModel>[].obs;
+  var addresses = <Address>[].obs;
   PostManModel postMan = new PostManModel();
   static String? token;
   static String? userName;
@@ -38,31 +39,24 @@ class PostManController extends GetxController {
   }
 
   Future getLocations() async {
-    var response = await http.get(
-      Uri.parse("https://jsonplaceholder.typicode.com/users"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "id": "Kamal002",
-        "mailID": "mail002"
-      },
-      //body:{"username":"kusd"},
-      // headers: {"id": "Kamal002", "mailID": "mail002"}
-    );
+    print("getting all locations");
+    try {
+      var response = await http.get(
+          Uri.parse("http://10.0.2.2:5000/api/postman/address/"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "x-auth-token": "$token"
+          });
 
-    List data = json.decode(response.body);
-
-    for (var oneAddress in data) {
-      AddressModel address = new AddressModel(
-        addressID: oneAddress['id'].toString(), //oneMail['mailID'],
-        description: oneAddress['id'].toString(), // oneMail['addressID'],
-        branchID: oneAddress['id'].toString(), // oneMail['lastAppearedBranch'],
-        lat: oneAddress['id'],
-        lng: oneAddress['id'], // oneMail['postManID'],
-        userIDList: oneAddress['id'], // oneMail['sourceBranchID'],
-      );
-      addresses.add(address);
+      var result = AddressList.fromRawJson(response.body);
+      print(result.addresses);
+      addresses.clear();
+      addresses.addAll(result.addresses);
+      print(addresses.length.toString() + "results found");
+      return (result);
+    } on Exception catch (e) {
+      print(e);
     }
-    return;
   }
 
   Future confirmDelivery(String mailID) async {
@@ -71,19 +65,12 @@ class PostManController extends GetxController {
           Uri.parse("http://10.0.2.2:5000/api/postman/posts/confirm/$mailID"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
-            "mailID": "mail002",
             "x-auth-token": "$token"
           });
-      // print(response);
-      // List data = json.decode(response.body);
-      // print(data);
+
       var result = MsgRes.fromRawJson(response.body);
-      print("Result status " + result.err.toString());
-      return (result.err);
-      //print(result);
-      //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
-      // mails.addAll(result.mailModel);
-      // print(mails.length.toString() + "results found");
+
+      return (result);
     } on Exception catch (e) {
       print(e);
       return (1);
@@ -96,7 +83,6 @@ class PostManController extends GetxController {
           Uri.parse("http://10.0.2.2:5000/api/postman/posts/cancel/$mailID"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
-            "mailID": "mail002",
             "x-auth-token": "$token"
           });
       // print(response);
@@ -104,7 +90,7 @@ class PostManController extends GetxController {
       // print(data);
       var result = MsgRes.fromRawJson(response.body);
       //print("Result status " + result.err.toString());
-      return (result.err);
+      return (result);
       //print(result);
       //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
       // mails.addAll(result.mailModel);

@@ -18,7 +18,7 @@ typedef Marker MarkerUpdateAction(Marker marker);
 
 class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
   void initstate() {
-    getLocations();
+    //getLocations();
   }
 
   PlaceMarkerBodyState();
@@ -28,10 +28,11 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
   GoogleMapController? controller;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   MarkerId? selectedMarker;
-  int _markerIdCounter = 1;
+  int _markerIdCounter = 0;
   PostManController postManController = new PostManController();
   void _onMapCreated(GoogleMapController controller) {
     this.controller = controller;
+    getLocations();
   }
 
   @override
@@ -98,24 +99,20 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
   void _add() {
     final int markerCount = markers.length;
 
-    if (markerCount == 12) {
-      //!change this to addresses list length
-      //!changed
+    if (markerCount == postManController.addresses.length) {
       return;
     }
 
-    final String markerIdVal = 'marker_id_$_markerIdCounter';
+    final String markerIdVal =
+        postManController.addresses[_markerIdCounter].description;
     _markerIdCounter++;
     final MarkerId markerId = MarkerId(markerIdVal);
 
     final Marker marker = Marker(
       markerId: markerId,
       position: LatLng(
-        center.latitude + sin(_markerIdCounter * pi / 6.0) / 20.0,
-        center.longitude + cos(_markerIdCounter * pi / 6.0) / 20.0,
-      ),
-      // position: LatLng(postManController.addresses[_markerIdCounter - 1].lat,
-      //     postManController.addresses[_markerIdCounter - 1].lng),
+          double.parse(postManController.addresses[_markerIdCounter - 1].lat),
+          double.parse(postManController.addresses[_markerIdCounter - 1].lng)),
       infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
       onTap: () {
         _onMarkerTapped(markerId);
@@ -408,6 +405,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
   }
 
   Future getLocations() async {
+    //print("calling the frontend function");
     await postManController.getLocations();
   }
 }

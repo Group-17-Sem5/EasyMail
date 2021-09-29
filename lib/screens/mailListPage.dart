@@ -130,74 +130,6 @@ class _MailListPageState extends State<MailListPage> {
     );
   }
 
-  // Widget searchBox(BuildContext context) {
-  //   final isPortrait =
-  //       MediaQuery.of(context).orientation == Orientation.portrait;
-
-  //   return FloatingSearchBar(
-  //     hint: 'Search...',
-  //     scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
-  //     transitionDuration: const Duration(milliseconds: 200),
-  //     controller: _searchController,
-  //     transitionCurve: Curves.easeInOut,
-  //     physics: const BouncingScrollPhysics(),
-  //     axisAlignment: isPortrait ? 0.0 : -1.0,
-  //     openAxisAlignment: 0.0,
-  //     width: isPortrait ? 600 : 500,
-  //     debounceDelay: const Duration(milliseconds: 200),
-  //     onQueryChanged: (query) {
-  //       print(query);
-  //     },
-  //     // Specify a custom transition to be used for
-  //     // animating between opened and closed stated.
-  //     transition: CircularFloatingSearchBarTransition(),
-  //     actions: [
-  //       FloatingSearchBarAction(
-  //         showIfOpened: true,
-  //         child: CircularButton(
-  //           icon: const Icon(Icons.mail),
-  //           onPressed: () {
-  //             setState(() {
-  //               searchResult = _searchController.query.toString();
-  //               isSearched = true;
-  //               print(searchResult);
-  //             });
-  //           },
-  //         ),
-  //       ),
-  //       FloatingSearchBarAction.searchToClear(
-  //         showIfClosed: false,
-  //       ),
-  //     ],
-  //     builder: (context, transition) {
-  //       return ClipRRect(
-  //         borderRadius: BorderRadius.circular(20),
-  //         child: Material(
-  //           color: Colors.white,
-  //           elevation: 4.0,
-  //           child: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: postManController.mails.map((mail) {
-  //               return Container(
-  //                 height: 50,
-  //                 child: ListTile(
-  //                   title: Text(mail.toString()),
-  //                   onTap: () {
-  //                     tapped(
-  //                       mail.toString(),
-  //                     );
-  //                     print(mail.toString());
-  //                   },
-  //                 ),
-  //               );
-  //             }).toList(),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
   Widget tileList() {
     return Expanded(
       child: isLoading
@@ -235,15 +167,6 @@ class _MailListPageState extends State<MailListPage> {
       color: Colors.greenAccent,
       child: Row(
         children: [
-          // ListTile(
-          //   title: Text(mail.mailID.toString()),
-          //   onTap: () {
-          //     tapped(
-          //       mail.mailID.toString(),
-          //     );
-          //     print(mail.mailID.toString());
-          //   },
-          // ),
           Container(width: 100, child: Text(mail.mailId)),
           //Container(width: 100, child: Text(mail.isDelivered.toString())),
           Container(width: 100, child: Text(mail.receiverId.toString())),
@@ -260,50 +183,6 @@ class _MailListPageState extends State<MailListPage> {
                 selectedMail.clear();
                 selectedMail.add(postManController.mails.value[index]);
               }),
-          // SizedBox(
-          //   width: 20,
-          // ),
-          // IconButton(
-          //     tooltip: "edit",
-          //     icon: Icon(Icons.drive_file_rename_outline),
-          //     color: Colors.black,
-          //     hoverColor: Colors.white,
-          //     onPressed: () {
-          //       //editEvent(event.eventID, index);
-          //     }),
-          // SizedBox(
-          //   width: 20,
-          // ),
-          // IconButton(
-          //     tooltip: "UnBan",
-          //     icon: Icon(Icons.check),
-          //     color: Colors.black,
-          //     hoverColor: Colors.white,
-          //     onPressed: () {
-          //       //unBanEvent(event.eventID);
-          //     }),
-          // SizedBox(
-          //   width: 20,
-          // ),
-          // IconButton(
-          //     tooltip: "Ban",
-          //     icon: Icon(Icons.block),
-          //     color: Colors.black,
-          //     hoverColor: Colors.white,
-          //     onPressed: () {
-          //       //banEvent(event.eventID);
-          //     }),
-          // SizedBox(
-          //   width: 20,
-          // ),
-          // IconButton(
-          //     tooltip: "Delete forever",
-          //     icon: Icon(Icons.delete),
-          //     color: Colors.black,
-          //     hoverColor: Colors.white,
-          //     onPressed: () {
-          //       //deleteEvent(event.writerID, event.eventID);
-          //     }),
         ],
       ),
     );
@@ -316,10 +195,11 @@ class _MailListPageState extends State<MailListPage> {
   }
 
   Future deliverMail(String mailID) async {
-    var err = await postManController.confirmDelivery(mailID);
-    if (err == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Succesfully delivered the post')));
+    var result = await postManController.confirmDelivery(mailID);
+    if (result.err == 0) {
+      var msg = result.msg;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('$msg')));
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Something went Wrong ')));
@@ -327,10 +207,11 @@ class _MailListPageState extends State<MailListPage> {
   }
 
   Future cancelDelivery(String mailID) async {
-    var err = await postManController.cancelDelivery(mailID);
-    if (err == 0) {
+    var result = await postManController.cancelDelivery(mailID);
+    if (result.err == 0) {
+      var msg = result.msg;
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text(' Cancelled delivery')));
+          .showSnackBar(SnackBar(content: Text('$msg')));
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Something went Wrong ')));
