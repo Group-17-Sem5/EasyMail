@@ -1,5 +1,6 @@
 import 'package:easy_mail_app_frontend/model/postManModel.dart';
 import 'package:easy_mail_app_frontend/model/tokenModel.dart';
+import 'package:easy_mail_app_frontend/model/updatingMsgModel.dart';
 import 'package:get/get.dart';
 import '../model/mailModel.Dart';
 import '../model/addressModel.dart';
@@ -65,11 +66,53 @@ class PostManController extends GetxController {
   }
 
   Future confirmDelivery(String mailID) async {
-    return;
+    try {
+      var response = await http.put(
+          Uri.parse("http://10.0.2.2:5000/api/postman/posts/confirm/$mailID"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "mailID": "mail002",
+            "x-auth-token": "$token"
+          });
+      // print(response);
+      // List data = json.decode(response.body);
+      // print(data);
+      var result = MsgRes.fromRawJson(response.body);
+      print("Result status " + result.err.toString());
+      return (result.err);
+      //print(result);
+      //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
+      // mails.addAll(result.mailModel);
+      // print(mails.length.toString() + "results found");
+    } on Exception catch (e) {
+      print(e);
+      return (1);
+    }
   }
 
   Future cancelDelivery(String mailID) async {
-    return;
+    try {
+      var response = await http.put(
+          Uri.parse("http://10.0.2.2:5000/api/postman/posts/cancel/$mailID"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "mailID": "mail002",
+            "x-auth-token": "$token"
+          });
+      // print(response);
+      // List data = json.decode(response.body);
+      // print(data);
+      var result = MsgRes.fromRawJson(response.body);
+      //print("Result status " + result.err.toString());
+      return (result.err);
+      //print(result);
+      //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
+      // mails.addAll(result.mailModel);
+      // print(mails.length.toString() + "results found");
+    } on Exception catch (e) {
+      print(e);
+      return (1);
+    }
   }
 
   Future getMails() async {

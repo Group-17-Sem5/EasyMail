@@ -86,37 +86,41 @@ class _MailListPageState extends State<MailListPage> {
                         child: Column(
                       children: [
                         Container(
-                            width: 100,
-                            child:
-                                Text('selectedMail[0].receiverID.toString()')),
+                            width: 300,
+                            child: Text("Receiver id : " +
+                                selectedMail[0].receiverId.toString())),
                         Container(
-                            width: 100,
-                            child:
-                                Text('selectedMail[0].addressID.toString()')),
+                            width: 300,
+                            child: Text("Address ID : " +
+                                selectedMail[0].addressId.toString())),
                         Container(
-                            width: 100,
-                            child: Text('selectedMail[0].senderID.toString()')),
+                            width: 300,
+                            child: Text("Sender ID : " +
+                                selectedMail[0].senderId.toString())),
                         Container(
-                            width: 100,
-                            child:
-                                Text('selectedMail[0].isDelivered.toString()')),
-                        IconButton(
-                            tooltip: "Deliver",
-                            icon: Icon(Icons.check),
-                            color: Colors.black,
-                            hoverColor: Colors.white,
-                            onPressed: () {
-                              // deliverMail(
-                              //     postManController.mails[index].mailID);
-                            }),
-                        IconButton(
-                            tooltip: "Cancelled",
-                            icon: Icon(Icons.block),
-                            color: Colors.black,
-                            hoverColor: Colors.white,
-                            onPressed: () {
-                              //banEvent(event.eventID);
-                            }),
+                            width: 300,
+                            child: Text("Delivery Status: " +
+                                selectedMail[0].isDelivered.toString())),
+                        Row(
+                          children: [
+                            IconButton(
+                                tooltip: "Deliver",
+                                icon: Icon(Icons.check),
+                                color: Colors.black,
+                                hoverColor: Colors.white,
+                                onPressed: () {
+                                  deliverMail(selectedMail[0].mailId);
+                                }),
+                            IconButton(
+                                tooltip: "Cancel",
+                                icon: Icon(Icons.block),
+                                color: Colors.black,
+                                hoverColor: Colors.white,
+                                onPressed: () {
+                                  cancelDelivery(selectedMail[0].mailId);
+                                }),
+                          ],
+                        ),
                       ],
                     ));
                   },
@@ -241,21 +245,20 @@ class _MailListPageState extends State<MailListPage> {
           //   },
           // ),
           Container(width: 100, child: Text(mail.mailId)),
-          // Container(width: 100, child: Text(mail.isDelivered.toString())),
-          // Container(width: 100, child: Text(mail.addressID.toString())),
-          // Container(width: 100, child: Text(mail.receiverID.toString())),
+          //Container(width: 100, child: Text(mail.isDelivered.toString())),
+          Container(width: 100, child: Text(mail.receiverId.toString())),
+          Container(width: 100, child: Text(mail.senderId.toString())),
           // // Container(width: 100, child: Text(tag.subscriber.toString())),
           // SizedBox(),
           IconButton(
               tooltip: "view",
-              icon: Icon(Icons.check_circle),
+              icon: Icon(Icons.mail),
               color: Colors.black,
               hoverColor: Colors.white,
               onPressed: () {
                 isTouched = true;
                 selectedMail.clear();
                 selectedMail.add(postManController.mails.value[index]);
-                //acceptEvent(event.eventID, index);
               }),
           // SizedBox(
           //   width: 20,
@@ -307,31 +310,30 @@ class _MailListPageState extends State<MailListPage> {
   }
 
   //methods
-  Future tapped(String mailName) async {
-    List data;
-    var response =
-        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/posts/")
-            //headers: {"accept": "applicati"}
-            );
-
-    data = json.decode(response.body);
-    if (data[0]['error'] == 1) {
-      print('Check again');
-    } else {
-      var token = data[0]['title'];
-      print(token);
-    }
-
-    //print(data[1]["title"]);
-
-    print(mailName);
-  }
 
   Future getMailsList() async {
     await postManController.getMails();
   }
 
   Future deliverMail(String mailID) async {
-    // await postManController.deliverMail(mailID);
+    var err = await postManController.confirmDelivery(mailID);
+    if (err == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Succesfully delivered the post')));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Something went Wrong ')));
+    }
+  }
+
+  Future cancelDelivery(String mailID) async {
+    var err = await postManController.cancelDelivery(mailID);
+    if (err == 0) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text(' Cancelled delivery')));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Something went Wrong ')));
+    }
   }
 }
