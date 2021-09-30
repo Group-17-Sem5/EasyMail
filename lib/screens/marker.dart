@@ -28,6 +28,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
   GoogleMapController? controller;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   MarkerId? selectedMarker;
+  String selectedaddressID = "";
   int _markerIdCounter = 0;
   PostManController postManController = new PostManController();
   void _onMapCreated(GoogleMapController controller) {
@@ -40,17 +41,20 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     super.dispose();
   }
 
-  void _onMarkerTapped(MarkerId markerId) {
+  void _onMarkerTapped(MarkerId markerId, String addressID) {
     final Marker? tappedMarker = markers[markerId];
+    print("tapped $addressID");
     if (tappedMarker != null) {
       setState(() {
         final MarkerId? previousMarkerId = selectedMarker;
+
         if (previousMarkerId != null && markers.containsKey(previousMarkerId)) {
           final Marker resetOld = markers[previousMarkerId]!
               .copyWith(iconParam: BitmapDescriptor.defaultMarker);
           markers[previousMarkerId] = resetOld;
         }
         selectedMarker = markerId;
+        selectedaddressID = addressID;
         final Marker newMarker = tappedMarker.copyWith(
           iconParam: BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueGreen,
@@ -61,8 +65,10 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     }
   }
 
-  void _onMarkerDragEnd(MarkerId markerId, LatLng newPosition) async {
+  void _onMarkerDragEnd(
+      MarkerId markerId, LatLng newPosition, String addressID) async {
     final Marker? tappedMarker = markers[markerId];
+    print("dragging $addressID");
     if (tappedMarker != null) {
       await showDialog<void>(
           context: context,
@@ -70,8 +76,10 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
             return AlertDialog(
                 actions: <Widget>[
                   TextButton(
-                    child: const Text('OK'),
-                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Go back'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   )
                 ],
                 content: Padding(
@@ -83,12 +91,13 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                         Text('New position: $newPosition'),
                         Text('press the button to change the address'),
                         IconButton(
-                            tooltip: "view",
+                            tooltip: "Save new position",
                             icon: Icon(Icons.check_circle),
                             color: Colors.black,
                             hoverColor: Colors.white,
                             onPressed: () {
-                              //acceptEvent(event.eventID, index);
+                              saveNewLocation(addressID, newPosition);
+                              Navigator.of(context).pop();
                             }),
                       ],
                     )));
@@ -105,6 +114,8 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
 
     final String markerIdVal =
         postManController.addresses[_markerIdCounter].description;
+    final String addressID =
+        postManController.addresses[_markerIdCounter].addressId;
     _markerIdCounter++;
     final MarkerId markerId = MarkerId(markerIdVal);
 
@@ -115,10 +126,10 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
           double.parse(postManController.addresses[_markerIdCounter - 1].lng)),
       infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
       onTap: () {
-        _onMarkerTapped(markerId);
+        _onMarkerTapped(markerId, addressID);
       },
       onDragEnd: (LatLng position) {
-        _onMarkerDragEnd(markerId, position);
+        _onMarkerDragEnd(markerId, position, addressID);
       },
     );
 
@@ -127,41 +138,43 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     });
   }
 
-  void _remove(MarkerId markerId) {
+  void _remove(MarkerId markerId, String addressID) {
     setState(() {
       if (markers.containsKey(markerId)) {
         markers.remove(markerId);
       }
     });
+    print("removing $addressID");
+    //remove the location
   }
 
-  void _changePosition(MarkerId markerId) {
-    final Marker marker = markers[markerId]!;
-    final LatLng current = marker.position;
-    final Offset offset = Offset(
-      center.latitude - current.latitude,
-      center.longitude - current.longitude,
-    );
-    setState(() {
-      markers[markerId] = marker.copyWith(
-        positionParam: LatLng(
-          center.latitude + offset.dy,
-          center.longitude + offset.dx,
-        ),
-      );
-    });
-  }
+  // void _changePosition(MarkerId markerId) {
+  //   final Marker marker = markers[markerId]!;
+  //   final LatLng current = marker.position;
+  //   final Offset offset = Offset(
+  //     center.latitude - current.latitude,
+  //     center.longitude - current.longitude,
+  //   );
+  //   setState(() {
+  //     markers[markerId] = marker.copyWith(
+  //       positionParam: LatLng(
+  //         center.latitude + offset.dy,
+  //         center.longitude + offset.dx,
+  //       ),
+  //     );
+  //   });
+  // }
 
-  void _changeAnchor(MarkerId markerId) {
-    final Marker marker = markers[markerId]!;
-    final Offset currentAnchor = marker.anchor;
-    final Offset newAnchor = Offset(1.0 - currentAnchor.dy, currentAnchor.dx);
-    setState(() {
-      markers[markerId] = marker.copyWith(
-        anchorParam: newAnchor,
-      );
-    });
-  }
+  // void _changeAnchor(MarkerId markerId) {
+  //   final Marker marker = markers[markerId]!;
+  //   final Offset currentAnchor = marker.anchor;
+  //   final Offset newAnchor = Offset(1.0 - currentAnchor.dy, currentAnchor.dx);
+  //   setState(() {
+  //     markers[markerId] = marker.copyWith(
+  //       anchorParam: newAnchor,
+  //     );
+  //   });
+  // }
 
   Future<void> _changeInfoAnchor(MarkerId markerId) async {
     final Marker marker = markers[markerId]!;
@@ -185,14 +198,14 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     });
   }
 
-  Future<void> _toggleFlat(MarkerId markerId) async {
-    final Marker marker = markers[markerId]!;
-    setState(() {
-      markers[markerId] = marker.copyWith(
-        flatParam: !marker.flat,
-      );
-    });
-  }
+  // Future<void> _toggleFlat(MarkerId markerId) async {
+  //   final Marker marker = markers[markerId]!;
+  //   setState(() {
+  //     markers[markerId] = marker.copyWith(
+  //       flatParam: !marker.flat,
+  //     );
+  //   });
+  // }
 
   Future<void> _changeInfo(MarkerId markerId) async {
     final Marker marker = markers[markerId]!;
@@ -216,34 +229,34 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     });
   }
 
-  Future<void> _changeRotation(MarkerId markerId) async {
-    final Marker marker = markers[markerId]!;
-    final double current = marker.rotation;
-    setState(() {
-      markers[markerId] = marker.copyWith(
-        rotationParam: current == 330.0 ? 0.0 : current + 30.0,
-      );
-    });
-  }
+  // Future<void> _changeRotation(MarkerId markerId) async {
+  //   final Marker marker = markers[markerId]!;
+  //   final double current = marker.rotation;
+  //   setState(() {
+  //     markers[markerId] = marker.copyWith(
+  //       rotationParam: current == 330.0 ? 0.0 : current + 30.0,
+  //     );
+  //   });
+  // }
 
-  Future<void> _toggleVisible(MarkerId markerId) async {
-    final Marker marker = markers[markerId]!;
-    setState(() {
-      markers[markerId] = marker.copyWith(
-        visibleParam: !marker.visible,
-      );
-    });
-  }
+  // Future<void> _toggleVisible(MarkerId markerId) async {
+  //   final Marker marker = markers[markerId]!;
+  //   setState(() {
+  //     markers[markerId] = marker.copyWith(
+  //       visibleParam: !marker.visible,
+  //     );
+  //   });
+  // }
 
-  Future<void> _changeZIndex(MarkerId markerId) async {
-    final Marker marker = markers[markerId]!;
-    final double current = marker.zIndex;
-    setState(() {
-      markers[markerId] = marker.copyWith(
-        zIndexParam: current == 12.0 ? 0.0 : current + 1.0,
-      );
-    });
-  }
+  // Future<void> _changeZIndex(MarkerId markerId) async {
+  //   final Marker marker = markers[markerId]!;
+  //   final double current = marker.zIndex;
+  //   setState(() {
+  //     markers[markerId] = marker.copyWith(
+  //       zIndexParam: current == 12.0 ? 0.0 : current + 1.0,
+  //     );
+  //   });
+  // }
 
   void _setMarkerIcon(MarkerId markerId, BitmapDescriptor assetIcon) {
     final Marker marker = markers[markerId]!;
@@ -279,6 +292,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
   @override
   Widget build(BuildContext context) {
     final MarkerId? selectedId = selectedMarker;
+    final String? selectedAddress = selectedaddressID;
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -314,7 +328,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                           child: const Text('Remove address'),
                           onPressed: selectedId == null
                               ? null
-                              : () => _remove(selectedId),
+                              : () => _remove(selectedId, selectedaddressID),
                         ),
                         TextButton(
                           child: const Text('change Name'),
@@ -338,48 +352,48 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                               ? null
                               : () => _changeAlpha(selectedId),
                         ),
-                        TextButton(
-                          child: const Text('change anchor'),
-                          onPressed: selectedId == null
-                              ? null
-                              : () => _changeAnchor(selectedId),
-                        ),
+                        // TextButton(
+                        //   child: const Text('change anchor'),
+                        //   onPressed: selectedId == null
+                        //       ? null
+                        //       : () => _changeAnchor(selectedId),
+                        // ),
                         TextButton(
                           child: const Text('Drag Location'),
                           onPressed: selectedId == null
                               ? null
                               : () => _toggleDraggable(selectedId),
                         ),
-                        TextButton(
-                          child: const Text('toggle flat'),
-                          onPressed: selectedId == null
-                              ? null
-                              : () => _toggleFlat(selectedId),
-                        ),
-                        TextButton(
-                          child: const Text('change Location'),
-                          onPressed: selectedId == null
-                              ? null
-                              : () => _changePosition(selectedId),
-                        ),
-                        TextButton(
-                          child: const Text('change rotation'),
-                          onPressed: selectedId == null
-                              ? null
-                              : () => _changeRotation(selectedId),
-                        ),
-                        TextButton(
-                          child: const Text('toggle visible'),
-                          onPressed: selectedId == null
-                              ? null
-                              : () => _toggleVisible(selectedId),
-                        ),
-                        TextButton(
-                          child: const Text('change zIndex'),
-                          onPressed: selectedId == null
-                              ? null
-                              : () => _changeZIndex(selectedId),
-                        ),
+                        // TextButton(
+                        //   child: const Text('toggle flat'),
+                        //   onPressed: selectedId == null
+                        //       ? null
+                        //       : () => _toggleFlat(selectedId),
+                        // ),
+                        // TextButton(
+                        //   child: const Text('change position'),
+                        //   onPressed: selectedId == null
+                        //       ? null
+                        //       : () => _changePosition(selectedId),
+                        // ),
+                        // TextButton(
+                        //   child: const Text('change rotation'),
+                        //   onPressed: selectedId == null
+                        //       ? null
+                        //       : () => _changeRotation(selectedId),
+                        // ),
+                        // TextButton(
+                        //   child: const Text('toggle visible'),
+                        //   onPressed: selectedId == null
+                        //       ? null
+                        //       : () => _toggleVisible(selectedId),
+                        // ),
+                        // TextButton(
+                        //   child: const Text('change zIndex'),
+                        //   onPressed: selectedId == null
+                        //       ? null
+                        //       : () => _changeZIndex(selectedId),
+                        // ),
                         TextButton(
                           child: const Text('set marker icon'),
                           onPressed: selectedId == null
@@ -407,5 +421,14 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
   Future getLocations() async {
     //print("calling the frontend function");
     await postManController.getLocations();
+  }
+
+  Future saveNewLocation(String addressID, LatLng newPosition) async {
+    //print(newPosition.latitude.toString());
+    //print(newPosition.longitude.toString());
+    var msg = await postManController.editLocation(addressID, newPosition);
+    print(msg);
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
   }
 }

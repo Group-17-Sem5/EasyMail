@@ -3,6 +3,7 @@ import 'package:easy_mail_app_frontend/model/postManModel.dart';
 import 'package:easy_mail_app_frontend/model/tokenModel.dart';
 import 'package:easy_mail_app_frontend/model/updatingMsgModel.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../model/mailModel.Dart';
 import '../model/addressModel.dart';
 import 'package:http/http.dart' as http;
@@ -130,9 +131,32 @@ class PostManController extends GetxController {
     return;
   }
 
-  Future editLocation(String locationID, AddressModel address) async {
-    print(address.addressID);
-    return;
+  Future editLocation(String addressID, LatLng newPosition) async {
+    //print("$newPosition");
+    try {
+      var lat = newPosition.latitude;
+      var lng = newPosition.longitude;
+      var response = await http.put(
+          Uri.parse("http://10.0.2.2:5000/api/postman/address/$addressID"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "x-auth-token": "$token"
+          },
+          body: json.encode(
+            <String, String>{
+              'addressID': "$addressID",
+              "lat": "$lat",
+              "lng": "$lng"
+            },
+          ));
+
+      var result = MsgRes.fromRawJson(response.body);
+
+      return (result.msg);
+    } on Exception catch (e) {
+      print(e);
+      return (1);
+    }
   }
 
   Future removeLocation(String locationID) async {
