@@ -14,7 +14,7 @@ class UserMailBox extends StatefulWidget {
 
 class _UserMailBoxState extends State<UserMailBox> {
   bool isLoading = false;
-  String type = "sentMails";
+
   var selectedMail = <MailModel>[].obs;
   var userController = new UserController();
   void initState() {

@@ -1,13 +1,15 @@
 import 'package:easy_mail_app_frontend/screens/editProfilePage.dart';
 import 'package:easy_mail_app_frontend/screens/homePage.dart';
-import 'package:easy_mail_app_frontend/screens/locationPage.dart';
-import 'package:easy_mail_app_frontend/screens/mailListPage.dart';
-import 'package:easy_mail_app_frontend/screens/marker.dart';
-import 'package:easy_mail_app_frontend/screens/postManLogin.dart';
-import 'package:easy_mail_app_frontend/screens/userLogin.dart';
-import 'package:easy_mail_app_frontend/screens/userMailBox.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/cancelledMailPage.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/deliveredmailPage.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/locationPage.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/mailListPage.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/marker.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/postManLogin.dart';
+import 'package:easy_mail_app_frontend/screens/userScreens/userLogin.dart';
+import 'package:easy_mail_app_frontend/screens/userScreens/userMailBox.dart';
 import 'package:easy_mail_app_frontend/screens/userProfile.dart';
-import 'package:easy_mail_app_frontend/screens/userSentMails.dart';
+import 'package:easy_mail_app_frontend/screens/userScreens/userSentMails.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -36,6 +38,8 @@ class MyApp extends StatelessWidget {
         UserLogin.route: (context) => UserLogin(),
         UserMailBox.route: (context) => UserMailBox(),
         UserSentMails.route: (context) => UserSentMails(),
+        CancelledMailPage.route: (context) => CancelledMailPage(),
+        DeliveredMailPage.route: (context) => DeliveredMailPage(),
 
         // WriterManaging.route: (context) => WriterManaging(),
         // PrivateTagManaging.route: (context) => PrivateTagManaging(),

@@ -45,6 +45,7 @@ class MailModel {
         required this.postManId,
         required this.senderId,
         required this.receiverId,
+        required this.isCancelled,
     });
 
     String mailId;
@@ -57,6 +58,7 @@ class MailModel {
     String postManId;
     String senderId;
     String receiverId;
+    bool isCancelled;
 
     factory MailModel.fromRawJson(String str) => MailModel.fromJson(json.decode(str));
 
@@ -73,6 +75,7 @@ class MailModel {
         postManId: json["postManID"],
         senderId: json["senderID"],
         receiverId: json["receiverID"],
+        isCancelled: json["isCancelled"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -86,6 +89,7 @@ class MailModel {
         "postManID": postManId,
         "senderID": senderId,
         "receiverID": receiverId,
+        "isCancelled":isCancelled,
     };
 }
 

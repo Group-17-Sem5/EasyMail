@@ -127,7 +127,59 @@ class PostManController extends GetxController {
     return;
   }
 
-  Future addLocation(AddressModel address) async {
+  Future getDeliveredMails() async {
+    //print(userName);
+    try {
+      var response = await http.get(
+          Uri.parse(
+              "http://10.0.2.2:5000/api/postman/delivered-posts/$userName"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "mailID": "mail002",
+            "x-auth-token": "$token"
+          });
+      // print(response);
+      // List data = json.decode(response.body);
+      // print(data);
+      var result = Result.fromRawJson(response.body);
+      //print(result);
+      //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
+      mails.addAll(result.mailModel);
+      print(mails.length.toString() + "results found");
+    } on Exception catch (e) {
+      print(e);
+    }
+
+    return;
+  }
+
+  Future getCancelledMails() async {
+    //print(userName);
+    try {
+      var response = await http.get(
+          Uri.parse(
+              "http://10.0.2.2:5000/api/postman/cancelled-posts/$userName"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "mailID": "mail002",
+            "x-auth-token": "$token"
+          });
+      // print(response);
+      // List data = json.decode(response.body);
+      // print(data);
+      var result = Result.fromRawJson(response.body);
+      //print(result);
+      //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
+      mails.addAll(result.mailModel);
+      print(mails.length.toString() + "results found");
+    } on Exception catch (e) {
+      print(e);
+    }
+
+    return;
+  }
+
+  Future addLocation(Address address) async {
     return;
   }
 

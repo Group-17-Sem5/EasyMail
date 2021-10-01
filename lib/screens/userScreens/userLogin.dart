@@ -1,6 +1,7 @@
 import 'package:easy_mail_app_frontend/controller/postManController.dart';
+import 'package:easy_mail_app_frontend/controller/userController.dart';
 import 'package:easy_mail_app_frontend/screens/homePage.dart';
-import 'package:easy_mail_app_frontend/screens/mailListPage.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/mailListPage.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
 import 'package:get/utils.dart';
 import 'package:http/http.dart' as http;
@@ -12,18 +13,18 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PostManLogin extends StatefulWidget {
-  PostManLogin({Key? key}) : super(key: key);
-  static const String route = '/postMan/login';
+class UserLogin extends StatefulWidget {
+  UserLogin({Key? key}) : super(key: key);
+  static const String route = '/user/login';
 
   @override
-  _PostManLoginState createState() => _PostManLoginState();
+  _UserLoginState createState() => _UserLoginState();
 }
 
-class _PostManLoginState extends State<PostManLogin> {
-  var _emailController = TextEditingController();
+class _UserLoginState extends State<UserLogin> {
+  var _userNameController = TextEditingController();
   var _passwordController = TextEditingController();
-  PostManController postManController = new PostManController();
+  UserController userController = new UserController();
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: postmanAppBar(context),
@@ -63,11 +64,11 @@ class _PostManLoginState extends State<PostManLogin> {
 
   Widget emailField() {
     return (TextField(
-      controller: _emailController,
+      controller: _userNameController,
       obscureText: false,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Email",
+          hintText: "user name",
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     ));
@@ -96,12 +97,12 @@ class _PostManLoginState extends State<PostManLogin> {
         onPressed: () {
           bool _validate = true;
           setState(() {
-            _emailController.text.isEmpty
+            _userNameController.text.isEmpty
                 ? _validate = false
                 : _validate = true;
           });
           if (_validate) {
-            checkLogin(_emailController.text, _passwordController.text);
+            checkLogin(_userNameController.text, _passwordController.text);
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('check the email again')));
@@ -135,13 +136,13 @@ class _PostManLoginState extends State<PostManLogin> {
 
   void checkLogin(String username, String password) async {
     try {
-      var err = await postManController.login(username, password);
+      var err = await userController.login(username, password);
       if (err == 0) {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => MailListPage()));
       } else {
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => PostManLogin()));
+            MaterialPageRoute(builder: (context) => UserLogin()));
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Check the details again')));
       }

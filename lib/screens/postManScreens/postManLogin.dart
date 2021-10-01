@@ -1,6 +1,6 @@
+import 'package:easy_mail_app_frontend/controller/postManController.dart';
 import 'package:easy_mail_app_frontend/screens/homePage.dart';
-import 'package:easy_mail_app_frontend/screens/mailListPage.dart';
-import 'package:easy_mail_app_frontend/screens/userMailBox.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/mailListPage.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
 import 'package:get/utils.dart';
 import 'package:http/http.dart' as http;
@@ -12,17 +12,18 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserLogin extends StatefulWidget {
-  UserLogin({Key? key}) : super(key: key);
-  static const String route = '/user/login';
+class PostManLogin extends StatefulWidget {
+  PostManLogin({Key? key}) : super(key: key);
+  static const String route = '/postMan/login';
 
   @override
-  _UserLoginState createState() => _UserLoginState();
+  _PostManLoginState createState() => _PostManLoginState();
 }
 
-class _UserLoginState extends State<UserLogin> {
+class _PostManLoginState extends State<PostManLogin> {
   var _emailController = TextEditingController();
   var _passwordController = TextEditingController();
+  PostManController postManController = new PostManController();
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: postmanAppBar(context),
@@ -95,11 +96,10 @@ class _UserLoginState extends State<UserLogin> {
         onPressed: () {
           bool _validate = true;
           setState(() {
-            _emailController.text.isEmpty || _passwordController.text.isEmpty
+            _emailController.text.isEmpty
                 ? _validate = false
                 : _validate = true;
           });
-
           if (_validate) {
             checkLogin(_emailController.text, _passwordController.text);
           } else {
@@ -123,9 +123,8 @@ class _UserLoginState extends State<UserLogin> {
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
-          getData();
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => UserMailBox()));
+              MaterialPageRoute(builder: (context) => MailListPage()));
         },
         child: Text("Back",
             textAlign: TextAlign.center,
@@ -134,43 +133,20 @@ class _UserLoginState extends State<UserLogin> {
     );
   }
 
-  void checkLogin(String email, String password) async {
-    List data;
-    var response =
-        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/posts/")
-            //headers: {"accept": "applicati"}
-            );
-
-    data = json.decode(response.body);
-    if (data[0]['error'] == 1) {
-      print('Check again');
-    } else {
-      var token = data[0]['title'];
-      print(token);
+  void checkLogin(String username, String password) async {
+    try {
+      var err = await postManController.login(username, password);
+      if (err == 0) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => MailListPage()));
+      } else {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => PostManLogin()));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Check the details again')));
+      }
+    } on Exception catch (e) {
+      print(e);
     }
-
-    //print(data[1]["title"]);
-
-    print(email);
-  }
-
-  Future getData() async {
-    List data;
-    var response =
-        await http.get(Uri.parse("https://jsonplaceholder.typicode.com/users"),
-            //body:{"username":"kusd"},
-            headers: {"accept": "applicati"});
-
-    data = json.decode(response.body);
-    if (data[0]['error'] == 1) {
-      print('Check again');
-    } else {
-      var token = data[0]['id'];
-      print(token);
-    }
-
-    //print(data[1]["title"]);
-
-    return "Success!";
   }
 }

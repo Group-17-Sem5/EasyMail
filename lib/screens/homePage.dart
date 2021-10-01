@@ -1,5 +1,5 @@
-import 'package:easy_mail_app_frontend/screens/postManLogin.dart';
-import 'package:easy_mail_app_frontend/screens/userLogin.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/postManLogin.dart';
+import 'package:easy_mail_app_frontend/screens/userScreens/userLogin.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 import 'dart:typed_data';
+import 'package:easy_mail_app_frontend/model/addressesModel.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -124,6 +125,68 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
       position: LatLng(
           double.parse(postManController.addresses[_markerIdCounter - 1].lat),
           double.parse(postManController.addresses[_markerIdCounter - 1].lng)),
+      infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
+      onTap: () {
+        _onMarkerTapped(markerId, addressID);
+      },
+      onDragEnd: (LatLng position) {
+        _onMarkerDragEnd(markerId, position, addressID);
+      },
+    );
+
+    setState(() {
+      markers[markerId] = marker;
+    });
+  }
+
+  void _createNewAddress() async {
+    final int markerCount = markers.length;
+
+    if (markerCount == postManController.addresses.length + 1) {
+      return;
+    }
+
+    final String markerIdVal = "default";
+    final String addressID = "default";
+    _markerIdCounter++;
+    final MarkerId markerId = MarkerId(markerIdVal);
+    await showDialog<List>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Go back'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('submit'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+              content: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 66),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      TextField(),
+                      TextField(),
+                      Text('press the button to change the address'),
+                    ],
+                  )));
+        });
+
+    final Marker marker = Marker(
+      markerId: markerId,
+      position: LatLng(
+          double.parse(postManController.addresses[_markerIdCounter - 1].lat) +
+              0.0000025,
+          double.parse(postManController.addresses[_markerIdCounter - 1].lng) +
+              0.0000025),
       infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
       onTap: () {
         _onMarkerTapped(markerId, addressID);
@@ -352,6 +415,12 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                               ? null
                               : () => _changeAlpha(selectedId),
                         ),
+                        TextButton(
+                          child: const Text('add new address'),
+                          onPressed: selectedId == null
+                              ? null
+                              : () => _createNewAddress(),
+                        ),
                         // TextButton(
                         //   child: const Text('change anchor'),
                         //   onPressed: selectedId == null
@@ -394,18 +463,18 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                         //       ? null
                         //       : () => _changeZIndex(selectedId),
                         // ),
-                        TextButton(
-                          child: const Text('set marker icon'),
-                          onPressed: selectedId == null
-                              ? null
-                              : () {
-                                  _getAssetIcon(context).then(
-                                    (BitmapDescriptor icon) {
-                                      _setMarkerIcon(selectedId, icon);
-                                    },
-                                  );
-                                },
-                        ),
+                        // TextButton(
+                        //   child: const Text('set marker icon'),
+                        //   onPressed: selectedId == null
+                        //       ? null
+                        //       : () {
+                        //           _getAssetIcon(context).then(
+                        //             (BitmapDescriptor icon) {
+                        //               _setMarkerIcon(selectedId, icon);
+                        //             },
+                        //           );
+                        //         },
+                        // ),
                       ],
                     ),
                   ],
@@ -421,6 +490,9 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
   Future getLocations() async {
     //print("calling the frontend function");
     await postManController.getLocations();
+    for (var i = 0; i <= postManController.addresses.length; i++) {
+      _add();
+    }
   }
 
   Future saveNewLocation(String addressID, LatLng newPosition) async {
@@ -430,5 +502,9 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     print(msg);
 
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+  }
+
+  Future addNewAddress(String details, LatLng position) async {
+    //var msg = await postManController.addLocation(address);
   }
 }

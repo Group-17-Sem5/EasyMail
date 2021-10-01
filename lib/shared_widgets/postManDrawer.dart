@@ -1,4 +1,7 @@
-import 'package:easy_mail_app_frontend/screens/marker.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/cancelledMailPage.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/deliveredmailPage.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/mailListPage.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/marker.dart';
 import 'package:easy_mail_app_frontend/screens/userProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,14 +16,18 @@ Widget postManDrawer(BuildContext context) {
             color: Colors.grey,
           ),
           child: Center(
-            child: Text(
-              //controller,
-              "Post Man",
-              style: GoogleFonts.laila(
-                fontSize: 30,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            child: ListTile(
+                title: Text(
+                  //controller,
+                  "Post Man",
+                  style: GoogleFonts.laila(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                onTap: () {
+                  print("Going to profile page");
+                }),
           ),
         ),
         ListTile(
@@ -32,47 +39,47 @@ Widget postManDrawer(BuildContext context) {
           },
         ),
         ListTile(
-          title: Text('User Profile'),
+          title: Text('My Assigned Mails'),
           onTap: () {
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => ProfilePage()));
+                MaterialPageRoute(builder: (context) => MailListPage()));
           },
         ),
         ListTile(
-          title: Text('Writer Controller'),
+          title: Text('My delivered Mails'),
           onTap: () {
-            // Navigator.of(context).pushReplacement(
-            //     MaterialPageRoute(builder: (context) => WriterManaging()));
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => DeliveredMailPage()));
           },
         ),
         ListTile(
-          title: Text('Private Tag Controller'),
+          title: Text('My Cancelled Mails'),
           onTap: () {
-            // Navigator.of(context).pushReplacement(
-            //     MaterialPageRoute(builder: (context) => PrivateTagManaging()));
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => CancelledMailPage()));
           },
         ),
-        ListTile(
-          title: Text('Public Tag Controller'),
-          onTap: () {
-            // Update the state of the app.
-            // ...
-          },
-        ),
-        ListTile(
-          title: Text('Notification Controller'),
-          onTap: () {
-            // Update the state of the app.
-            // ...
-          },
-        ),
-        ListTile(
-          title: Text('Event Controller'),
-          onTap: () {
-            // Navigator.of(context).pushReplacement(
-            //     MaterialPageRoute(builder: (context) => EventManaging()));
-          },
-        ),
+        // ListTile(
+        //   title: Text('Public Tag Controller'),
+        //   onTap: () {
+        //     // Update the state of the app.
+        //     // ...
+        //   },
+        // ),
+        // ListTile(
+        //   title: Text('Notification Controller'),
+        //   onTap: () {
+        //     // Update the state of the app.
+        //     // ...
+        //   },
+        // ),
+        // ListTile(
+        //   title: Text('Event Controller'),
+        //   onTap: () {
+        //     // Navigator.of(context).pushReplacement(
+        //     //     MaterialPageRoute(builder: (context) => EventManaging()));
+        //   },
+        // ),
       ],
     ),
   );
