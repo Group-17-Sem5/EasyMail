@@ -2,7 +2,8 @@ import 'package:easy_mail_app_frontend/screens/editProfilePage.dart';
 import 'package:easy_mail_app_frontend/screens/homePage.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/cancelledMailPage.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/deliveredmailPage.dart';
-import 'package:easy_mail_app_frontend/screens/postManScreens/locationPage.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/editAddressDetails.dart';
+
 import 'package:easy_mail_app_frontend/screens/postManScreens/mailListPage.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/marker.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/postManLogin.dart';
@@ -26,20 +27,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      initialRoute: PostManLogin.route,
+      initialRoute: MyHomePage.route,
       routes: {
         MyHomePage.route: (context) => MyHomePage(title: 'Easy Mail'),
         PostManLogin.route: (context) => PostManLogin(),
         MailListPage.route: (context) => MailListPage(),
-        AddressLocation.route: (context) => AddressLocation(),
+
         PlaceMarkerBody.route: (context) => PlaceMarkerBody(),
-        ProfilePage.route: (context) => ProfilePage(),
-        EditProfilePage.route: (context) => EditProfilePage(),
+        // ProfilePage.route: (context) => ProfilePage(),
+        // EditProfilePage.route: (context) => EditProfilePage(),
         UserLogin.route: (context) => UserLogin(),
-        UserMailBox.route: (context) => UserMailBox(),
-        UserSentMails.route: (context) => UserSentMails(),
+        UserSentMailPage.route: (context) => UserSentMailPage(),
+        ReceivedMailPage.route: (context) => ReceivedMailPage(),
         CancelledMailPage.route: (context) => CancelledMailPage(),
         DeliveredMailPage.route: (context) => DeliveredMailPage(),
+        EditAddressDetails.route: (context) => EditAddressDetails(),
 
         // WriterManaging.route: (context) => WriterManaging(),
         // PrivateTagManaging.route: (context) => PrivateTagManaging(),

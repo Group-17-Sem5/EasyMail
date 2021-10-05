@@ -1,3 +1,4 @@
+import 'package:easy_mail_app_frontend/controller/postManController.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/cancelledMailPage.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/deliveredmailPage.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/mailListPage.dart';
@@ -19,7 +20,7 @@ Widget postManDrawer(BuildContext context) {
             child: ListTile(
                 title: Text(
                   //controller,
-                  "Post Man",
+                  "PostManController.postMan.userName",
                   style: GoogleFonts.laila(
                     fontSize: 30,
                     fontWeight: FontWeight.w500,

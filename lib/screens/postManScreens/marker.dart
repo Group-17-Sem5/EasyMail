@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 import 'dart:typed_data';
 import 'package:easy_mail_app_frontend/model/addressesModel.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/editAddressDetails.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -98,7 +99,11 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                             hoverColor: Colors.white,
                             onPressed: () {
                               saveNewLocation(addressID, newPosition);
-                              Navigator.of(context).pop();
+                              setState(() {});
+
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => PlaceMarkerBody()));
                             }),
                       ],
                     )));
@@ -106,10 +111,30 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     }
   }
 
-  void _add() {
+  void _add() async {
     final int markerCount = markers.length;
 
-    if (markerCount == postManController.addresses.length) {
+    if (markerCount > postManController.addresses.length) {
+      final String markerIdVal = "default$markerCount";
+      final String addressID = "default$markerCount";
+      _markerIdCounter++;
+      final MarkerId markerId = MarkerId(markerIdVal);
+      await addNewAddress(markerCount);
+      final Marker marker = Marker(
+        markerId: markerId,
+        position: LatLng(6.500533840690815, 80.12186606879841),
+        infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
+        onTap: () {
+          _onMarkerTapped(markerId, addressID);
+        },
+        onDragEnd: (LatLng position) {
+          _onMarkerDragEnd(markerId, position, addressID);
+        },
+      );
+
+      setState(() {
+        markers[markerId] = marker;
+      });
       return;
     }
 
@@ -119,7 +144,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
         postManController.addresses[_markerIdCounter].addressId;
     _markerIdCounter++;
     final MarkerId markerId = MarkerId(markerIdVal);
-
+    print(_markerIdCounter);
     final Marker marker = Marker(
       markerId: markerId,
       position: LatLng(
@@ -139,7 +164,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     });
   }
 
-  void _createNewAddress() async {
+  void _editAddress() async {
     final int markerCount = markers.length;
 
     if (markerCount == postManController.addresses.length + 1) {
@@ -150,35 +175,35 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     final String addressID = "default";
     _markerIdCounter++;
     final MarkerId markerId = MarkerId(markerIdVal);
-    await showDialog<List>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Go back'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: const Text('submit'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-              content: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 66),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      TextField(),
-                      TextField(),
-                      Text('press the button to change the address'),
-                    ],
-                  )));
-        });
+    // await showDialog<List>(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return AlertDialog(
+    //           actions: <Widget>[
+    //             TextButton(
+    //               child: const Text('Go back'),
+    //               onPressed: () {
+    //                 Navigator.of(context).pop();
+    //               },
+    //             ),
+    //             TextButton(
+    //               child: const Text('submit'),
+    //               onPressed: () {
+    //                 Navigator.of(context).pop();
+    //               },
+    //             )
+    //           ],
+    //           content: Padding(
+    //               padding: const EdgeInsets.symmetric(vertical: 66),
+    //               child: Column(
+    //                 mainAxisSize: MainAxisSize.min,
+    //                 children: <Widget>[
+    //                   TextField(),
+    //                   TextField(),
+    //                   Text('press the button to change the address'),
+    //                 ],
+    //               )));
+    //     });
 
     final Marker marker = Marker(
       markerId: markerId,
@@ -239,18 +264,18 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
   //   });
   // }
 
-  Future<void> _changeInfoAnchor(MarkerId markerId) async {
-    final Marker marker = markers[markerId]!;
-    final Offset currentAnchor = marker.infoWindow.anchor;
-    final Offset newAnchor = Offset(1.0 - currentAnchor.dy, currentAnchor.dx);
-    setState(() {
-      markers[markerId] = marker.copyWith(
-        infoWindowParam: marker.infoWindow.copyWith(
-          anchorParam: newAnchor,
-        ),
-      );
-    });
-  }
+  // Future<void> _changeInfoAnchor(MarkerId markerId) async {
+  //   final Marker marker = markers[markerId]!;
+  //   final Offset currentAnchor = marker.infoWindow.anchor;
+  //   final Offset newAnchor = Offset(1.0 - currentAnchor.dy, currentAnchor.dx);
+  //   setState(() {
+  //     markers[markerId] = marker.copyWith(
+  //       infoWindowParam: marker.infoWindow.copyWith(
+  //         anchorParam: newAnchor,
+  //       ),
+  //     );
+  //   });
+  // }
 
   Future<void> _toggleDraggable(MarkerId markerId) async {
     final Marker marker = markers[markerId]!;
@@ -270,27 +295,27 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
   //   });
   // }
 
-  Future<void> _changeInfo(MarkerId markerId) async {
-    final Marker marker = markers[markerId]!;
-    final String newSnippet = marker.infoWindow.snippet! + '*';
-    setState(() {
-      markers[markerId] = marker.copyWith(
-        infoWindowParam: marker.infoWindow.copyWith(
-          snippetParam: newSnippet,
-        ),
-      );
-    });
-  }
+  // Future<void> _changeInfo(MarkerId markerId) async {
+  //   final Marker marker = markers[markerId]!;
+  //   final String newSnippet = marker.infoWindow.snippet! + '*';
+  //   setState(() {
+  //     markers[markerId] = marker.copyWith(
+  //       infoWindowParam: marker.infoWindow.copyWith(
+  //         snippetParam: newSnippet,
+  //       ),
+  //     );
+  //   });
+  // }
 
-  Future<void> _changeAlpha(MarkerId markerId) async {
-    final Marker marker = markers[markerId]!;
-    final double current = marker.alpha;
-    setState(() {
-      markers[markerId] = marker.copyWith(
-        alphaParam: current < 0.1 ? 1.0 : current * 0.75,
-      );
-    });
-  }
+  // Future<void> _changeAlpha(MarkerId markerId) async {
+  //   final Marker marker = markers[markerId]!;
+  //   final double current = marker.alpha;
+  //   setState(() {
+  //     markers[markerId] = marker.copyWith(
+  //       alphaParam: current < 0.1 ? 1.0 : current * 0.75,
+  //     );
+  //   });
+  // }
 
   // Future<void> _changeRotation(MarkerId markerId) async {
   //   final Marker marker = markers[markerId]!;
@@ -393,34 +418,34 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                               ? null
                               : () => _remove(selectedId, selectedaddressID),
                         ),
-                        TextButton(
-                          child: const Text('change Name'),
-                          onPressed: selectedId == null
-                              ? null
-                              : () => _changeInfo(selectedId),
-                        ),
-                        TextButton(
-                          child: const Text('change info anchor'),
-                          onPressed: selectedId == null
-                              ? null
-                              : () => _changeInfoAnchor(selectedId),
-                        ),
+                        // TextButton(
+                        //   child: const Text('change Name'),
+                        //   onPressed: selectedId == null
+                        //       ? null
+                        //       : () => _changeInfo(selectedId),
+                        // ),
+                        // TextButton(
+                        //   child: const Text('change info anchor'),
+                        //   onPressed: selectedId == null
+                        //       ? null
+                        //       : () => _changeInfoAnchor(selectedId),
+                        // ),
                       ],
                     ),
                     Column(
                       children: <Widget>[
-                        TextButton(
-                          child: const Text('change alpha'),
-                          onPressed: selectedId == null
-                              ? null
-                              : () => _changeAlpha(selectedId),
-                        ),
-                        TextButton(
-                          child: const Text('add new address'),
-                          onPressed: selectedId == null
-                              ? null
-                              : () => _createNewAddress(),
-                        ),
+                        // TextButton(
+                        //   child: const Text('change alpha'),
+                        //   onPressed: selectedId == null
+                        //       ? null
+                        //       : () => _changeAlpha(selectedId),
+                        // ),
+                        // TextButton(
+                        //   child: const Text('add new address'),
+                        //   onPressed: selectedId == null
+                        //       ? null
+                        //       : () => _createNewAddress(),
+                        // ),
                         // TextButton(
                         //   child: const Text('change anchor'),
                         //   onPressed: selectedId == null
@@ -433,6 +458,17 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                               ? null
                               : () => _toggleDraggable(selectedId),
                         ),
+                        // TextButton(
+                        //     child: const Text('Change Details'),
+                        //     onPressed: selectedId == null
+                        //         ? null
+                        //         : () {
+                        //             addNewAddress();
+                        //             // Navigator.of(context).pushReplacement(
+                        //             //     MaterialPageRoute(
+                        //             //         builder: (context) =>
+                        //             //             EditAddressDetails()));
+                        //           }),
                         // TextButton(
                         //   child: const Text('toggle flat'),
                         //   onPressed: selectedId == null
@@ -489,8 +525,9 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
 
   Future getLocations() async {
     //print("calling the frontend function");
+    markers.clear();
     await postManController.getLocations();
-    for (var i = 0; i <= postManController.addresses.length; i++) {
+    for (var i = 0; i < postManController.addresses.length; i++) {
       _add();
     }
   }
@@ -504,7 +541,19 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
   }
 
-  Future addNewAddress(String details, LatLng position) async {
-    //var msg = await postManController.addLocation(address);
+  Future addNewAddress(markerID) async {
+    Address address = new Address(
+        addressId: "default$markerID",
+        description: "default$markerID",
+        branchId: "default$markerID",
+        lng: "80.12186606879841",
+        lat: "6.500533840690815",
+        userIdList: []);
+    await postManController.addLocation(address);
+    postManController.selectedAddress.clear();
+    postManController.selectedAddress.add(address);
+    print(postManController.selectedAddress[0].addressId.toString());
+    // Navigator.pushReplacement(context,
+    //     MaterialPageRoute(builder: (BuildContext context) => super.widget));
   }
 }

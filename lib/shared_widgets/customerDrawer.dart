@@ -1,6 +1,7 @@
 import 'package:easy_mail_app_frontend/screens/postManScreens/marker.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/userMailBox.dart';
 import 'package:easy_mail_app_frontend/screens/userProfile.dart';
+import 'package:easy_mail_app_frontend/screens/userScreens/userSentMails.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -34,14 +35,14 @@ Widget userDrawer(BuildContext context) {
           title: Text('My Mail Box'),
           onTap: () {
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => UserMailBox()));
+                MaterialPageRoute(builder: (context) => ReceivedMailPage()));
           },
         ),
         ListTile(
           title: Text('Sent Mails'),
           onTap: () {
-            // Navigator.of(context).pushReplacement(
-            //     MaterialPageRoute(builder: (context) => ProfilePage()));
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => UserSentMailPage()));
           },
         ),
         ListTile(

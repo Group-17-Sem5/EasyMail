@@ -1,5 +1,6 @@
 import 'package:easy_mail_app_frontend/controller/postManController.dart';
 import 'package:easy_mail_app_frontend/screens/homePage.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/editAddressDetails.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/mailListPage.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
 import 'package:get/utils.dart';
@@ -27,33 +28,36 @@ class _PostManLoginState extends State<PostManLogin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: postmanAppBar(context),
+      resizeToAvoidBottomInset: true,
       //drawer: postManDrawer(context),
-      body: Center(
-        child: Container(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(36.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 135.0,
-                  child: Image.asset(
-                    "assets/images/postMan.jpg",
-                    fit: BoxFit.contain,
+      body: SingleChildScrollView(
+        child: Center(
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(36.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 135.0,
+                    child: Image.asset(
+                      "assets/images/postMan.jpg",
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                ),
-                SizedBox(height: 45.0),
-                emailField(),
-                SizedBox(height: 25.0),
-                passwordField(),
-                SizedBox(
-                  height: 35.0,
-                ),
-                loginButon(),
-                cancelButton(),
-              ],
+                  SizedBox(height: 45.0),
+                  emailField(),
+                  SizedBox(height: 25.0),
+                  passwordField(),
+                  SizedBox(
+                    height: 35.0,
+                  ),
+                  loginButon(),
+                  cancelButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -67,7 +71,7 @@ class _PostManLoginState extends State<PostManLogin> {
       obscureText: false,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Email",
+          hintText: "User Name",
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     ));

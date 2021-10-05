@@ -12,7 +12,8 @@ import 'dart:convert';
 class PostManController extends GetxController {
   var mails = <MailModel>[].obs;
   var addresses = <Address>[].obs;
-  PostManModel postMan = new PostManModel();
+  var selectedAddress = <Address>[].obs;
+  static PostManModel postMan = new PostManModel();
   static String? token;
   static String? userName;
 
@@ -103,7 +104,7 @@ class PostManController extends GetxController {
   }
 
   Future getMails() async {
-    //print(userName);
+    mails.clear();
     try {
       var response = await http.get(
           Uri.parse("http://10.0.2.2:5000/api/postman/posts/$userName"),
@@ -129,6 +130,7 @@ class PostManController extends GetxController {
 
   Future getDeliveredMails() async {
     //print(userName);
+    mails.clear();
     try {
       var response = await http.get(
           Uri.parse(
@@ -154,6 +156,7 @@ class PostManController extends GetxController {
   }
 
   Future getCancelledMails() async {
+    mails.clear();
     //print(userName);
     try {
       var response = await http.get(
@@ -180,7 +183,26 @@ class PostManController extends GetxController {
   }
 
   Future addLocation(Address address) async {
-    return;
+    print("adding a new location");
+    try {
+      // var lat = newPosition.latitude;
+      // var lng = newPosition.longitude;
+      var response = await http.post(
+        Uri.parse("http://10.0.2.2:5000/api/postman/address/add"),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          "x-auth-token": "$token"
+        },
+        body: address.toRawJson(),
+      );
+
+      var result = MsgRes.fromRawJson(response.body);
+
+      return (result.msg);
+    } on Exception catch (e) {
+      print(e);
+      return (1);
+    }
   }
 
   Future editLocation(String addressID, LatLng newPosition) async {

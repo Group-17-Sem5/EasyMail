@@ -1,34 +1,50 @@
 import 'package:easy_mail_app_frontend/controller/userController.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
+import 'package:easy_mail_app_frontend/shared_widgets/customerDrawer.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/postManDrawer.dart';
-import 'package:flutter/material.dart';
-import 'package:easy_mail_app_frontend/model/mailModel.Dart';
+import 'package:easy_mail_app_frontend/shared_widgets/searchBox.dart';
+import "package:flutter/material.dart";
 import 'package:get/get.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'dart:io';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:easy_mail_app_frontend/controller/postManController.dart';
+import 'package:easy_mail_app_frontend/controller/appBinding.dart';
+import 'package:easy_mail_app_frontend/model/mailModel.Dart';
 
-class UserSentMails extends StatefulWidget {
-  const UserSentMails({Key? key}) : super(key: key);
+class UserSentMailPage extends StatefulWidget {
+  UserSentMailPage({Key? key}) : super(key: key);
   static const String route = '/user/sentMails';
+
   @override
-  _UserSentMailsState createState() => _UserSentMailsState();
+  _UserSentMailPageState createState() => _UserSentMailPageState();
 }
 
-class _UserSentMailsState extends State<UserSentMails> {
-  bool isLoading = false;
-  String type = "sentMails";
-  var selectedMail = <MailModel>[].obs;
+class _UserSentMailPageState extends State<UserSentMailPage> {
+  //var _searchController = FloatingSearchBarController();
   var userController = new UserController();
+  //var searchResult = '';
+  bool isLoading = false;
+  bool isSearched = false;
   bool isTouched = false;
+
+  var selectedMail = <MailModel>[].obs;
+  @override
   void initState() {
-    getSentMails("default");
+    // TODO: implement initState
+
+    getMailsList();
     super.initState();
   }
 
+  //List mails = ["mail1", "mail2", "mail3"];
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
         appBar: postmanAppBar(context),
-        drawer: postManDrawer(context),
+        drawer: userDrawer(context),
         body: Container(
           color: Color(0xFFE0FAEA),
           child: Column(
@@ -72,37 +88,41 @@ class _UserSentMailsState extends State<UserSentMails> {
                         child: Column(
                       children: [
                         Container(
-                            width: 100,
-                            child:
-                                Text('selectedMail[0].receiverID.toString()')),
+                            width: 300,
+                            child: Text("Receiver id : " +
+                                selectedMail[0].receiverId.toString())),
                         Container(
-                            width: 100,
-                            child:
-                                Text('selectedMail[0].addressID.toString()')),
+                            width: 300,
+                            child: Text("Address ID : " +
+                                selectedMail[0].addressId.toString())),
                         Container(
-                            width: 100,
-                            child: Text('selectedMail[0].senderID.toString()')),
+                            width: 300,
+                            child: Text("Sender ID : " +
+                                selectedMail[0].senderId.toString())),
                         Container(
-                            width: 100,
-                            child:
-                                Text('selectedMail[0].isDelivered.toString()')),
-                        IconButton(
-                            tooltip: "Deliver",
-                            icon: Icon(Icons.check),
-                            color: Colors.black,
-                            hoverColor: Colors.white,
-                            onPressed: () {
-                              // deliverMail(
-                              //     userController.sentMails[index].mailID);
-                            }),
-                        IconButton(
-                            tooltip: "Cancelled",
-                            icon: Icon(Icons.block),
-                            color: Colors.black,
-                            hoverColor: Colors.white,
-                            onPressed: () {
-                              //banEvent(event.eventID);
-                            }),
+                            width: 300,
+                            child: Text("Delivery Status: " +
+                                selectedMail[0].isDelivered.toString())),
+                        // Row(
+                        //   children: [
+                        //     IconButton(
+                        //         tooltip: "Deliver",
+                        //         icon: Icon(Icons.check),
+                        //         color: Colors.black,
+                        //         hoverColor: Colors.white,
+                        //         onPressed: () {
+                        //           deliverMail(selectedMail[0].mailId);
+                        //         }),
+                        //     IconButton(
+                        //         tooltip: "Cancel",
+                        //         icon: Icon(Icons.block),
+                        //         color: Colors.black,
+                        //         hoverColor: Colors.white,
+                        //         onPressed: () {
+                        //           cancelDelivery(selectedMail[0].mailId);
+                        //         }),
+                        //   ],
+                        // ),
                       ],
                     ));
                   },
@@ -126,15 +146,15 @@ class _UserSentMailsState extends State<UserSentMails> {
           : Obx(() {
               if (isLoading) {
                 return Text('Loading');
-              } else if (userController.sentMails.isEmpty) {
+              } else if (userController.mails.isEmpty) {
                 return Text('Empty List');
               } else {
                 return ListView.builder(
-                  itemCount: userController.sentMails.length,
+                  itemCount: userController.mails.length,
                   itemBuilder: (context, index) {
                     return Container(
                       child: tagCard(
-                          context, userController.sentMails[index], index),
+                          context, userController.mails.value[index], index),
                     );
                   },
                 );
@@ -149,83 +169,54 @@ class _UserSentMailsState extends State<UserSentMails> {
       color: Colors.greenAccent,
       child: Row(
         children: [
-          // ListTile(
-          //   title: Text(mail.mailID.toString()),
-          //   onTap: () {
-          //     tapped(
-          //       mail.mailID.toString(),
-          //     );
-          //     print(mail.mailID.toString());
-          //   },
-          // ),
-          Container(width: 100, child: Text('mail.mailID')),
-          // Container(width: 100, child: Text(mail.isDelivered.toString())),
-          // Container(width: 100, child: Text(mail.addressID.toString())),
-          // Container(width: 100, child: Text(mail.receiverID.toString())),
+          Container(width: 100, child: Text(mail.mailId)),
+          //Container(width: 100, child: Text(mail.isDelivered.toString())),
+          Container(width: 100, child: Text(mail.receiverId.toString())),
+          Container(width: 100, child: Text(mail.senderId.toString())),
           // // Container(width: 100, child: Text(tag.subscriber.toString())),
           // SizedBox(),
           IconButton(
               tooltip: "view",
-              icon: Icon(Icons.check_circle),
+              icon: Icon(Icons.mail),
               color: Colors.black,
               hoverColor: Colors.white,
               onPressed: () {
                 isTouched = true;
                 selectedMail.clear();
-                selectedMail.add(userController.sentMails.value[index]);
-                //acceptEvent(event.eventID, index);
+                selectedMail.add(userController.mails.value[index]);
               }),
-          // SizedBox(
-          //   width: 20,
-          // ),
-          // IconButton(
-          //     tooltip: "edit",
-          //     icon: Icon(Icons.drive_file_rename_outline),
-          //     color: Colors.black,
-          //     hoverColor: Colors.white,
-          //     onPressed: () {
-          //       //editEvent(event.eventID, index);
-          //     }),
-          // SizedBox(
-          //   width: 20,
-          // ),
-          // IconButton(
-          //     tooltip: "UnBan",
-          //     icon: Icon(Icons.check),
-          //     color: Colors.black,
-          //     hoverColor: Colors.white,
-          //     onPressed: () {
-          //       //unBanEvent(event.eventID);
-          //     }),
-          // SizedBox(
-          //   width: 20,
-          // ),
-          // IconButton(
-          //     tooltip: "Ban",
-          //     icon: Icon(Icons.block),
-          //     color: Colors.black,
-          //     hoverColor: Colors.white,
-          //     onPressed: () {
-          //       //banEvent(event.eventID);
-          //     }),
-          // SizedBox(
-          //   width: 20,
-          // ),
-          // IconButton(
-          //     tooltip: "Delete forever",
-          //     icon: Icon(Icons.delete),
-          //     color: Colors.black,
-          //     hoverColor: Colors.white,
-          //     onPressed: () {
-          //       //deleteEvent(event.writerID, event.eventID);
-          //     }),
         ],
       ),
     );
   }
 
-  Future getSentMails(String userName) async {
-    await userController.getSentMails(userName);
-    return;
+  //methods
+
+  Future getMailsList() async {
+    await userController.getSentMails();
   }
+
+  // Future deliverMail(String mailID) async {
+  //   var result = await userController.confirmDelivery(mailID);
+  //   if (result.err == 0) {
+  //     var msg = result.msg;
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text('$msg')));
+  //   } else {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(const SnackBar(content: Text('Something went Wrong ')));
+  //   }
+  // }
+
+  // Future cancelDelivery(String mailID) async {
+  //   var result = await postManController.cancelDelivery(mailID);
+  //   if (result.err == 0) {
+  //     var msg = result.msg;
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text('$msg')));
+  //   } else {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(const SnackBar(content: Text('Something went Wrong ')));
+  //   }
+  // }
 }

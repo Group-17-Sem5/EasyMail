@@ -3,6 +3,7 @@ import 'package:easy_mail_app_frontend/shared_widgets/postManDrawer.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/searchBox.dart';
 import "package:flutter/material.dart";
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'dart:io';
 import 'dart:convert';
@@ -10,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:easy_mail_app_frontend/controller/postManController.dart';
 import 'package:easy_mail_app_frontend/controller/appBinding.dart';
 import 'package:easy_mail_app_frontend/model/mailModel.Dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class MailListPage extends StatefulWidget {
   MailListPage({Key? key}) : super(key: key);
@@ -22,6 +24,7 @@ class MailListPage extends StatefulWidget {
 class _MailListPageState extends State<MailListPage> {
   //var _searchController = FloatingSearchBarController();
   var postManController = new PostManController();
+  RefreshController _refreshController = RefreshController();
   //var searchResult = '';
   bool isLoading = false;
   bool isSearched = false;
@@ -47,14 +50,56 @@ class _MailListPageState extends State<MailListPage> {
           color: Color(0xFFE0FAEA),
           child: Column(
             children: <Widget>[
+              Container(height: 20),
+              Text("The mails assiged",
+                  style: GoogleFonts.laila(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w500,
+                  )),
+              Container(height: 20),
+              tableHeading(),
               Expanded(
+                flex: 3,
                 child: tileList(),
               ),
-              Expanded(child: mailDetail()),
+              //Expanded(flex: 2, child: mailDetail()),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget tableHeading() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+              height: 40,
+              color: Colors.lightGreen,
+              child: Padding(
+                  padding: EdgeInsets.all(5.0), child: Text("Mail Id"))),
+        ),
+        Expanded(
+          child: Container(
+              height: 40,
+              color: Colors.lightGreen,
+              child: Padding(
+                  padding: EdgeInsets.all(5.0), child: Text("receiver ID"))),
+        ),
+        Expanded(
+          child: Container(
+              height: 40,
+              color: Colors.lightGreen,
+              child: Padding(
+                  padding: EdgeInsets.all(5.0), child: Text("Sender Id"))),
+        ),
+        Container(height: 40, width: 50, color: Colors.lightGreen),
+        // Expanded(
+        //   child: Text("Address Description"),
+        // ),
+        // Expanded(child: Text("Mail Id"),),
+      ],
     );
   }
 
@@ -82,47 +127,50 @@ class _MailListPageState extends State<MailListPage> {
                 return ListView.builder(
                   itemCount: selectedMail.length,
                   itemBuilder: (context, index) {
-                    return Container(
-                        child: Column(
-                      children: [
-                        Container(
-                            width: 300,
-                            child: Text("Receiver id : " +
-                                selectedMail[0].receiverId.toString())),
-                        Container(
-                            width: 300,
-                            child: Text("Address ID : " +
-                                selectedMail[0].addressId.toString())),
-                        Container(
-                            width: 300,
-                            child: Text("Sender ID : " +
-                                selectedMail[0].senderId.toString())),
-                        Container(
-                            width: 300,
-                            child: Text("Delivery Status: " +
-                                selectedMail[0].isDelivered.toString())),
-                        Row(
-                          children: [
-                            IconButton(
-                                tooltip: "Deliver",
-                                icon: Icon(Icons.check),
-                                color: Colors.black,
-                                hoverColor: Colors.white,
-                                onPressed: () {
-                                  deliverMail(selectedMail[0].mailId);
-                                }),
-                            IconButton(
-                                tooltip: "Cancel",
-                                icon: Icon(Icons.block),
-                                color: Colors.black,
-                                hoverColor: Colors.white,
-                                onPressed: () {
-                                  cancelDelivery(selectedMail[0].mailId);
-                                }),
-                          ],
-                        ),
-                      ],
-                    ));
+                    return AlertDialog(
+                        title: const Text('AlertDialog Title'),
+                        content: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Container(
+                                  width: 300,
+                                  child: Text("Receiver id : " +
+                                      selectedMail[0].receiverId.toString())),
+                              Container(
+                                  width: 300,
+                                  child: Text("Address ID : " +
+                                      selectedMail[0].addressId.toString())),
+                              Container(
+                                  width: 300,
+                                  child: Text("Sender ID : " +
+                                      selectedMail[0].senderId.toString())),
+                              Container(
+                                  width: 300,
+                                  child: Text("Delivery Status: " +
+                                      selectedMail[0].isDelivered.toString())),
+                              Row(
+                                children: [
+                                  IconButton(
+                                      tooltip: "Deliver",
+                                      icon: Icon(Icons.check),
+                                      color: Colors.black,
+                                      hoverColor: Colors.white,
+                                      onPressed: () {
+                                        deliverMail(selectedMail[0].mailId);
+                                      }),
+                                  IconButton(
+                                      tooltip: "Cancel",
+                                      icon: Icon(Icons.block),
+                                      color: Colors.black,
+                                      hoverColor: Colors.white,
+                                      onPressed: () {
+                                        cancelDelivery(selectedMail[0].mailId);
+                                      }),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ));
                   },
                 );
               }
@@ -147,14 +195,21 @@ class _MailListPageState extends State<MailListPage> {
               } else if (postManController.mails.isEmpty) {
                 return Text('Empty List');
               } else {
-                return ListView.builder(
-                  itemCount: postManController.mails.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      child: tagCard(
-                          context, postManController.mails.value[index], index),
-                    );
-                  },
+                return SmartRefresher(
+                  controller: _refreshController,
+                  onRefresh: getMailsList,
+                  //onLoading: _onLoading,
+                  enablePullUp: true,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: postManController.mails.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        child: tagCard(context,
+                            postManController.mails.value[index], index),
+                      );
+                    },
+                  ),
                 );
               }
             }),
@@ -182,6 +237,67 @@ class _MailListPageState extends State<MailListPage> {
                 isTouched = true;
                 selectedMail.clear();
                 selectedMail.add(postManController.mails.value[index]);
+                showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text('Mail Details'),
+                    content: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Container(
+                              width: 300,
+                              child: Text("Receiver id : " +
+                                  selectedMail[0].receiverId.toString())),
+                          Container(
+                              width: 300,
+                              child: Text("Address ID : " +
+                                  selectedMail[0].addressId.toString())),
+                          Container(
+                              width: 300,
+                              child: Text("Sender ID : " +
+                                  selectedMail[0].senderId.toString())),
+                          Container(
+                              width: 300,
+                              child: Text("Delivery Status: " +
+                                  selectedMail[0].isDelivered.toString())),
+                          Row(
+                            children: [
+                              IconButton(
+                                  tooltip: "Deliver",
+                                  icon: Icon(Icons.check),
+                                  color: Colors.black,
+                                  hoverColor: Colors.white,
+                                  onPressed: () {
+                                    deliverMail(selectedMail[0].mailId);
+                                  }),
+                              IconButton(
+                                  tooltip: "Cancel",
+                                  icon: Icon(Icons.block),
+                                  color: Colors.black,
+                                  hoverColor: Colors.white,
+                                  onPressed: () {
+                                    cancelDelivery(selectedMail[0].mailId);
+                                  }),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      // TextButton(
+                      //   onPressed: () => Navigator.pop(context, 'Cancel'),
+                      //   child: const Text('Cancel'),
+                      // ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context, 'OK');
+                          _refreshController.requestRefresh();
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                );
               }),
         ],
       ),
@@ -192,6 +308,7 @@ class _MailListPageState extends State<MailListPage> {
 
   Future getMailsList() async {
     await postManController.getMails();
+    _refreshController.loadComplete();
   }
 
   Future deliverMail(String mailID) async {

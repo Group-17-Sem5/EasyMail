@@ -20,13 +20,13 @@ class Result {
 
     String toRawJson() => json.encode(toJson());
 
-    factory Result.fromJson(Map<String, dynamic> json) => Result(
+    factory Result.fromJson(Map<dynamic, dynamic> json) => Result(
         err: json["err"],
         mailModel: List<MailModel>.from(json["mailModel"].map((x) => MailModel.fromJson(x))),
         msg: json["msg"],
     );
 
-    Map<String, dynamic> toJson() => {
+    Map<dynamic, dynamic> toJson() => {
         "err": err,
         "mailModel": List<dynamic>.from(mailModel.map((x) => x.toJson())),
         "msg": msg,
@@ -64,7 +64,7 @@ class MailModel {
 
     String toRawJson() => json.encode(toJson());
 
-    factory MailModel.fromJson(Map<String, dynamic> json) => MailModel(
+    factory MailModel.fromJson(Map<dynamic, dynamic> json) => MailModel(
         mailId: json["mailID"],
         addressId: json["addressID"],
         isAssigned: json["isAssigned"],
@@ -78,7 +78,7 @@ class MailModel {
         isCancelled: json["isCancelled"],
     );
 
-    Map<String, dynamic> toJson() => {
+    Map<dynamic, dynamic> toJson() => {
         "mailID": mailId,
         "addressID": addressId,
         "isAssigned": isAssigned,
