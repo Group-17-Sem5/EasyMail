@@ -45,7 +45,7 @@ class _DeliveredMailPageState extends State<DeliveredMailPage> {
     return Container(
       child: Scaffold(
         appBar: postmanAppBar(context),
-        drawer: postManDrawer(context),
+        drawer: postManDrawer(context, "Delivered List"),
         body: Container(
           color: Color(0xFFE0FAEA),
           child: Column(

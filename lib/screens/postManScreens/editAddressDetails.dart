@@ -40,7 +40,7 @@ class _EditAddressDetailsState extends State<EditAddressDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: postmanAppBar(context),
-      drawer: postManDrawer(context),
+      drawer: postManDrawer(context, "Edit Address"),
       body: Container(
         child: Column(
           children: [

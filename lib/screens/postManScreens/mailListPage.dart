@@ -45,7 +45,7 @@ class _MailListPageState extends State<MailListPage> {
     return Container(
       child: Scaffold(
         appBar: postmanAppBar(context),
-        drawer: postManDrawer(context),
+        drawer: postManDrawer(context, "Mails Assigned"),
         body: Container(
           color: Color(0xFFE0FAEA),
           child: Column(

@@ -25,7 +25,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
   PlaceMarkerBodyState();
   static final LatLng center = const LatLng(
       6.500533840690815, 80.12186606879841); //!enter lat lng of the branch
-
+  final _formKey = GlobalKey<FormState>();
   GoogleMapController? controller;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   MarkerId? selectedMarker;
@@ -385,7 +385,8 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     final String? selectedAddress = selectedaddressID;
     return Scaffold(
       appBar: postmanAppBar(context),
-      drawer: postManDrawer(context),
+      drawer: postManDrawer(context, "Addresses"),
+      resizeToAvoidBottomInset: true,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -393,7 +394,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
           Center(
             child: SizedBox(
               width: 300.0,
-              height: 400.0,
+              height: 380.0,
               child: GoogleMap(
                 onMapCreated: _onMapCreated,
                 initialCameraPosition: const CameraPosition(
@@ -471,22 +472,29 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                                   : () => _toggleDraggable(selectedId),
                             ),
                             TextButton(
-                                child: const Text('Change Details'),
+                                child: const Text('View Details'),
                                 onPressed: selectedId == null
                                     ? null
                                     : () {
-                                        //addNewAddress();
-                                        // Navigator.of(context).pushReplacement(
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) =>
-                                        //             EditAddressDetails()));
+                                        int index = postManController.addresses
+                                            .indexWhere((address) =>
+                                                address.addressId ==
+                                                selectedaddressID);
+                                        print(index);
+                                        showDetails(index);
                                       }),
-                            // TextButton(
-                            //   child: const Text('toggle flat'),
-                            //   onPressed: selectedId == null
-                            //       ? null
-                            //       : () => _toggleFlat(selectedId),
-                            // ),
+                            TextButton(
+                                child: const Text('Edit'),
+                                onPressed: selectedId == null
+                                    ? null
+                                    : () {
+                                        int index = postManController.addresses
+                                            .indexWhere((address) =>
+                                                address.addressId ==
+                                                selectedaddressID);
+                                        print(index);
+                                        showEditForm(index);
+                                      }),
                             // TextButton(
                             //   child: const Text('change position'),
                             //   onPressed: selectedId == null
@@ -556,9 +564,17 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
   }
 
+  Future editAddressDetails(String addressID, Address address) async {
+    var msg = await postManController.editAddress(addressID, address);
+    print(msg);
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    print(addressID + address.description);
+  }
+
   Future addNewAddress(markerID) async {
     Address address = new Address(
-        addressId: "default$markerID",
+        addressId: "Address$markerID",
         description: "default$markerID",
         branchId: "default$markerID",
         lng: "80.12186606879841",
@@ -578,5 +594,131 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
   removeAddress(String addressID) async {
     var msg = await postManController.removeLocation(addressID);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+  }
+
+  showDetails(addressLocation) {
+    var address = postManController.addresses[addressLocation];
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Mail Details'),
+        content: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                  width: 300, child: Text("Address id : " + address.addressId)),
+              Container(
+                  width: 300,
+                  child: Text("Description : " + address.description)),
+              Container(
+                  width: 300,
+                  child: Text("Branch ID ID : " + address.branchId)),
+              Container(
+                  width: 300,
+                  child: Text("Users: " + address.userIdList.toString())),
+              Row(
+                children: [
+                  // IconButton(
+                  //     tooltip: "Deliver",
+                  //     icon: Icon(Icons.check),
+                  //     color: Colors.black,
+                  //     hoverColor: Colors.white,
+                  //     onPressed: () {
+                  //       deliverMail(selectedMail[0].mailId);
+                  //     }),
+                  // IconButton(
+                  //     tooltip: "Cancel",
+                  //     icon: Icon(Icons.block),
+                  //     color: Colors.black,
+                  //     hoverColor: Colors.white,
+                  //     onPressed: () {
+                  //       cancelDelivery(selectedMail[0].mailId);
+                  //     }),
+                ],
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, 'OK');
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  showEditForm(index) {
+    var address = postManController.addresses[index];
+    TextEditingController _descriptionController = new TextEditingController();
+    TextEditingController _branchIdController = new TextEditingController();
+    _descriptionController.text = address.description;
+    _branchIdController.text = address.branchId;
+    // TextEditingController _ =new TextEditingController();
+    // TextEditingController _descriptionController =new TextEditingController();
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Stack(
+              overflow: Overflow.visible,
+              children: <Widget>[
+                Positioned(
+                  right: -40.0,
+                  top: -40.0,
+                  child: InkResponse(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: CircleAvatar(
+                      child: Icon(Icons.close),
+                      backgroundColor: Colors.red,
+                    ),
+                  ),
+                ),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child:
+                            TextFormField(controller: _descriptionController),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: TextFormField(controller: _branchIdController),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: RaisedButton(
+                          child: Text("Submit"),
+                          onPressed: () {
+                            Address addressNew = new Address(
+                                addressId: address.addressId,
+                                branchId: _branchIdController.text,
+                                description: _descriptionController.text,
+                                userIdList: address.userIdList,
+                                lat: address.lat,
+                                lng: address.lng);
+                            editAddressDetails(address.addressId, addressNew);
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => PlaceMarkerBody()));
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 }

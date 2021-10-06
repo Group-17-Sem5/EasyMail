@@ -14,6 +14,7 @@ class PostManController extends GetxController {
   var addresses = <Address>[].obs;
   var selectedAddress = <Address>[].obs;
   static PostManModel postMan = new PostManModel();
+  var loggedin = <String>[].obs;
   static String? token;
   static String? userName;
 
@@ -32,7 +33,9 @@ class PostManController extends GetxController {
       var result = TokenRes.fromRawJson(response.body);
       token = result.token;
       userName = username;
-      print(token);
+      loggedin.clear();
+      loggedin.add(username);
+      //print(token);
       return result.err;
     } on Exception catch (e) {
       print(e);
@@ -242,6 +245,27 @@ class PostManController extends GetxController {
           'Content-Type': 'application/json; charset=UTF-8',
           "x-auth-token": "$token"
         },
+      );
+
+      var result = MsgRes.fromRawJson(response.body);
+
+      return (result.msg);
+    } on Exception catch (e) {
+      print(e);
+      return (1);
+    }
+  }
+
+  Future editAddress(String addressID, Address address) async {
+    //print("$newPosition");
+    try {
+      var response = await http.put(
+        Uri.parse("http://10.0.2.2:5000/api/postman/address/update/$addressID"),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          "x-auth-token": "$token"
+        },
+        body: address.toRawJson(),
       );
 
       var result = MsgRes.fromRawJson(response.body);

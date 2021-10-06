@@ -45,7 +45,7 @@ class _CancelledMailPageState extends State<CancelledMailPage> {
     return Container(
       child: Scaffold(
         appBar: postmanAppBar(context),
-        drawer: postManDrawer(context),
+        drawer: postManDrawer(context, "Cancelled List"),
         body: Container(
           color: Color(0xFFE0FAEA),
           child: Column(

@@ -7,7 +7,7 @@ import 'package:easy_mail_app_frontend/screens/userProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Widget postManDrawer(BuildContext context) {
+Widget postManDrawer(BuildContext context, String userName) {
   return Drawer(
     child: ListView(
       padding: EdgeInsets.zero,
@@ -20,7 +20,7 @@ Widget postManDrawer(BuildContext context) {
             child: ListTile(
                 title: Text(
                   //controller,
-                  "PostManController.postMan.userName",
+                  "$userName",
                   style: GoogleFonts.laila(
                     fontSize: 30,
                     fontWeight: FontWeight.w500,
