@@ -51,7 +51,7 @@ class _CancelledMailPageState extends State<CancelledMailPage> {
           child: Column(
             children: <Widget>[
               Container(height: 20),
-              Text("The mails Delivered",
+              Text("The mails Cancelled",
                   style: GoogleFonts.laila(
                     fontSize: 24,
                     fontWeight: FontWeight.w500,

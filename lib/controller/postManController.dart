@@ -41,6 +41,7 @@ class PostManController extends GetxController {
   }
 
   Future getLocations() async {
+    addresses.clear();
     print("getting all locations");
     try {
       var response = await http.get(
@@ -52,7 +53,7 @@ class PostManController extends GetxController {
 
       var result = AddressList.fromRawJson(response.body);
       print(result.addresses);
-      addresses.clear();
+
       addresses.addAll(result.addresses);
       print(addresses.length.toString() + "results found");
       return (result);
@@ -233,7 +234,22 @@ class PostManController extends GetxController {
     }
   }
 
-  Future removeLocation(String locationID) async {
-    return;
+  Future removeLocation(String addressID) async {
+    try {
+      var response = await http.delete(
+        Uri.parse("http://10.0.2.2:5000/api/postman/address/$addressID"),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          "x-auth-token": "$token"
+        },
+      );
+
+      var result = MsgRes.fromRawJson(response.body);
+
+      return (result.msg);
+    } on Exception catch (e) {
+      print(e);
+      return (1);
+    }
   }
 }
