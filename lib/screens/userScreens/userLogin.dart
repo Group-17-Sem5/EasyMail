@@ -29,33 +29,36 @@ class _UserLoginState extends State<UserLogin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: postmanAppBar(context),
+      resizeToAvoidBottomInset: true,
       //drawer: postManDrawer(context),
       body: Center(
-        child: Container(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(36.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 135.0,
-                  child: Image.asset(
-                    "assets/images/postMan.jpg",
-                    fit: BoxFit.contain,
+        child: SingleChildScrollView(
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(36.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 135.0,
+                    child: Image.asset(
+                      "assets/images/postMan.jpg",
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                ),
-                SizedBox(height: 45.0),
-                emailField(),
-                SizedBox(height: 25.0),
-                passwordField(),
-                SizedBox(
-                  height: 35.0,
-                ),
-                loginButon(),
-                cancelButton(),
-              ],
+                  SizedBox(height: 45.0),
+                  emailField(),
+                  SizedBox(height: 25.0),
+                  passwordField(),
+                  SizedBox(
+                    height: 35.0,
+                  ),
+                  loginButon(),
+                  cancelButton(),
+                ],
+              ),
             ),
           ),
         ),

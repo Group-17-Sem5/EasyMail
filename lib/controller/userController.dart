@@ -42,6 +42,7 @@ class UserController extends GetxController {
   }
 
   Future getSentMails() async {
+    mails.clear();
     try {
       var response = await http.get(
           Uri.parse("http://10.0.2.2:5000/api/user/sent-mails/$userName"),
@@ -58,6 +59,7 @@ class UserController extends GetxController {
       //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
       mails.addAll(result.mailModel);
       print(mails.length.toString() + "results found");
+      return (result.msg);
     } on Exception catch (e) {
       print(e);
     }
@@ -74,6 +76,7 @@ class UserController extends GetxController {
   }
 
   Future getReceivedMails() async {
+    mails.clear();
     try {
       var response = await http.get(
           Uri.parse("http://10.0.2.2:5000/api/user/mailbox/$userName"),
@@ -90,6 +93,8 @@ class UserController extends GetxController {
       //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
       mails.addAll(result.mailModel);
       print(mails.length.toString() + "results found");
+      print(result.msg);
+      return (result.msg);
     } on Exception catch (e) {
       print(e);
     }

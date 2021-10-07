@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:easy_mail_app_frontend/controller/postManController.dart';
 import 'package:easy_mail_app_frontend/controller/appBinding.dart';
 import 'package:easy_mail_app_frontend/model/mailModel.Dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ReceivedMailPage extends StatefulWidget {
   ReceivedMailPage({Key? key}) : super(key: key);
@@ -24,6 +25,7 @@ class ReceivedMailPage extends StatefulWidget {
 class _ReceivedMailPageState extends State<ReceivedMailPage> {
   //var _searchController = FloatingSearchBarController();
   var userController = new UserController();
+  RefreshController _refreshController = RefreshController();
   //var searchResult = '';
   bool isLoading = false;
   bool isSearched = false;
@@ -49,86 +51,14 @@ class _ReceivedMailPageState extends State<ReceivedMailPage> {
           color: Color(0xFFE0FAEA),
           child: Column(
             children: <Widget>[
+              tableHeading(),
               Expanded(
                 child: tileList(),
               ),
-              Expanded(child: mailDetail()),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget mailDetail() {
-    setState(() {
-      //String result = getResult();
-      //print(result);
-    });
-    return Expanded(
-      child: isLoading
-          ? Center(
-              child: Column(
-                children: [
-                  Text("Loading data.."),
-                  CircularProgressIndicator(),
-                ],
-              ),
-            )
-          : Obx(() {
-              if (isLoading) {
-                return Text('Loading');
-              } else if (selectedMail.length == 0) {
-                return Text('Select a Mail to Show details');
-              } else {
-                return ListView.builder(
-                  itemCount: selectedMail.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                        child: Column(
-                      children: [
-                        Container(
-                            width: 300,
-                            child: Text("Receiver id : " +
-                                selectedMail[0].receiverId.toString())),
-                        Container(
-                            width: 300,
-                            child: Text("Address ID : " +
-                                selectedMail[0].addressId.toString())),
-                        Container(
-                            width: 300,
-                            child: Text("Sender ID : " +
-                                selectedMail[0].senderId.toString())),
-                        Container(
-                            width: 300,
-                            child: Text("Delivery Status: " +
-                                selectedMail[0].isDelivered.toString())),
-                        // Row(
-                        //   children: [
-                        //     IconButton(
-                        //         tooltip: "Deliver",
-                        //         icon: Icon(Icons.check),
-                        //         color: Colors.black,
-                        //         hoverColor: Colors.white,
-                        //         onPressed: () {
-                        //           deliverMail(selectedMail[0].mailId);
-                        //         }),
-                        //     IconButton(
-                        //         tooltip: "Cancel",
-                        //         icon: Icon(Icons.block),
-                        //         color: Colors.black,
-                        //         hoverColor: Colors.white,
-                        //         onPressed: () {
-                        //           cancelDelivery(selectedMail[0].mailId);
-                        //         }),
-                        //   ],
-                        // ),
-                      ],
-                    ));
-                  },
-                );
-              }
-            }),
     );
   }
 
@@ -149,17 +79,57 @@ class _ReceivedMailPageState extends State<ReceivedMailPage> {
               } else if (userController.mails.isEmpty) {
                 return Text('Empty List');
               } else {
-                return ListView.builder(
-                  itemCount: userController.mails.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      child: tagCard(
-                          context, userController.mails.value[index], index),
-                    );
-                  },
+                return SmartRefresher(
+                  controller: _refreshController,
+                  onRefresh: getMailsList,
+                  //onLoading: _onLoading,
+                  enablePullUp: true,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: userController.mails.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        child: tagCard(
+                            context, userController.mails.value[index], index),
+                      );
+                    },
+                  ),
                 );
               }
             }),
+    );
+  }
+
+  Widget tableHeading() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+              height: 40,
+              color: Colors.lightGreen,
+              child: Padding(
+                  padding: EdgeInsets.all(5.0), child: Text("Mail Id"))),
+        ),
+        Expanded(
+          child: Container(
+              height: 40,
+              color: Colors.lightGreen,
+              child: Padding(
+                  padding: EdgeInsets.all(5.0), child: Text("receiver ID"))),
+        ),
+        Expanded(
+          child: Container(
+              height: 40,
+              color: Colors.lightGreen,
+              child: Padding(
+                  padding: EdgeInsets.all(5.0), child: Text("Sender Id"))),
+        ),
+        Container(height: 40, width: 50, color: Colors.lightGreen),
+        // Expanded(
+        //   child: Text("Address Description"),
+        // ),
+        // Expanded(child: Text("Mail Id"),),
+      ],
     );
   }
 
@@ -184,6 +154,49 @@ class _ReceivedMailPageState extends State<ReceivedMailPage> {
                 isTouched = true;
                 selectedMail.clear();
                 selectedMail.add(userController.mails.value[index]);
+                showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text('Mail Details'),
+                    content: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Container(
+                              width: 300,
+                              child: Text("Address ID : " +
+                                  selectedMail[0].addressId.toString())),
+                          Container(
+                              width: 300,
+                              child: Text("Mail From : " +
+                                  selectedMail[0].senderId.toString())),
+                          Container(
+                              width: 300,
+                              child: Text("Delivery Status: " +
+                                  selectedMail[0].isDelivered.toString())),
+                          Container(
+                              width: 300,
+                              child: Text("Last appeared Branch: " +
+                                  selectedMail[0]
+                                      .lastAppearedBranch
+                                      .toString())),
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      // TextButton(
+                      //   onPressed: () => Navigator.pop(context, 'Cancel'),
+                      //   child: const Text('Cancel'),
+                      // ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context, 'OK');
+                          _refreshController.requestRefresh();
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                );
               }),
         ],
       ),
@@ -193,7 +206,10 @@ class _ReceivedMailPageState extends State<ReceivedMailPage> {
   //methods
 
   Future getMailsList() async {
-    await userController.getReceivedMails();
+    var msg = await userController.getReceivedMails();
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    _refreshController.loadComplete();
   }
 
   // Future deliverMail(String mailID) async {
