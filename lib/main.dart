@@ -1,4 +1,4 @@
-import 'package:easy_mail_app_frontend/screens/editProfilePage.dart';
+import 'package:easy_mail_app_frontend/screens/register.dart';
 import 'package:easy_mail_app_frontend/screens/homePage.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/cancelledMailPage.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/deliveredmailPage.dart';
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
 
         PlaceMarkerBody.route: (context) => PlaceMarkerBody(),
         // ProfilePage.route: (context) => ProfilePage(),
-        // EditProfilePage.route: (context) => EditProfilePage(),
+        RegisterProfilePage.route: (context) => RegisterProfilePage(),
         UserLogin.route: (context) => UserLogin(),
         UserSentMailPage.route: (context) => UserSentMailPage(),
         ReceivedMailPage.route: (context) => ReceivedMailPage(),

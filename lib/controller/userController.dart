@@ -1,3 +1,4 @@
+import 'package:easy_mail_app_frontend/model/addressesModel.dart';
 import 'package:easy_mail_app_frontend/model/postManModel.dart';
 import 'package:easy_mail_app_frontend/model/tokenModel.dart';
 import 'package:easy_mail_app_frontend/model/userModel.dart';
@@ -9,12 +10,33 @@ import 'dart:convert';
 
 class UserController extends GetxController {
   var mails = <MailModel>[].obs;
-  UserModel postMan = new UserModel();
+  var selectedUser = <User>[].obs;
+  var addresses = <Address>[].obs;
+  // User user = new User();
   static String? token;
   static String? userName;
 
-  Future register(String details) async {
-    return;
+  Future register(User user) async {
+    print(user.username);
+    try {
+      var response = await http.post(
+        Uri.parse("http://10.0.2.2:5000/api/user/register"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: user.toRawJson(),
+      );
+
+      var result = TokenRes.fromRawJson(response.body);
+      token = result.token;
+      userName = user.username;
+
+      print(token);
+      return result.err;
+    } on Exception catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   Future login(String username, String password) async {
@@ -104,5 +126,41 @@ class UserController extends GetxController {
 
   Future changeMyAddressID(String addressID) async {
     return;
+  }
+
+  Future getUser(userName) async {
+    selectedUser.clear();
+  }
+
+  Future updateUser(User user) async {
+    selectedUser.clear();
+    selectedUser.add(user);
+    print(user.username);
+  }
+
+  Future registerUser(User user) async {
+    print(user.username);
+  }
+
+  Future getLocations() async {
+    addresses.clear();
+    print("getting all locations");
+    try {
+      var response = await http.get(
+          Uri.parse("http://10.0.2.2:5000/api/postman/address/"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "x-auth-token": "$token"
+          });
+
+      var result = AddressList.fromRawJson(response.body);
+      print(result.addresses);
+
+      addresses.addAll(result.addresses);
+      print(addresses.length.toString() + "results found");
+      return (result);
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 }

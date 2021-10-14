@@ -2,6 +2,7 @@ import 'package:easy_mail_app_frontend/controller/postManController.dart';
 import 'package:easy_mail_app_frontend/controller/userController.dart';
 import 'package:easy_mail_app_frontend/screens/homePage.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/mailListPage.dart';
+import 'package:easy_mail_app_frontend/screens/register.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/userMailBox.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
 import 'package:get/utils.dart';
@@ -41,6 +42,7 @@ class _UserLoginState extends State<UserLogin> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  signUpButton(),
                   SizedBox(
                     height: 135.0,
                     child: Image.asset(
@@ -153,5 +155,24 @@ class _UserLoginState extends State<UserLogin> {
     } on Exception catch (e) {
       print(e);
     }
+  }
+
+  Widget signUpButton() {
+    return Material(
+      elevation: 5.0,
+      borderRadius: BorderRadius.circular(30.0),
+      color: Color(0xFF000000),
+      child: MaterialButton(
+        minWidth: 20,
+        padding: EdgeInsets.only(right: 10),
+        onPressed: () async {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => RegisterProfilePage()));
+        },
+        child: Text("Sign up",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      ),
+    );
   }
 }
