@@ -1,5 +1,7 @@
 import 'package:easy_mail_app_frontend/model/addressesModel.dart';
+import 'package:easy_mail_app_frontend/model/moneyOrderModel.dart';
 import 'package:easy_mail_app_frontend/model/postManModel.dart';
+import 'package:easy_mail_app_frontend/model/moneyOrderModel.dart';
 import 'package:easy_mail_app_frontend/model/tokenModel.dart';
 import 'package:easy_mail_app_frontend/model/userModel.dart';
 import 'package:get/get.dart';
@@ -10,6 +12,7 @@ import 'dart:convert';
 
 class UserController extends GetxController {
   var mails = <MailModel>[].obs;
+  var moneyOrders = <MoneyOrder>[].obs;
   var selectedUser = <User>[].obs;
   var addresses = <Address>[].obs;
   // User user = new User();
@@ -30,7 +33,7 @@ class UserController extends GetxController {
       var result = TokenRes.fromRawJson(response.body);
       token = result.token;
       userName = user.username;
-
+      print(userName);
       print(token);
       return result.err;
     } on Exception catch (e) {
@@ -89,11 +92,31 @@ class UserController extends GetxController {
     return;
   }
 
-  Future getSentMoneyOrders(String mailID) async {
+  Future getSentMoneyOrders() async {
+    moneyOrders.clear();
+    try {
+      var response = await http.get(
+          Uri.parse("http://10.0.2.2:5000/api/user/money-order/$userName"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "x-auth-token": "$token"
+          });
+      // print(response);
+      // List data = json.decode(response.body);
+      // print(data);
+      var result = MoneyOrderDetails.fromRawJson(response.body);
+      //print(result);
+      //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
+      moneyOrders.addAll(result.moneyOrder);
+      print(moneyOrders.length.toString() + "results found");
+      return (result.msg);
+    } on Exception catch (e) {
+      print(e);
+    }
     return;
   }
 
-  Future getReceivedMoneyOrders(String mailID) async {
+  Future getReceivedMoneyOrders() async {
     return;
   }
 

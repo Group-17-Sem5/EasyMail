@@ -5,6 +5,7 @@ import 'package:easy_mail_app_frontend/shared_widgets/postManDrawer.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/searchBox.dart';
 import "package:flutter/material.dart";
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'dart:io';
 import 'dart:convert';
@@ -51,6 +52,10 @@ class _ReceivedMailPageState extends State<ReceivedMailPage> {
           color: Color(0xFFE0FAEA),
           child: Column(
             children: <Widget>[
+              Text("The Mails For you", style: GoogleFonts.laila(fontSize: 28)),
+              Container(
+                height: 10,
+              ),
               tableHeading(),
               Expanded(
                 child: tileList(),

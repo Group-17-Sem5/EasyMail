@@ -1,4 +1,5 @@
 import 'package:easy_mail_app_frontend/controller/userController.dart';
+import 'package:easy_mail_app_frontend/model/moneyOrderModel.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/customerDrawer.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/postManDrawer.dart';
@@ -15,29 +16,29 @@ import 'package:easy_mail_app_frontend/controller/appBinding.dart';
 import 'package:easy_mail_app_frontend/model/mailModel.Dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class UserSentMailPage extends StatefulWidget {
-  UserSentMailPage({Key? key}) : super(key: key);
-  static const String route = '/user/sentMails';
+class MoneyOrdersPage extends StatefulWidget {
+  MoneyOrdersPage({Key? key}) : super(key: key);
+  static const String route = '/user/moneyOrdersList';
 
   @override
-  _UserSentMailPageState createState() => _UserSentMailPageState();
+  _MoneyOrdersPageState createState() => _MoneyOrdersPageState();
 }
 
-class _UserSentMailPageState extends State<UserSentMailPage> {
+class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
   //var _searchController = FloatingSearchBarController();
   var userController = new UserController();
-  RefreshController _refreshController = new RefreshController();
+  RefreshController _refreshController = RefreshController();
   //var searchResult = '';
   bool isLoading = false;
   bool isSearched = false;
   bool isTouched = false;
 
-  var selectedMail = <MailModel>[].obs;
+  var selectedMoneyOrder = <MoneyOrder>[].obs;
   @override
   void initState() {
     // TODO: implement initState
 
-    getMailsList();
+    getMoneyOrdersList();
     super.initState();
   }
 
@@ -52,7 +53,7 @@ class _UserSentMailPageState extends State<UserSentMailPage> {
           color: Color(0xFFE0FAEA),
           child: Column(
             children: <Widget>[
-              Text("The Mails You Sent",
+              Text("The MoneyOrders You sent",
                   style: GoogleFonts.laila(fontSize: 28)),
               Container(
                 height: 10,
@@ -65,39 +66,6 @@ class _UserSentMailPageState extends State<UserSentMailPage> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget tableHeading() {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-              height: 40,
-              color: Colors.lightGreen,
-              child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("Mail Id"))),
-        ),
-        Expanded(
-          child: Container(
-              height: 40,
-              color: Colors.lightGreen,
-              child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("receiver ID"))),
-        ),
-        Expanded(
-          child: Container(
-              height: 40,
-              color: Colors.lightGreen,
-              child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("Sender Id"))),
-        ),
-        Container(height: 40, width: 50, color: Colors.lightGreen),
-        // Expanded(
-        //   child: Text("Address Description"),
-        // ),
-        // Expanded(child: Text("Mail Id"),),
-      ],
     );
   }
 
@@ -115,21 +83,21 @@ class _UserSentMailPageState extends State<UserSentMailPage> {
           : Obx(() {
               if (isLoading) {
                 return Text('Loading');
-              } else if (userController.mails.isEmpty) {
+              } else if (userController.moneyOrders.isEmpty) {
                 return Text('Empty List');
               } else {
                 return SmartRefresher(
                   controller: _refreshController,
-                  onRefresh: getMailsList,
+                  onRefresh: getMoneyOrdersList,
                   //onLoading: _onLoading,
                   enablePullUp: true,
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: userController.mails.length,
+                    itemCount: userController.moneyOrders.length,
                     itemBuilder: (context, index) {
                       return Container(
-                        child: tagCard(
-                            context, userController.mails.value[index], index),
+                        child: tagCard(context,
+                            userController.moneyOrders.value[index], index),
                       );
                     },
                   ),
@@ -139,16 +107,57 @@ class _UserSentMailPageState extends State<UserSentMailPage> {
     );
   }
 
-  Widget tagCard(BuildContext context, MailModel mail, int index) {
+  Widget tableHeading() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+              height: 40,
+              color: Colors.lightGreen,
+              child: Padding(
+                  padding: EdgeInsets.all(5.0), child: Text("MoneyOrder ID"))),
+        ),
+        Expanded(
+          child: Container(
+              height: 40,
+              color: Colors.lightGreen,
+              child: Padding(
+                  padding: EdgeInsets.all(5.0), child: Text("receiver ID"))),
+        ),
+        // Expanded(
+        //   child: Container(
+        //       height: 40,
+        //       color: Colors.lightGreen,
+        //       child: Padding(
+        //           padding: EdgeInsets.all(5.0), child: Text("Special Code"))),
+        // ),
+        Expanded(
+          child: Container(
+              height: 40,
+              color: Colors.lightGreen,
+              child: Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: Text("Delivery status"))),
+        ),
+        Container(height: 40, width: 50, color: Colors.lightGreen),
+        // Expanded(
+        //   child: Text("Address Description"),
+        // ),
+        // Expanded(child: Text("Mail Id"),),
+      ],
+    );
+  }
+
+  Widget tagCard(BuildContext context, MoneyOrder moneyOrder, int index) {
     return Container(
       height: 40,
       color: Colors.greenAccent,
       child: Row(
         children: [
-          Container(width: 100, child: Text(mail.mailId)),
+          Container(width: 100, child: Text(moneyOrder.moneyOrderId)),
           //Container(width: 100, child: Text(mail.isDelivered.toString())),
-          Container(width: 100, child: Text(mail.receiverId.toString())),
-          Container(width: 100, child: Text(mail.senderId.toString())),
+          Container(width: 100, child: Text(moneyOrder.receiverId.toString())),
+          Container(width: 100, child: Text(moneyOrder.isDelivered.toString())),
           // // Container(width: 100, child: Text(tag.subscriber.toString())),
           // SizedBox(),
           IconButton(
@@ -158,8 +167,8 @@ class _UserSentMailPageState extends State<UserSentMailPage> {
               hoverColor: Colors.white,
               onPressed: () {
                 isTouched = true;
-                selectedMail.clear();
-                selectedMail.add(userController.mails.value[index]);
+                selectedMoneyOrder.clear();
+                selectedMoneyOrder.add(userController.moneyOrders.value[index]);
                 showDialog<String>(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
@@ -169,22 +178,24 @@ class _UserSentMailPageState extends State<UserSentMailPage> {
                         children: [
                           Container(
                               width: 300,
-                              child: Text("Address ID : " +
-                                  selectedMail[0].addressId.toString())),
+                              child: Text("Receiver ID : " +
+                                  selectedMoneyOrder[0].receiverId.toString())),
                           Container(
                               width: 300,
-                              child: Text("Mail For : " +
-                                  selectedMail[0].receiverId.toString())),
+                              child: Text("Special Code : " +
+                                  selectedMoneyOrder[0]
+                                      .specialCode
+                                      .toString())),
                           Container(
                               width: 300,
                               child: Text("Delivery Status: " +
-                                  selectedMail[0].isDelivered.toString())),
+                                  selectedMoneyOrder[0]
+                                      .isDelivered
+                                      .toString())),
                           Container(
                               width: 300,
-                              child: Text("Last Appeeared Branch: " +
-                                  selectedMail[0]
-                                      .lastAppearedBranch
-                                      .toString())),
+                              child: Text("Amount: " +
+                                  selectedMoneyOrder[0].amount.toString())),
                         ],
                       ),
                     ),
@@ -211,14 +222,15 @@ class _UserSentMailPageState extends State<UserSentMailPage> {
 
   //methods
 
-  Future getMailsList() async {
-    var msg = await userController.getSentMails();
+  Future getMoneyOrdersList() async {
+    var msg = await userController.getSentMoneyOrders();
+
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
     _refreshController.loadComplete();
   }
 
   // Future deliverMail(String mailID) async {
-  //   var result = await userController.confirmDelivery(mailID);
+  //   var result = await postManController.confirmDelivery(mailID);
   //   if (result.err == 0) {
   //     var msg = result.msg;
   //     ScaffoldMessenger.of(context)

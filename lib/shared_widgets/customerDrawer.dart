@@ -1,4 +1,5 @@
 import 'package:easy_mail_app_frontend/screens/postManScreens/marker.dart';
+import 'package:easy_mail_app_frontend/screens/userScreens/moneyOrders.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/userMailBox.dart';
 import 'package:easy_mail_app_frontend/screens/userProfile.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/userSentMails.dart';
@@ -55,8 +56,8 @@ Widget userDrawer(BuildContext context) {
         ListTile(
           title: Text('Sent Money Orders'),
           onTap: () {
-            // Navigator.of(context).pushReplacement(
-            //     MaterialPageRoute(builder: (context) => PrivateTagManaging()));
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => MoneyOrdersPage()));
           },
         ),
         ListTile(

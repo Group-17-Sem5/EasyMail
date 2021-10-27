@@ -7,6 +7,7 @@ import 'package:easy_mail_app_frontend/screens/postManScreens/mailListPage.dart'
 import 'package:easy_mail_app_frontend/screens/userScreens/userMailBox.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/userAppbar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:path/path.dart';
 import 'package:easy_mail_app_frontend/model/userModel.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/textfield_widget.dart';
@@ -73,6 +74,11 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
           child: SingleChildScrollView(
         child: Column(
           children: [
+            Text(
+              "User Details",
+              style:
+                  GoogleFonts.laila(fontSize: 28, fontWeight: FontWeight.bold),
+            ),
             //picture(),
             Text("User Name"),
             SizedBox(
@@ -89,8 +95,12 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
               height: 10,
             ),
             Text("Address"),
-            addressIdField(),
-            dropList(),
+            Row(
+              children: [
+                addressIdField(),
+                dropList(),
+              ],
+            ),
 
             SizedBox(
               height: 10,
@@ -115,6 +125,7 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
   Widget passwordField() {
     return TextField(
       controller: _passwordController,
+      maxLength: 15,
       obscureText: _isHidden,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -127,6 +138,7 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
   Widget userNameField() {
     return TextField(
       controller: _userNameController,
+      maxLength: 15,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Saman123",
@@ -136,20 +148,23 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
   }
 
   Widget addressIdField() {
-    return TextField(
-      controller: _addressIDController,
-      readOnly: true,
-      decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Address123",
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+    return Expanded(
+      child: TextField(
+        controller: _addressIDController,
+        readOnly: true,
+        decoration: InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            hintText: "Address123",
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+      ),
     );
   }
 
   Widget branchIdField() {
     return TextField(
       controller: _branchIDController,
+      maxLength: 15,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Branch 123",
@@ -161,6 +176,7 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
   Widget phoneNumberField() {
     return TextField(
       controller: _phoneNumberController,
+      maxLength: 10,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "01123365487",
@@ -178,7 +194,7 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
 
   Widget dropList() {
     return DropdownButton<String>(
-      //value: "dropdownValue",
+      hint: Text("Select"),
       icon: const Icon(Icons.arrow_drop_down_rounded),
       iconSize: 24,
       elevation: 16,
@@ -212,7 +228,14 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
         minWidth: 20,
         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
         onPressed: () async {
-          submit(context);
+          if (_userNameController.text.toString() == "" ||
+              _phoneNumberController.text.toString() == "" ||
+              _branchIDController.text.toString() == "") {
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Fill The all details')));
+          } else {
+            submit(context);
+          }
         },
         child: Text("Sign up",
             textAlign: TextAlign.center,
@@ -279,7 +302,10 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
                           child: Text("Submit"),
                           onPressed: () {
                             if (_passwordController.text.toString() ==
-                                _confirmPasswordController.text.toString()) {
+                                    _confirmPasswordController.text
+                                        .toString() &&
+                                _confirmPasswordController.text.toString() !=
+                                    "") {
                               User user = new User(
                                   username: _userNameController.text,
                                   receivedMoneyOrdersList: [],

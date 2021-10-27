@@ -40,6 +40,12 @@ class _PostManLoginState extends State<PostManLogin> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  Text("Login Here...",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.laila(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30)),
                   SizedBox(
                     height: 135.0,
                     child: Image.asset(
