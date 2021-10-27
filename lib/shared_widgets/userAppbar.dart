@@ -19,8 +19,12 @@ AppBar userAppBar(BuildContext context) {
         onPressed: () {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text('Logged out')));
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => MyHomePage(title: "Easy Mail")));
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MyHomePage(title: "Easy Mail")),
+            (Route<dynamic> route) => false,
+          );
         },
       ),
     ],

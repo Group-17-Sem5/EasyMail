@@ -36,32 +36,41 @@ class _UserLoginState extends State<UserLogin> {
         child: SingleChildScrollView(
           child: Container(
             color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(36.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
+            child: Column(children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(),
+                  ),
                   signUpButton(),
-                  SizedBox(
-                    height: 135.0,
-                    child: Image.asset(
-                      "assets/images/postMan.jpg",
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  SizedBox(height: 45.0),
-                  emailField(),
-                  SizedBox(height: 25.0),
-                  passwordField(),
-                  SizedBox(
-                    height: 35.0,
-                  ),
-                  loginButon(),
-                  cancelButton(),
                 ],
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.all(36.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 135.0,
+                      child: Image.asset(
+                        "assets/images/postMan.jpg",
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    SizedBox(height: 45.0),
+                    emailField(),
+                    SizedBox(height: 25.0),
+                    passwordField(),
+                    SizedBox(
+                      height: 35.0,
+                    ),
+                    loginButon(),
+                    cancelButton(),
+                  ],
+                ),
+              ),
+            ]),
           ),
         ),
       ),
@@ -161,17 +170,17 @@ class _UserLoginState extends State<UserLogin> {
     return Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
-      color: Color(0xFF000000),
+      color: Color(0xFFEC9147),
       child: MaterialButton(
-        minWidth: 20,
-        padding: EdgeInsets.only(right: 10),
+        minWidth: 25,
+        padding: EdgeInsets.all(10),
         onPressed: () async {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => RegisterProfilePage()));
         },
         child: Text("Sign up",
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
       ),
     );
   }

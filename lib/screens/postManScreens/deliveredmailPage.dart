@@ -289,8 +289,10 @@ class _DeliveredMailPageState extends State<DeliveredMailPage> {
                       // ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pop(context, 'OK');
                           _refreshController.requestRefresh();
+                          Navigator.pop(context, 'OK');
+
+                          _refreshController.loadComplete();
                         },
                         child: const Text('OK'),
                       ),
@@ -311,6 +313,7 @@ class _DeliveredMailPageState extends State<DeliveredMailPage> {
   }
 
   Future deliverMail(String mailID) async {
+    _refreshController.requestRefresh();
     var result = await postManController.confirmDelivery(mailID);
     if (result.err == 0) {
       var msg = result.msg;
@@ -320,9 +323,11 @@ class _DeliveredMailPageState extends State<DeliveredMailPage> {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Something went Wrong ')));
     }
+    _refreshController.loadComplete();
   }
 
   Future cancelDelivery(String mailID) async {
+    _refreshController.requestRefresh();
     var result = await postManController.cancelDelivery(mailID);
     if (result.err == 0) {
       var msg = result.msg;
@@ -332,5 +337,6 @@ class _DeliveredMailPageState extends State<DeliveredMailPage> {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Something went Wrong ')));
     }
+    _refreshController.loadComplete();
   }
 }

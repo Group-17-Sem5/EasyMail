@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 startAsPostMan();
               },
               hoverColor: Colors.white,
-              child: Text("Start as postMan"),
+              child: Text("I'm a postman"),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   startAsCustomer();
                 },
                 hoverColor: Colors.white,
-                child: Text("Start as Customer",
+                child: Text("I'm a user",
                     style: TextStyle(
                       decorationColor: Colors.white,
                     )),

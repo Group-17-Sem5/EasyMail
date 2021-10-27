@@ -664,22 +664,10 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Stack(
-              overflow: Overflow.visible,
+            content: ListView(
+              shrinkWrap: true,
+              //overflow: Overflow.visible,
               children: <Widget>[
-                Positioned(
-                  right: -40.0,
-                  top: -40.0,
-                  child: InkResponse(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: CircleAvatar(
-                      child: Icon(Icons.close),
-                      backgroundColor: Colors.red,
-                    ),
-                  ),
-                ),
                 Form(
                   key: _formKey,
                   child: Column(
@@ -687,12 +675,25 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.all(8.0),
-                        child:
-                            TextFormField(controller: _descriptionController),
+                        child: Column(
+                          children: [
+                            Text(
+                              "Enter Description",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            TextFormField(controller: _descriptionController)
+                          ],
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: TextFormField(controller: _branchIdController),
+                        child: Column(
+                          children: [
+                            Text("Branch ID",
+                                style: TextStyle(color: Colors.grey)),
+                            TextFormField(controller: _branchIdController)
+                          ],
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -712,7 +713,20 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                                     builder: (context) => PlaceMarkerBody()));
                           },
                         ),
-                      )
+                      ),
+                      Positioned(
+                        right: 10.0,
+                        top: 0,
+                        child: InkResponse(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: CircleAvatar(
+                            child: Icon(Icons.close),
+                            backgroundColor: Colors.red,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

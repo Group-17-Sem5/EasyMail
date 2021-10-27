@@ -4,6 +4,7 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:easy_mail_app_frontend/controller/userController.dart';
 import 'package:easy_mail_app_frontend/model/addressesModel.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/mailListPage.dart';
+import 'package:easy_mail_app_frontend/screens/userScreens/userMailBox.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/userAppbar.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
@@ -234,6 +235,8 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
 
   void register(User user) async {
     await userController.register(user);
+    // print(_confirmPasswordController);
+    // print(_passwordController);
   }
 
   void submit(BuildContext context) async {
@@ -275,8 +278,8 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
                         child: RaisedButton(
                           child: Text("Submit"),
                           onPressed: () {
-                            if (_passwordController ==
-                                _confirmPasswordController) {
+                            if (_passwordController.text.toString() ==
+                                _confirmPasswordController.text.toString()) {
                               User user = new User(
                                   username: _userNameController.text,
                                   receivedMoneyOrdersList: [],
@@ -290,7 +293,8 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
                               register(user);
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
-                                      builder: (context) => MailListPage()));
+                                      builder: (context) =>
+                                          ReceivedMailPage()));
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content:
