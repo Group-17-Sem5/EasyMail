@@ -1,4 +1,5 @@
 import 'package:easy_mail_app_frontend/model/addressesModel.dart';
+import 'package:easy_mail_app_frontend/model/courierModel.dart';
 import 'package:easy_mail_app_frontend/model/moneyOrderModel.dart';
 import 'package:easy_mail_app_frontend/model/postManModel.dart';
 import 'package:easy_mail_app_frontend/model/moneyOrderModel.dart';
@@ -15,6 +16,8 @@ class UserController extends GetxController {
   var moneyOrders = <MoneyOrder>[].obs;
   var selectedUser = <User>[].obs;
   var addresses = <Address>[].obs;
+  var sentCouriers = <Courier>[].obs;
+  var receivedCouriers = <Courier>[].obs;
   // User user = new User();
   static String? token;
   static String? userName;
@@ -109,11 +112,11 @@ class UserController extends GetxController {
       //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
       moneyOrders.addAll(result.moneyOrder);
       print(moneyOrders.length.toString() + "results found");
+      print(result);
       return (result.msg);
     } on Exception catch (e) {
       print(e);
     }
-    return;
   }
 
   Future getReceivedMoneyOrders() async {
@@ -127,7 +130,6 @@ class UserController extends GetxController {
           Uri.parse("http://10.0.2.2:5000/api/user/mailbox/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
-            "mailID": "mail002",
             "x-auth-token": "$token"
           });
       // print(response);
@@ -138,6 +140,59 @@ class UserController extends GetxController {
       //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
       mails.addAll(result.mailModel);
       print(mails.length.toString() + "results found");
+      print(result.msg);
+      return (result.msg);
+    } on Exception catch (e) {
+      print(e);
+    }
+
+    return;
+  }
+
+  Future getReceivedCouriers() async {
+    receivedCouriers.clear();
+    try {
+      var response = await http.get(
+          Uri.parse("http://10.0.2.2:5000/api/user/sent-couriers/$userName"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "x-auth-token": "$token"
+          });
+      // print(response);
+      // List data = json.decode(response.body);
+      // print(data);
+      var result = CourierDetails.fromRawJson(response.body);
+      //print(result);
+      //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
+      receivedCouriers.addAll(result.couriers);
+      print(receivedCouriers.length.toString() + "results found");
+      print(result.msg);
+      return (result.msg);
+    } on Exception catch (e) {
+      print(e);
+    }
+
+    return;
+  }
+
+  Future getSentCouriers() async {
+    sentCouriers.clear();
+    try {
+      var response = await http.get(
+          Uri.parse(
+              "http://10.0.2.2:5000/api/user/received-couriers/$userName"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "x-auth-token": "$token"
+          });
+      // print(response);
+      // List data = json.decode(response.body);
+      // print(data);
+      var result = CourierDetails.fromRawJson(response.body);
+      //print(result);
+      //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
+      sentCouriers.addAll(result.couriers);
+      print(sentCouriers.length.toString() + "results found");
       print(result.msg);
       return (result.msg);
     } on Exception catch (e) {

@@ -1,4 +1,5 @@
 import 'package:easy_mail_app_frontend/screens/postManScreens/marker.dart';
+import 'package:easy_mail_app_frontend/screens/userScreens/couriers-user.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/moneyOrders.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/userMailBox.dart';
 import 'package:easy_mail_app_frontend/screens/userProfile.dart';
@@ -47,31 +48,17 @@ Widget userDrawer(BuildContext context) {
           },
         ),
         ListTile(
-          title: Text('Received Money Orders'),
+          title: Text('Money Orders'),
           onTap: () {
             // Navigator.of(context).pushReplacement(
             //     MaterialPageRoute(builder: (context) => WriterManaging()));
           },
         ),
         ListTile(
-          title: Text('Sent Money Orders'),
+          title: Text('Couriers'),
           onTap: () {
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => MoneyOrdersPage()));
-          },
-        ),
-        ListTile(
-          title: Text('Received Packagess'),
-          onTap: () {
-            // Update the state of the app.
-            // ...
-          },
-        ),
-        ListTile(
-          title: Text('Sent Packages'),
-          onTap: () {
-            // Update the state of the app.
-            // ...
+                MaterialPageRoute(builder: (context) => CouriersUser()));
           },
         ),
       ],

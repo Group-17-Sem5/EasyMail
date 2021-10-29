@@ -41,9 +41,8 @@ class MoneyOrder {
     required this.moneyOrderId,
     required this.specialCode,
     required this.amount,
-    required this.date,
-    required this.sourceBranch,
-    required this.receivingBranch,
+    required this.sourceBranchId,
+    required this.receivingBranchId,
     required this.senderId,
     required this.receiverId,
     required this.isDelivered,
@@ -53,9 +52,8 @@ class MoneyOrder {
   String moneyOrderId;
   String specialCode;
   String amount;
-  DateTime date;
-  String sourceBranch;
-  String receivingBranch;
+  String sourceBranchId;
+  String receivingBranchId;
   String senderId;
   String receiverId;
   bool isDelivered;
@@ -70,9 +68,8 @@ class MoneyOrder {
         moneyOrderId: json["moneyOrderID"],
         specialCode: json["specialCode"],
         amount: json["amount"],
-        date: DateTime.parse(json["date"]),
-        sourceBranch: json["sourceBranch"],
-        receivingBranch: json["receivingBranch"],
+        sourceBranchId: json["sourceBranchID"],
+        receivingBranchId: json["receivingBranchID"],
         senderId: json["senderID"],
         receiverId: json["receiverID"],
         isDelivered: json["isDelivered"],
@@ -83,9 +80,8 @@ class MoneyOrder {
         "moneyOrderID": moneyOrderId,
         "specialCode": specialCode,
         "amount": amount,
-        "date": date.toIso8601String(),
-        "sourceBranch": sourceBranch,
-        "receivingBranch": receivingBranch,
+        "sourceBranchID": sourceBranchId,
+        "receivingBranchID": receivingBranchId,
         "senderID": senderId,
         "receiverID": receiverId,
         "isDelivered": isDelivered,

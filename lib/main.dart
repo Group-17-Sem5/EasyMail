@@ -7,6 +7,7 @@ import 'package:easy_mail_app_frontend/screens/postManScreens/editAddressDetails
 import 'package:easy_mail_app_frontend/screens/postManScreens/mailListPage.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/marker.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/postManLogin.dart';
+import 'package:easy_mail_app_frontend/screens/userScreens/couriers-user.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/moneyOrders.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/userLogin.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/userMailBox.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         EditAddressDetails.route: (context) => EditAddressDetails(),
 
         MoneyOrdersPage.route: (context) => MoneyOrdersPage(),
+        CouriersUser.route: (context) => CouriersUser(),
         // PrivateTagManaging.route: (context) => PrivateTagManaging(),
         // EventManaging.route: (context) => EventManaging(),
       },
