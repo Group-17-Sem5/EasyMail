@@ -4,6 +4,7 @@ import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/customerDrawer.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/postManDrawer.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/searchBox.dart';
+import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +15,7 @@ import 'package:http/http.dart' as http;
 import 'package:easy_mail_app_frontend/controller/postManController.dart';
 import 'package:easy_mail_app_frontend/controller/appBinding.dart';
 import 'package:easy_mail_app_frontend/model/mailModel.Dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class MoneyOrdersPage extends StatefulWidget {
@@ -28,6 +30,8 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
   //var _searchController = FloatingSearchBarController();
   var userController = new UserController();
   RefreshController _refreshController = RefreshController();
+  PersistentTabController? _controller =
+      PersistentTabController(initialIndex: 0);
   //var searchResult = '';
   bool isLoading = false;
   bool isSearched = false;
@@ -37,8 +41,6 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
   @override
   void initState() {
     // TODO: implement initState
-
-    getMoneyOrdersList();
     super.initState();
   }
 
@@ -49,27 +51,95 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
       child: Scaffold(
         appBar: postmanAppBar(context),
         drawer: userDrawer(context),
-        body: Container(
-          color: Color(0xFFE0FAEA),
-          child: Column(
-            children: <Widget>[
-              Text("The MoneyOrders You sent",
-                  style: GoogleFonts.laila(fontSize: 28)),
-              Container(
-                height: 10,
-              ),
-              tableHeading(),
-              Expanded(
-                child: tileList(),
-              ),
-            ],
-          ),
-        ),
+        body: bottomNavBar(),
       ),
     );
   }
 
-  Widget tileList() {
+  Widget bottomNavBar() {
+    return PersistentTabView(
+      context,
+      controller: _controller,
+      screens: _buildScreens(),
+      items: _navBarsItems(),
+      confineInSafeArea: true,
+      backgroundColor: Colors.white, // Default is Colors.white.
+      handleAndroidBackButtonPress: true, // Default is true.
+      resizeToAvoidBottomInset:
+          true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+      stateManagement: true, // Default is true.
+      hideNavigationBarWhenKeyboardShows:
+          true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
+      decoration: NavBarDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        colorBehindNavBar: Colors.white,
+      ),
+      popAllScreensOnTapOfSelectedTab: true,
+      popActionScreens: PopActionScreensType.all,
+      itemAnimationProperties: ItemAnimationProperties(
+        // Navigation Bar's items animation properties.
+        duration: Duration(milliseconds: 200),
+        curve: Curves.ease,
+      ),
+      screenTransitionAnimation: ScreenTransitionAnimation(
+        // Screen transition animation on change of selected tab.
+        animateTabTransition: true,
+        curve: Curves.ease,
+        duration: Duration(milliseconds: 200),
+      ),
+      navBarStyle:
+          NavBarStyle.style1, // Choose the nav bar style with this property.
+    );
+  }
+
+  List<Widget> _buildScreens() {
+    return [deliveredMoneyOrderScreen(), sentMoneyOrderScreen()];
+  }
+
+  List<PersistentBottomNavBarItem> _navBarsItems() {
+    return [
+      PersistentBottomNavBarItem(
+        icon: Icon(CupertinoIcons.money_dollar),
+        title: ("Received"),
+        activeColorPrimary: CupertinoColors.activeBlue,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
+        //onPressed: _getCouriersList(0),
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(CupertinoIcons.arrow_up_circle_fill),
+        title: ("Sent"),
+        activeColorPrimary: CupertinoColors.activeBlue,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
+        //onPressed: _getCouriersList(1),
+      ),
+    ];
+  }
+
+  Widget deliveredMoneyOrderScreen() {
+    getMoneyOrders(0);
+    return Expanded(
+        child: Container(
+      child: Column(children: [
+        Text("Money orders For you"),
+        tableHeading(),
+        receivedTileList(),
+      ]),
+    ));
+  }
+
+  Widget sentMoneyOrderScreen() {
+    getMoneyOrders(1);
+    return Expanded(
+        child: Container(
+      child: Column(children: [
+        Text("MoneyOrders sent by You"),
+        tableHeading(),
+        sentTileList(),
+      ]),
+    ));
+  }
+
+  Widget sentTileList() {
     return Expanded(
       child: isLoading
           ? Center(
@@ -83,24 +153,52 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
           : Obx(() {
               if (isLoading) {
                 return Text('Loading');
-              } else if (userController.moneyOrders.isEmpty) {
+              } else if (userController.sentMoneyOrders.isEmpty) {
                 return Text('Empty List');
               } else {
-                return SmartRefresher(
-                  controller: _refreshController,
-                  onRefresh: getMoneyOrdersList,
-                  //onLoading: _onLoading,
-                  enablePullUp: true,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: userController.moneyOrders.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        child: tagCard(context,
-                            userController.moneyOrders.value[index], index),
-                      );
-                    },
-                  ),
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: userController.sentMoneyOrders.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      child: tagCard(context,
+                          userController.sentMoneyOrders.value[index], index),
+                    );
+                  },
+                );
+              }
+            }),
+    );
+  }
+
+  Widget receivedTileList() {
+    return Expanded(
+      child: isLoading
+          ? Center(
+              child: Column(
+                children: [
+                  Text("Loading data.."),
+                  CircularProgressIndicator(),
+                ],
+              ),
+            )
+          : Obx(() {
+              if (isLoading) {
+                return Text('Loading');
+              } else if (userController.receivedMoneyOrders.isEmpty) {
+                return Text('Empty List');
+              } else {
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: userController.receivedMoneyOrders.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      child: tagCard(
+                          context,
+                          userController.receivedMoneyOrders.value[index],
+                          index),
+                    );
+                  },
                 );
               }
             }),
@@ -168,7 +266,7 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
               onPressed: () {
                 isTouched = true;
                 selectedMoneyOrder.clear();
-                selectedMoneyOrder.add(userController.moneyOrders.value[index]);
+                selectedMoneyOrder.add(moneyOrder);
                 showDialog<String>(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
@@ -207,7 +305,7 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context, 'OK');
-                          _refreshController.requestRefresh();
+                          // _refreshController.requestRefresh();
                         },
                         child: const Text('OK'),
                       ),
@@ -221,9 +319,23 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
   }
 
   //methods
+  getMoneyOrders(int num) {
+    if (num == 1) {
+      getSentMoneyOrdersList();
+    } else {
+      getReceivedMoneyOrdersList();
+    }
+  }
 
-  Future getMoneyOrdersList() async {
+  Future getSentMoneyOrdersList() async {
     var msg = await userController.getSentMoneyOrders();
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    _refreshController.loadComplete();
+  }
+
+  Future getReceivedMoneyOrdersList() async {
+    var msg = await userController.getReceivedMoneyOrders();
 
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
     _refreshController.loadComplete();

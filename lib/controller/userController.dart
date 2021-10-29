@@ -13,7 +13,8 @@ import 'dart:convert';
 
 class UserController extends GetxController {
   var mails = <MailModel>[].obs;
-  var moneyOrders = <MoneyOrder>[].obs;
+  var sentMoneyOrders = <MoneyOrder>[].obs;
+  var receivedMoneyOrders = <MoneyOrder>[].obs;
   var selectedUser = <User>[].obs;
   var addresses = <Address>[].obs;
   var sentCouriers = <Courier>[].obs;
@@ -96,7 +97,7 @@ class UserController extends GetxController {
   }
 
   Future getSentMoneyOrders() async {
-    moneyOrders.clear();
+    sentMoneyOrders.clear();
     try {
       var response = await http.get(
           Uri.parse("http://10.0.2.2:5000/api/user/money-order/$userName"),
@@ -110,8 +111,8 @@ class UserController extends GetxController {
       var result = MoneyOrderDetails.fromRawJson(response.body);
       //print(result);
       //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
-      moneyOrders.addAll(result.moneyOrder);
-      print(moneyOrders.length.toString() + "results found");
+      sentMoneyOrders.addAll(result.moneyOrder);
+      print(sentMoneyOrders.length.toString() + "results found");
       print(result);
       return (result.msg);
     } on Exception catch (e) {
@@ -120,7 +121,28 @@ class UserController extends GetxController {
   }
 
   Future getReceivedMoneyOrders() async {
-    return;
+    receivedMoneyOrders.clear();
+    try {
+      var response = await http.get(
+          Uri.parse(
+              "http://10.0.2.2:5000/api/user/received-money-order/$userName"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "x-auth-token": "$token"
+          });
+      // print(response);
+      // List data = json.decode(response.body);
+      // print(data);
+      var result = MoneyOrderDetails.fromRawJson(response.body);
+      //print(result);
+      //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
+      receivedMoneyOrders.addAll(result.moneyOrder);
+      print(receivedMoneyOrders.length.toString() + "results found");
+      print(result);
+      return (result.msg);
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 
   Future getReceivedMails() async {

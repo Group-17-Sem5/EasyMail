@@ -50,8 +50,8 @@ Widget userDrawer(BuildContext context) {
         ListTile(
           title: Text('Money Orders'),
           onTap: () {
-            // Navigator.of(context).pushReplacement(
-            //     MaterialPageRoute(builder: (context) => WriterManaging()));
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => MoneyOrdersPage()));
           },
         ),
         ListTile(
