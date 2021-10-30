@@ -1,4 +1,5 @@
 import 'package:easy_mail_app_frontend/model/addressesModel.dart';
+import 'package:easy_mail_app_frontend/model/courierModel.dart';
 import 'package:easy_mail_app_frontend/model/postManModel.dart';
 import 'package:easy_mail_app_frontend/model/tokenModel.dart';
 import 'package:easy_mail_app_frontend/model/updatingMsgModel.dart';
@@ -14,6 +15,9 @@ class PostManController extends GetxController {
   var addresses = <Address>[].obs;
   var selectedAddress = <Address>[].obs;
   static PostManModel postMan = new PostManModel();
+  var assignedCouriers = <Courier>[].obs;
+  var deliveredCouriers = <Courier>[].obs;
+  var cancelledCouriers = <Courier>[].obs;
   var loggedin = <String>[].obs;
   static String? token;
   static String? userName;
@@ -114,7 +118,6 @@ class PostManController extends GetxController {
           Uri.parse("http://10.0.2.2:5000/api/postman/posts/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
-            "mailID": "mail002",
             "x-auth-token": "$token"
           });
       // print(response);
@@ -141,7 +144,6 @@ class PostManController extends GetxController {
               "http://10.0.2.2:5000/api/postman/delivered-posts/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
-            "mailID": "mail002",
             "x-auth-token": "$token"
           });
       // print(response);
@@ -168,7 +170,6 @@ class PostManController extends GetxController {
               "http://10.0.2.2:5000/api/postman/cancelled-posts/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
-            "mailID": "mail002",
             "x-auth-token": "$token"
           });
       // print(response);
@@ -184,6 +185,124 @@ class PostManController extends GetxController {
     }
 
     return;
+  }
+
+  Future getAssignedCouriers() async {
+    assignedCouriers.clear();
+    //print(userName);
+    try {
+      var response = await http.get(
+          Uri.parse("http://10.0.2.2:5000/api/postman/couriers/$userName"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "x-auth-token": "$token"
+          });
+      // print(response);
+      // List data = json.decode(response.body);
+      // print(data);
+      var result = CourierDetails.fromRawJson(response.body);
+      //print(result);
+      //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
+      assignedCouriers.addAll(result.couriers);
+      print(assignedCouriers.length.toString() + " results found");
+      return (result.msg);
+    } on Exception catch (e) {
+      print(e);
+    }
+
+    return;
+  }
+
+  Future getDeliveredCouriers() async {
+    deliveredCouriers.clear();
+    //print(userName);
+    try {
+      var response = await http.get(
+          Uri.parse(
+              "http://10.0.2.2:5000/api/postman/delivered-couriers/$userName"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "x-auth-token": "$token"
+          });
+      // print(response);
+      // List data = json.decode(response.body);
+      // print(data);
+      var result = CourierDetails.fromRawJson(response.body);
+      //print(result);
+      //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
+      deliveredCouriers.addAll(result.couriers);
+      print(deliveredCouriers.length.toString() + " results found");
+      return (result.msg);
+    } on Exception catch (e) {
+      print(e);
+    }
+
+    return;
+  }
+
+  Future getCancelledCouriers() async {
+    cancelledCouriers.clear();
+    //print(userName);
+    try {
+      var response = await http.get(
+          Uri.parse(
+              "http://10.0.2.2:5000/api/postman/cancelled-couriers/$userName"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "x-auth-token": "$token"
+          });
+      // print(response);
+      // List data = json.decode(response.body);
+      // print(data);
+      var result = CourierDetails.fromRawJson(response.body);
+      //print(result);
+      //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
+      cancelledCouriers.addAll(result.couriers);
+      print(cancelledCouriers.length.toString() + " results found");
+      return (result.msg);
+    } on Exception catch (e) {
+      print(e);
+    }
+
+    return;
+  }
+
+  Future confirmCourierDelivery(String courierID) async {
+    try {
+      var response = await http.put(
+          Uri.parse(
+              "http://10.0.2.2:5000/api/postman/couriers/confirm/$courierID"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "x-auth-token": "$token"
+          });
+
+      var result = MsgRes.fromRawJson(response.body);
+
+      return (result);
+    } on Exception catch (e) {
+      print(e);
+      return (1);
+    }
+  }
+
+  Future cancelCourierDelivery(String courierID) async {
+    try {
+      var response = await http.put(
+          Uri.parse(
+              "http://10.0.2.2:5000/api/postman/couriers/cancel/$courierID"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "x-auth-token": "$token"
+          });
+
+      var result = MsgRes.fromRawJson(response.body);
+
+      return (result);
+    } on Exception catch (e) {
+      print(e);
+      return (1);
+    }
   }
 
   Future addLocation(Address address) async {

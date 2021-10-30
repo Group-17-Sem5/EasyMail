@@ -13,6 +13,8 @@ import 'dart:convert';
 
 class UserController extends GetxController {
   var mails = <MailModel>[].obs;
+  var sentMails = <MailModel>[].obs;
+  var receivedMails = <MailModel>[].obs;
   var sentMoneyOrders = <MoneyOrder>[].obs;
   var receivedMoneyOrders = <MoneyOrder>[].obs;
   var selectedUser = <User>[].obs;
@@ -71,7 +73,7 @@ class UserController extends GetxController {
   }
 
   Future getSentMails() async {
-    mails.clear();
+    sentMails.clear();
     try {
       var response = await http.get(
           Uri.parse("http://10.0.2.2:5000/api/user/sent-mails/$userName"),
@@ -86,8 +88,9 @@ class UserController extends GetxController {
       var result = Result.fromRawJson(response.body);
       //print(result);
       //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
-      mails.addAll(result.mailModel);
-      print(mails.length.toString() + "results found");
+
+      sentMails.addAll(result.mailModel);
+      print(sentMails.length.toString() + "results found");
       return (result.msg);
     } on Exception catch (e) {
       print(e);
@@ -146,7 +149,7 @@ class UserController extends GetxController {
   }
 
   Future getReceivedMails() async {
-    mails.clear();
+    receivedMails.clear();
     try {
       var response = await http.get(
           Uri.parse("http://10.0.2.2:5000/api/user/mailbox/$userName"),
@@ -160,8 +163,8 @@ class UserController extends GetxController {
       var result = Result.fromRawJson(response.body);
       //print(result);
       //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
-      mails.addAll(result.mailModel);
-      print(mails.length.toString() + "results found");
+      receivedMails.addAll(result.mailModel);
+      print(receivedMails.length.toString() + "results found");
       print(result.msg);
       return (result.msg);
     } on Exception catch (e) {

@@ -1,3 +1,4 @@
+import 'package:easy_mail_app_frontend/screens/postManScreens/couriers-postman.dart';
 import 'package:easy_mail_app_frontend/screens/register.dart';
 import 'package:easy_mail_app_frontend/screens/homePage.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/cancelledMailPage.dart';
@@ -8,6 +9,7 @@ import 'package:easy_mail_app_frontend/screens/postManScreens/mailListPage.dart'
 import 'package:easy_mail_app_frontend/screens/postManScreens/marker.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/postManLogin.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/couriers-user.dart';
+import 'package:easy_mail_app_frontend/screens/userScreens/mails-user.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/moneyOrders.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/userLogin.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/userMailBox.dart';
@@ -44,9 +46,10 @@ class MyApp extends StatelessWidget {
         CancelledMailPage.route: (context) => CancelledMailPage(),
         DeliveredMailPage.route: (context) => DeliveredMailPage(),
         EditAddressDetails.route: (context) => EditAddressDetails(),
-
+        MailsUserPage.route: (context) => MailsUserPage(),
         MoneyOrdersPage.route: (context) => MoneyOrdersPage(),
         CouriersUser.route: (context) => CouriersUser(),
+        PostManCourierPage.route: (context) => PostManCourierPage(),
         // PrivateTagManaging.route: (context) => PrivateTagManaging(),
         // EventManaging.route: (context) => EventManaging(),
       },

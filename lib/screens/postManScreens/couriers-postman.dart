@@ -1,50 +1,59 @@
 import 'package:easy_mail_app_frontend/controller/userController.dart';
+import 'package:easy_mail_app_frontend/model/courierModel.dart';
+import 'package:easy_mail_app_frontend/model/moneyOrderModel.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/customerDrawer.dart';
+import 'package:easy_mail_app_frontend/shared_widgets/postManDrawer.dart';
+import 'package:easy_mail_app_frontend/shared_widgets/searchBox.dart';
 import 'package:flutter/cupertino.dart';
+import "package:flutter/material.dart";
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'dart:io';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:easy_mail_app_frontend/controller/postManController.dart';
+import 'package:easy_mail_app_frontend/controller/appBinding.dart';
+import 'package:easy_mail_app_frontend/model/mailModel.Dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:easy_mail_app_frontend/model/courierModel.dart';
 
-class CouriersUser extends StatefulWidget {
-  const CouriersUser({Key? key}) : super(key: key);
-  static const String route = '/user/courier';
+class PostManCourierPage extends StatefulWidget {
+  PostManCourierPage({Key? key}) : super(key: key);
+  static const String route = '/postman/couriers';
 
   @override
-  _CouriersUserState createState() => _CouriersUserState();
+  _PostManCourierPageState createState() => _PostManCourierPageState();
 }
 
-class _CouriersUserState extends State<CouriersUser> {
-  var userController = new UserController();
-  RefreshController _sentrefreshController = RefreshController();
-  RefreshController _receivedrefreshController = RefreshController();
+class _PostManCourierPageState extends State<PostManCourierPage> {
+  //var _searchController = FloatingSearchBarController();
+  var postManController = new PostManController();
+  RefreshController _refreshController = RefreshController();
+  PersistentTabController? _controller =
+      PersistentTabController(initialIndex: 0);
   //var searchResult = '';
   bool isLoading = false;
   bool isSearched = false;
   bool isTouched = false;
+
   var selectedCourier = <Courier>[].obs;
-  //var selectedCourier = <Courier>[].obs;
-  PersistentTabController? _controller =
-      PersistentTabController(initialIndex: 0);
+  @override
   void initState() {
     // TODO: implement initState
-
-    //_getCouriersList(2);
     super.initState();
   }
 
+  //List mails = ["mail1", "mail2", "mail3"];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: postmanAppBar(context),
-      drawer: userDrawer(context),
-      //extendBody: true,
-      body: bottomNavBar(),
-
-      //bottomNavigationBar: bottomNavBar(),
+    return Container(
+      child: Scaffold(
+        appBar: postmanAppBar(context),
+        drawer: postManDrawer(context, "Couriers"),
+        body: bottomNavBar(),
+      ),
     );
   }
 
@@ -85,56 +94,72 @@ class _CouriersUserState extends State<CouriersUser> {
   }
 
   List<Widget> _buildScreens() {
-    return [deliveredCourierScreen(), sentCourierScreen()];
+    return [assignedCouriers(), deliveredCouriers(), cancelledCouriers()];
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
-        icon: Icon(CupertinoIcons.gift),
-        title: ("Received"),
+        icon: Icon(CupertinoIcons.gift_fill),
+        title: ("Assigned"),
         activeColorPrimary: CupertinoColors.activeBlue,
         inactiveColorPrimary: CupertinoColors.systemGrey,
         //onPressed: _getCouriersList(0),
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(CupertinoIcons.arrow_up_circle_fill),
-        title: ("Sent"),
-        activeColorPrimary: CupertinoColors.activeBlue,
+        icon: Icon(CupertinoIcons.smiley),
+        title: ("Delivered"),
+        activeColorPrimary: CupertinoColors.activeGreen,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
+        //onPressed: _getCouriersList(1),
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(CupertinoIcons.gift),
+        title: ("Cancelled"),
+        activeColorPrimary: CupertinoColors.systemRed,
         inactiveColorPrimary: CupertinoColors.systemGrey,
         //onPressed: _getCouriersList(1),
       ),
     ];
   }
 
-  Widget sentCourierScreen() {
-    getCouriersList(1);
+  Widget assignedCouriers() {
+    getCouriers(0);
     return Expanded(
         child: Container(
       child: Column(children: [
-        Text("Couriers sent by You", style: GoogleFonts.laila(fontSize: 20)),
+        Text("Couriers Assigned to you"),
         tableHeading(),
-        sentTileList(),
+        assignedTileList(),
       ]),
     ));
   }
 
-  Widget deliveredCourierScreen() {
-    getCouriersList(0);
+  Widget deliveredCouriers() {
+    getCouriers(1);
     return Expanded(
         child: Container(
-      child: Column(
-        children: [
-          Text("Couriers received to you",
-              style: GoogleFonts.laila(fontSize: 20)),
-          tableHeading(),
-          receivedTileList(),
-        ],
-      ),
+      child: Column(children: [
+        Text("Couriers Delivered by you"),
+        tableHeading(),
+        receivedTileList(),
+      ]),
     ));
   }
 
-  Widget sentTileList() {
+  Widget cancelledCouriers() {
+    getCouriers(2);
+    return Expanded(
+        child: Container(
+      child: Column(children: [
+        Text("Couriers caneclled by you"),
+        tableHeading(),
+        cancelledTileList(),
+      ]),
+    ));
+  }
+
+  Widget assignedTileList() {
     return Expanded(
       child: isLoading
           ? Center(
@@ -148,16 +173,18 @@ class _CouriersUserState extends State<CouriersUser> {
           : Obx(() {
               if (isLoading) {
                 return Text('Loading');
-              } else if (userController.sentCouriers.isEmpty) {
+              } else if (postManController.assignedCouriers.isEmpty) {
                 return Text('Empty List');
               } else {
                 return ListView.builder(
                   shrinkWrap: true,
-                  itemCount: userController.sentCouriers.length,
+                  itemCount: postManController.assignedCouriers.length,
                   itemBuilder: (context, index) {
                     return Container(
-                      child: tagCard(context,
-                          userController.sentCouriers.value[index], index),
+                      child: tagCard(
+                          context,
+                          postManController.assignedCouriers.value[index],
+                          index),
                     );
                   },
                 );
@@ -180,16 +207,52 @@ class _CouriersUserState extends State<CouriersUser> {
           : Obx(() {
               if (isLoading) {
                 return Text('Loading');
-              } else if (userController.receivedCouriers.isEmpty) {
+              } else if (postManController.deliveredCouriers.isEmpty) {
                 return Text('Empty List');
               } else {
                 return ListView.builder(
                   shrinkWrap: true,
-                  itemCount: userController.receivedCouriers.length,
+                  itemCount: postManController.deliveredCouriers.length,
                   itemBuilder: (context, index) {
                     return Container(
-                      child: tagCard(context,
-                          userController.receivedCouriers.value[index], index),
+                      child: tagCard(
+                          context,
+                          postManController.deliveredCouriers.value[index],
+                          index),
+                    );
+                  },
+                );
+              }
+            }),
+    );
+  }
+
+  Widget cancelledTileList() {
+    return Expanded(
+      child: isLoading
+          ? Center(
+              child: Column(
+                children: [
+                  Text("Loading data.."),
+                  CircularProgressIndicator(),
+                ],
+              ),
+            )
+          : Obx(() {
+              if (isLoading) {
+                return Text('Loading');
+              } else if (postManController.cancelledCouriers.isEmpty) {
+                return Text('Empty List');
+              } else {
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: postManController.cancelledCouriers.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      child: tagCard(
+                          context,
+                          postManController.cancelledCouriers.value[index],
+                          index),
                     );
                   },
                 );
@@ -206,7 +269,7 @@ class _CouriersUserState extends State<CouriersUser> {
               height: 40,
               color: Colors.lightGreen,
               child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("Sender ID"))),
+                  padding: EdgeInsets.all(5.0), child: Text("MoneyOrder ID"))),
         ),
         Expanded(
           child: Container(
@@ -245,7 +308,7 @@ class _CouriersUserState extends State<CouriersUser> {
       color: Colors.greenAccent,
       child: Row(
         children: [
-          Container(width: 100, child: Text(courier.senderId)),
+          Container(width: 100, child: Text(courier.id)),
           //Container(width: 100, child: Text(mail.isDelivered.toString())),
           Container(width: 100, child: Text(courier.receiverId.toString())),
           Container(width: 100, child: Text(courier.isDelivered.toString())),
@@ -263,32 +326,26 @@ class _CouriersUserState extends State<CouriersUser> {
                 showDialog<String>(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
-                    title: const Text('Courier Details'),
+                    title: const Text('Courier Detai;s'),
                     content: SingleChildScrollView(
                       child: Column(
                         children: [
                           Container(
                               width: 300,
-                              child: Text("postMan ID : " +
-                                  selectedCourier[0].postManId.toString())),
+                              child: Text("Receiver ID : " +
+                                  selectedCourier[0].receiverId.toString())),
                           Container(
                               width: 300,
-                              child: Text("Address ID : " +
-                                  selectedCourier[0].addressId.toString())),
+                              child: Text("Weight : " +
+                                  selectedCourier[0].weight.toString())),
                           Container(
                               width: 300,
                               child: Text("Delivery Status: " +
                                   selectedCourier[0].isDelivered.toString())),
                           Container(
                               width: 300,
-                              child: Text("Last Appeared Branch: " +
-                                  selectedCourier[0]
-                                      .lastAppearedBranchId
-                                      .toString())),
-                          Container(
-                              width: 300,
-                              child: Text("Weight: " +
-                                  selectedCourier[0].weight.toString())),
+                              child: Text("Address: " +
+                                  selectedCourier[0].addressId.toString())),
                         ],
                       ),
                     ),
@@ -300,8 +357,7 @@ class _CouriersUserState extends State<CouriersUser> {
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context, 'OK');
-                          // _sentrefreshController.requestRefresh();
-                          // _receivedrefreshController.requestRefresh();
+                          // _refreshController.requestRefresh();
                         },
                         child: const Text('OK'),
                       ),
@@ -314,32 +370,59 @@ class _CouriersUserState extends State<CouriersUser> {
     );
   }
 
-  getCouriersList(int num) {
-    //print("Getting couriers");
+  //methods
+  getCouriers(int num) {
     if (num == 0) {
-      print("getting received couriers");
-      getSentCouriers();
+      getAssignedCouriersList();
     } else if (num == 1) {
-      print("getting sent couriers");
-      getReceivedCouriers();
+      getDeliveredCouriersList();
     } else {
-      print("getting all couriers");
-      getSentCouriers();
-      getReceivedCouriers();
+      getCancelledCouriersList();
     }
   }
 
-  void getSentCouriers() async {
-    var msg = userController.getSentCouriers();
-    _sentrefreshController.loadComplete();
-    _receivedrefreshController.loadComplete();
-    print(msg);
+  Future getAssignedCouriersList() async {
+    var msg = await postManController.getAssignedCouriers();
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    _refreshController.loadComplete();
   }
 
-  void getReceivedCouriers() async {
-    var msg = userController.getReceivedCouriers();
-    _sentrefreshController.loadComplete();
-    _receivedrefreshController.loadComplete();
-    print(msg);
+  Future getDeliveredCouriersList() async {
+    var msg = await postManController.getDeliveredCouriers();
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    _refreshController.loadComplete();
   }
+
+  Future getCancelledCouriersList() async {
+    var msg = await postManController.getCancelledCouriers();
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    _refreshController.loadComplete();
+  }
+
+  // Future deliverMail(String mailID) async {
+  //   var result = await postManController.confirmDelivery(mailID);
+  //   if (result.err == 0) {
+  //     var msg = result.msg;
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text('$msg')));
+  //   } else {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(const SnackBar(content: Text('Something went Wrong ')));
+  //   }
+  // }
+
+  // Future cancelDelivery(String mailID) async {
+  //   var result = await postManController.cancelDelivery(mailID);
+  //   if (result.err == 0) {
+  //     var msg = result.msg;
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text('$msg')));
+  //   } else {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(const SnackBar(content: Text('Something went Wrong ')));
+  //   }
+  // }
 }

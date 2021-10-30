@@ -1,5 +1,6 @@
 import 'package:easy_mail_app_frontend/controller/postManController.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/cancelledMailPage.dart';
+import 'package:easy_mail_app_frontend/screens/postManScreens/couriers-postman.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/deliveredmailPage.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/mailListPage.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/marker.dart';
@@ -58,6 +59,13 @@ Widget postManDrawer(BuildContext context, String userName) {
           onTap: () {
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => CancelledMailPage()));
+          },
+        ),
+        ListTile(
+          title: Text('Couriers'),
+          onTap: () {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => PostManCourierPage()));
           },
         ),
         // ListTile(

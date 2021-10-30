@@ -4,6 +4,7 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:easy_mail_app_frontend/controller/userController.dart';
 import 'package:easy_mail_app_frontend/model/addressesModel.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/mailListPage.dart';
+import 'package:easy_mail_app_frontend/screens/userScreens/mails-user.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/userMailBox.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/userAppbar.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,7 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
   TextEditingController _phoneNumberController = new TextEditingController();
   TextEditingController _addressIDController = new TextEditingController();
   TextEditingController _branchIDController = new TextEditingController();
+  TextEditingController _emailController = new TextEditingController();
   TextEditingController _confirmPasswordController =
       new TextEditingController();
   String _address = "fsd";
@@ -94,6 +96,10 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
             SizedBox(
               height: 10,
             ),
+            emailField(),
+            SizedBox(
+              height: 10,
+            ),
             Text("Address"),
             Row(
               children: [
@@ -142,6 +148,18 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Saman123",
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+    );
+  }
+
+  Widget emailField() {
+    return TextField(
+      controller: _emailController,
+      maxLength: 25,
+      decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "sam@gmail.com",
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
@@ -308,19 +326,16 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
                                     "") {
                               User user = new User(
                                   username: _userNameController.text,
-                                  receivedMoneyOrdersList: [],
-                                  receivedPostIdList: [],
+                                  status: true,
+                                  email: _emailController.text,
                                   phoneNumber: _phoneNumberController.text,
                                   addressId: _addressIDController.text,
                                   branchId: _branchIDController.text,
-                                  sentMoneyOrdersList: [],
-                                  sentPostIdList: [],
                                   password: _passwordController.text);
                               register(user);
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          ReceivedMailPage()));
+                                      builder: (context) => MailsUserPage()));
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content:

@@ -3,6 +3,7 @@ import 'package:easy_mail_app_frontend/controller/userController.dart';
 import 'package:easy_mail_app_frontend/screens/homePage.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/mailListPage.dart';
 import 'package:easy_mail_app_frontend/screens/register.dart';
+import 'package:easy_mail_app_frontend/screens/userScreens/mails-user.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/userMailBox.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
 import 'package:get/utils.dart';
@@ -154,7 +155,7 @@ class _UserLoginState extends State<UserLogin> {
       var err = await userController.login(username, password);
       if (err == 0) {
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => ReceivedMailPage()));
+            MaterialPageRoute(builder: (context) => MailsUserPage()));
       } else {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => UserLogin()));

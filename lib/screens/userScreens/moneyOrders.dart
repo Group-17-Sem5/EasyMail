@@ -120,7 +120,10 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
     return Expanded(
         child: Container(
       child: Column(children: [
-        Text("Money orders For you"),
+        Text(
+          "Money orders For you",
+          style: GoogleFonts.laila(fontSize: 18),
+        ),
         tableHeading(),
         receivedTileList(),
       ]),
@@ -132,7 +135,10 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
     return Expanded(
         child: Container(
       child: Column(children: [
-        Text("MoneyOrders sent by You"),
+        Text(
+          "MoneyOrders sent by You",
+          style: GoogleFonts.laila(fontSize: 18),
+        ),
         tableHeading(),
         sentTileList(),
       ]),
@@ -154,7 +160,8 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
               if (isLoading) {
                 return Text('Loading');
               } else if (userController.sentMoneyOrders.isEmpty) {
-                return Text('Empty List');
+                return Text('Empty List',
+                    style: GoogleFonts.laila(fontSize: 12));
               } else {
                 return ListView.builder(
                   shrinkWrap: true,
@@ -213,7 +220,7 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
               height: 40,
               color: Colors.lightGreen,
               child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("MoneyOrder ID"))),
+                  padding: EdgeInsets.all(5.0), child: Text("Sender ID"))),
         ),
         Expanded(
           child: Container(
@@ -252,7 +259,7 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
       color: Colors.greenAccent,
       child: Row(
         children: [
-          Container(width: 100, child: Text(moneyOrder.moneyOrderId)),
+          Container(width: 100, child: Text(moneyOrder.senderId)),
           //Container(width: 100, child: Text(mail.isDelivered.toString())),
           Container(width: 100, child: Text(moneyOrder.receiverId.toString())),
           Container(width: 100, child: Text(moneyOrder.isDelivered.toString())),
@@ -270,7 +277,10 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
                 showDialog<String>(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
-                    title: const Text('Mail Details'),
+                    title: Text(
+                      'Money Order Details',
+                      style: GoogleFonts.laila(fontSize: 18),
+                    ),
                     content: SingleChildScrollView(
                       child: Column(
                         children: [
@@ -278,6 +288,10 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
                               width: 300,
                               child: Text("Receiver ID : " +
                                   selectedMoneyOrder[0].receiverId.toString())),
+                          Container(
+                              width: 300,
+                              child: Text("Sender ID : " +
+                                  selectedMoneyOrder[0].senderId.toString())),
                           Container(
                               width: 300,
                               child: Text("Special Code : " +

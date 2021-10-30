@@ -182,7 +182,7 @@ class _ReceivedMailPageState extends State<ReceivedMailPage> {
                               width: 300,
                               child: Text("Last appeared Branch: " +
                                   selectedMail[0]
-                                      .lastAppearedBranch
+                                      .lastAppearedBranchId
                                       .toString())),
                         ],
                       ),

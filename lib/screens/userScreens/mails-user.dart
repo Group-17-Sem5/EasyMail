@@ -1,50 +1,58 @@
 import 'package:easy_mail_app_frontend/controller/userController.dart';
+import 'package:easy_mail_app_frontend/model/moneyOrderModel.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/customerDrawer.dart';
+import 'package:easy_mail_app_frontend/shared_widgets/postManDrawer.dart';
+import 'package:easy_mail_app_frontend/shared_widgets/searchBox.dart';
 import 'package:flutter/cupertino.dart';
+import "package:flutter/material.dart";
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'dart:io';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:easy_mail_app_frontend/controller/postManController.dart';
+import 'package:easy_mail_app_frontend/controller/appBinding.dart';
+import 'package:easy_mail_app_frontend/model/mailModel.Dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:easy_mail_app_frontend/model/courierModel.dart';
 
-class CouriersUser extends StatefulWidget {
-  const CouriersUser({Key? key}) : super(key: key);
-  static const String route = '/user/courier';
+class MailsUserPage extends StatefulWidget {
+  MailsUserPage({Key? key}) : super(key: key);
+  static const String route = '/user/mailsUser';
 
   @override
-  _CouriersUserState createState() => _CouriersUserState();
+  _MailsUserPageState createState() => _MailsUserPageState();
 }
 
-class _CouriersUserState extends State<CouriersUser> {
+class _MailsUserPageState extends State<MailsUserPage> {
+  //var _searchController = FloatingSearchBarController();
   var userController = new UserController();
-  RefreshController _sentrefreshController = RefreshController();
-  RefreshController _receivedrefreshController = RefreshController();
+  RefreshController _refreshController = RefreshController();
+  PersistentTabController? _controller =
+      PersistentTabController(initialIndex: 0);
   //var searchResult = '';
   bool isLoading = false;
   bool isSearched = false;
   bool isTouched = false;
-  var selectedCourier = <Courier>[].obs;
-  //var selectedCourier = <Courier>[].obs;
-  PersistentTabController? _controller =
-      PersistentTabController(initialIndex: 0);
+
+  var selectedMail = <MailModel>[].obs;
+  @override
   void initState() {
     // TODO: implement initState
-
-    //_getCouriersList(2);
     super.initState();
   }
 
+  //List mails = ["mail1", "mail2", "mail3"];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: postmanAppBar(context),
-      drawer: userDrawer(context),
-      //extendBody: true,
-      body: bottomNavBar(),
-
-      //bottomNavigationBar: bottomNavBar(),
+    return Container(
+      child: Scaffold(
+        appBar: postmanAppBar(context),
+        drawer: userDrawer(context),
+        body: bottomNavBar(),
+      ),
     );
   }
 
@@ -85,15 +93,15 @@ class _CouriersUserState extends State<CouriersUser> {
   }
 
   List<Widget> _buildScreens() {
-    return [deliveredCourierScreen(), sentCourierScreen()];
+    return [deliveredMailScreen(), sentMailScreen()];
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
-        icon: Icon(CupertinoIcons.gift),
+        icon: Icon(CupertinoIcons.mail_solid),
         title: ("Received"),
-        activeColorPrimary: CupertinoColors.activeBlue,
+        activeColorPrimary: CupertinoColors.activeGreen,
         inactiveColorPrimary: CupertinoColors.systemGrey,
         //onPressed: _getCouriersList(0),
       ),
@@ -107,30 +115,30 @@ class _CouriersUserState extends State<CouriersUser> {
     ];
   }
 
-  Widget sentCourierScreen() {
-    getCouriersList(1);
+  Widget deliveredMailScreen() {
+    getMails(0);
     return Expanded(
         child: Container(
       child: Column(children: [
-        Text("Couriers sent by You", style: GoogleFonts.laila(fontSize: 20)),
+        Text("Mails For you"),
         tableHeading(),
-        sentTileList(),
+        receivedTileList(),
       ]),
     ));
   }
 
-  Widget deliveredCourierScreen() {
-    getCouriersList(0);
+  Widget sentMailScreen() {
+    getMails(1);
     return Expanded(
         child: Container(
-      child: Column(
-        children: [
-          Text("Couriers received to you",
-              style: GoogleFonts.laila(fontSize: 20)),
-          tableHeading(),
-          receivedTileList(),
-        ],
-      ),
+      child: Column(children: [
+        Text(
+          "Mails sent by You",
+          style: GoogleFonts.laila(fontSize: 22),
+        ),
+        tableHeading(),
+        sentTileList(),
+      ]),
     ));
   }
 
@@ -148,16 +156,16 @@ class _CouriersUserState extends State<CouriersUser> {
           : Obx(() {
               if (isLoading) {
                 return Text('Loading');
-              } else if (userController.sentCouriers.isEmpty) {
+              } else if (userController.sentMails.isEmpty) {
                 return Text('Empty List');
               } else {
                 return ListView.builder(
                   shrinkWrap: true,
-                  itemCount: userController.sentCouriers.length,
+                  itemCount: userController.sentMails.length,
                   itemBuilder: (context, index) {
                     return Container(
                       child: tagCard(context,
-                          userController.sentCouriers.value[index], index),
+                          userController.sentMails.value[index], index),
                     );
                   },
                 );
@@ -180,16 +188,16 @@ class _CouriersUserState extends State<CouriersUser> {
           : Obx(() {
               if (isLoading) {
                 return Text('Loading');
-              } else if (userController.receivedCouriers.isEmpty) {
+              } else if (userController.receivedMails.isEmpty) {
                 return Text('Empty List');
               } else {
                 return ListView.builder(
                   shrinkWrap: true,
-                  itemCount: userController.receivedCouriers.length,
+                  itemCount: userController.receivedMails.length,
                   itemBuilder: (context, index) {
                     return Container(
                       child: tagCard(context,
-                          userController.receivedCouriers.value[index], index),
+                          userController.receivedMails.value[index], index),
                     );
                   },
                 );
@@ -205,15 +213,16 @@ class _CouriersUserState extends State<CouriersUser> {
           child: Container(
               height: 40,
               color: Colors.lightGreen,
-              child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("Sender ID"))),
+              child:
+                  Padding(padding: EdgeInsets.all(5.0), child: Text("Sender"))),
         ),
         Expanded(
           child: Container(
               height: 40,
               color: Colors.lightGreen,
               child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("receiver ID"))),
+                  padding: EdgeInsets.all(5.0),
+                  child: Text("From the branch"))),
         ),
         // Expanded(
         //   child: Container(
@@ -239,16 +248,16 @@ class _CouriersUserState extends State<CouriersUser> {
     );
   }
 
-  Widget tagCard(BuildContext context, Courier courier, int index) {
+  Widget tagCard(BuildContext context, MailModel mail, int index) {
     return Container(
       height: 40,
       color: Colors.greenAccent,
       child: Row(
         children: [
-          Container(width: 100, child: Text(courier.senderId)),
+          Container(width: 100, child: Text(mail.senderId)),
           //Container(width: 100, child: Text(mail.isDelivered.toString())),
-          Container(width: 100, child: Text(courier.receiverId.toString())),
-          Container(width: 100, child: Text(courier.isDelivered.toString())),
+          Container(width: 100, child: Text(mail.sourceBranchId.toString())),
+          Container(width: 100, child: Text(mail.isDelivered.toString())),
           // // Container(width: 100, child: Text(tag.subscriber.toString())),
           // SizedBox(),
           IconButton(
@@ -258,37 +267,33 @@ class _CouriersUserState extends State<CouriersUser> {
               hoverColor: Colors.white,
               onPressed: () {
                 isTouched = true;
-                selectedCourier.clear();
-                selectedCourier.add(courier);
+                selectedMail.clear();
+                selectedMail.add(mail);
                 showDialog<String>(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
-                    title: const Text('Courier Details'),
+                    title: const Text('Mail Details'),
                     content: SingleChildScrollView(
                       child: Column(
                         children: [
                           Container(
                               width: 300,
-                              child: Text("postMan ID : " +
-                                  selectedCourier[0].postManId.toString())),
+                              child: Text("Sender ID : " +
+                                  selectedMail[0].senderId.toString())),
                           Container(
                               width: 300,
-                              child: Text("Address ID : " +
-                                  selectedCourier[0].addressId.toString())),
-                          Container(
-                              width: 300,
-                              child: Text("Delivery Status: " +
-                                  selectedCourier[0].isDelivered.toString())),
-                          Container(
-                              width: 300,
-                              child: Text("Last Appeared Branch: " +
-                                  selectedCourier[0]
+                              child: Text("Last appeared: " +
+                                  selectedMail[0]
                                       .lastAppearedBranchId
                                       .toString())),
                           Container(
                               width: 300,
-                              child: Text("Weight: " +
-                                  selectedCourier[0].weight.toString())),
+                              child: Text("Delivery Status: " +
+                                  selectedMail[0].isDelivered.toString())),
+                          Container(
+                              width: 300,
+                              child: Text("Assigned PostMan: " +
+                                  selectedMail[0].postManId.toString())),
                         ],
                       ),
                     ),
@@ -300,8 +305,7 @@ class _CouriersUserState extends State<CouriersUser> {
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context, 'OK');
-                          // _sentrefreshController.requestRefresh();
-                          // _receivedrefreshController.requestRefresh();
+                          // _refreshController.requestRefresh();
                         },
                         child: const Text('OK'),
                       ),
@@ -314,32 +318,50 @@ class _CouriersUserState extends State<CouriersUser> {
     );
   }
 
-  getCouriersList(int num) {
-    //print("Getting couriers");
-    if (num == 0) {
-      print("getting received couriers");
-      getSentCouriers();
-    } else if (num == 1) {
-      print("getting sent couriers");
-      getReceivedCouriers();
+  //methods
+  getMails(int num) {
+    if (num == 1) {
+      getSentMailsList();
     } else {
-      print("getting all couriers");
-      getSentCouriers();
-      getReceivedCouriers();
+      getReceivedMailsList();
     }
   }
 
-  void getSentCouriers() async {
-    var msg = userController.getSentCouriers();
-    _sentrefreshController.loadComplete();
-    _receivedrefreshController.loadComplete();
-    print(msg);
+  Future getSentMailsList() async {
+    var msg = await userController.getSentMails();
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    _refreshController.loadComplete();
   }
 
-  void getReceivedCouriers() async {
-    var msg = userController.getReceivedCouriers();
-    _sentrefreshController.loadComplete();
-    _receivedrefreshController.loadComplete();
-    print(msg);
+  Future getReceivedMailsList() async {
+    var msg = await userController.getReceivedMails();
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    _refreshController.loadComplete();
   }
+
+  // Future deliverMail(String mailID) async {
+  //   var result = await postManController.confirmDelivery(mailID);
+  //   if (result.err == 0) {
+  //     var msg = result.msg;
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text('$msg')));
+  //   } else {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(const SnackBar(content: Text('Something went Wrong ')));
+  //   }
+  // }
+
+  // Future cancelDelivery(String mailID) async {
+  //   var result = await postManController.cancelDelivery(mailID);
+  //   if (result.err == 0) {
+  //     var msg = result.msg;
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text('$msg')));
+  //   } else {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(const SnackBar(content: Text('Something went Wrong ')));
+  //   }
+  // }
 }

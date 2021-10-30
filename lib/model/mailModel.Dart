@@ -39,7 +39,7 @@ class MailModel {
         required this.addressId,
         required this.isAssigned,
         required this.isDelivered,
-        required this.lastAppearedBranch,
+        required this.lastAppearedBranchId,
         required this.sourceBranchId,
         required this.receivingBranchId,
         required this.postManId,
@@ -52,7 +52,7 @@ class MailModel {
     String addressId;
     bool isAssigned;
     bool isDelivered;
-    String lastAppearedBranch;
+    String lastAppearedBranchId;
     String sourceBranchId;
     String receivingBranchId;
     String postManId;
@@ -69,7 +69,7 @@ class MailModel {
         addressId: json["addressID"],
         isAssigned: json["isAssigned"],
         isDelivered: json["isDelivered"],
-        lastAppearedBranch: json["lastAppearedBranch"],
+        lastAppearedBranchId: json["lastAppearedBranchID"],
         sourceBranchId: json["sourceBranchID"],
         receivingBranchId: json["receivingBranchID"],
         postManId: json["postManID"],
@@ -83,7 +83,7 @@ class MailModel {
         "addressID": addressId,
         "isAssigned": isAssigned,
         "isDelivered": isDelivered,
-        "lastAppearedBranch": lastAppearedBranch,
+        "lastAppearedBranchID": lastAppearedBranchId,
         "sourceBranchID": sourceBranchId,
         "receivingBranchID": receivingBranchId,
         "postManID": postManId,

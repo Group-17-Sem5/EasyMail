@@ -35,18 +35,15 @@ class UserDetails {
 }
 
 class User {
-  User({
-    required this.username,
-    required this.password,
-    required this.addressId,
-    // required this.addressDescription,
-    required this.phoneNumber,
-    required this.branchId,
-    required this.sentPostIdList,
-    required this.receivedPostIdList,
-    required this.sentMoneyOrdersList,
-    required this.receivedMoneyOrdersList,
-  });
+  User(
+      {required this.username,
+      required this.password,
+      required this.addressId,
+      // required this.addressDescription,
+      required this.phoneNumber,
+      required this.branchId,
+      required this.status,
+      required this.email});
 
   String username;
   String password;
@@ -54,10 +51,8 @@ class User {
   // String addressDescription;
   String phoneNumber;
   String branchId;
-  List<dynamic> sentPostIdList;
-  List<dynamic> receivedPostIdList;
-  List<dynamic> sentMoneyOrdersList;
-  List<dynamic> receivedMoneyOrdersList;
+  bool status;
+  String email;
 
   factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
 
@@ -70,14 +65,8 @@ class User {
         // addressDescription: json["addressDescription"],
         phoneNumber: json["phoneNumber"],
         branchId: json["branchID"],
-        sentPostIdList:
-            List<dynamic>.from(json["sentPostIDList"].map((x) => x)),
-        receivedPostIdList:
-            List<dynamic>.from(json["receivedPostIDList"].map((x) => x)),
-        sentMoneyOrdersList:
-            List<dynamic>.from(json["sentMoneyOrdersList"].map((x) => x)),
-        receivedMoneyOrdersList:
-            List<dynamic>.from(json["receivedMoneyOrdersList"].map((x) => x)),
+        status: json['status'],
+        email: json['email'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -87,12 +76,7 @@ class User {
         // "addressDescription": addressDescription,
         "phoneNumber": phoneNumber,
         "branchID": branchId,
-        "sentPostIDList": List<dynamic>.from(sentPostIdList.map((x) => x)),
-        "receivedPostIDList":
-            List<dynamic>.from(receivedPostIdList.map((x) => x)),
-        "sentMoneyOrdersList":
-            List<dynamic>.from(sentMoneyOrdersList.map((x) => x)),
-        "receivedMoneyOrdersList":
-            List<dynamic>.from(receivedMoneyOrdersList.map((x) => x)),
+        "status": status,
+        "email": email,
       };
 }

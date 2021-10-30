@@ -183,7 +183,7 @@ class _UserSentMailPageState extends State<UserSentMailPage> {
                               width: 300,
                               child: Text("Last Appeeared Branch: " +
                                   selectedMail[0]
-                                      .lastAppearedBranch
+                                      .lastAppearedBranchId
                                       .toString())),
                         ],
                       ),
