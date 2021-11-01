@@ -263,7 +263,10 @@ class _CouriersUserState extends State<CouriersUser> {
                 showDialog<String>(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
-                    title: const Text('Courier Details'),
+                    title: Text(
+                      'Courier Details',
+                      style: GoogleFonts.laila(fontSize: 18),
+                    ),
                     content: SingleChildScrollView(
                       child: Column(
                         children: [

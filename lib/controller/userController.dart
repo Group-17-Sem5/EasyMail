@@ -249,12 +249,11 @@ class UserController extends GetxController {
     addresses.clear();
     print("getting all locations");
     try {
-      var response = await http.get(
-          Uri.parse("http://10.0.2.2:5000/api/postman/address/"),
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            "x-auth-token": "$token"
-          });
+      var response = await http
+          .get(Uri.parse("http://10.0.2.2:5000/api/user/addresses/"), headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        "x-auth-token": "$token"
+      });
 
       var result = AddressList.fromRawJson(response.body);
       print(result.addresses);

@@ -344,15 +344,15 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
   Future getSentMoneyOrdersList() async {
     var msg = await userController.getSentMoneyOrders();
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
-    _refreshController.loadComplete();
+    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    // _refreshController.loadComplete();
   }
 
   Future getReceivedMoneyOrdersList() async {
     var msg = await userController.getReceivedMoneyOrders();
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
-    _refreshController.loadComplete();
+    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    // _refreshController.loadComplete();
   }
 
   // Future deliverMail(String mailID) async {

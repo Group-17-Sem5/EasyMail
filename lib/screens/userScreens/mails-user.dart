@@ -120,7 +120,10 @@ class _MailsUserPageState extends State<MailsUserPage> {
     return Expanded(
         child: Container(
       child: Column(children: [
-        Text("Mails For you"),
+        Text(
+          "Mails For you",
+          style: GoogleFonts.laila(fontSize: 22),
+        ),
         tableHeading(),
         receivedTileList(),
       ]),
@@ -272,7 +275,10 @@ class _MailsUserPageState extends State<MailsUserPage> {
                 showDialog<String>(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
-                    title: const Text('Mail Details'),
+                    title: Text(
+                      'Mail Details',
+                      style: GoogleFonts.laila(fontSize: 18),
+                    ),
                     content: SingleChildScrollView(
                       child: Column(
                         children: [
@@ -280,6 +286,10 @@ class _MailsUserPageState extends State<MailsUserPage> {
                               width: 300,
                               child: Text("Sender ID : " +
                                   selectedMail[0].senderId.toString())),
+                          Container(
+                              width: 300,
+                              child: Text("Receiver ID : " +
+                                  selectedMail[0].receiverId.toString())),
                           Container(
                               width: 300,
                               child: Text("Last appeared: " +
@@ -330,15 +340,15 @@ class _MailsUserPageState extends State<MailsUserPage> {
   Future getSentMailsList() async {
     var msg = await userController.getSentMails();
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
-    _refreshController.loadComplete();
+    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    // _refreshController.loadComplete();
   }
 
   Future getReceivedMailsList() async {
     var msg = await userController.getReceivedMails();
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
-    _refreshController.loadComplete();
+    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    // _refreshController.loadComplete();
   }
 
   // Future deliverMail(String mailID) async {

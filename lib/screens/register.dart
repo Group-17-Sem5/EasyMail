@@ -31,7 +31,7 @@ class RegisterProfilePage extends StatefulWidget {
 }
 
 class _RegisterProfilePageState extends State<RegisterProfilePage> {
-  PostManController postManController = new PostManController();
+  //PostManController postManController = new PostManController();
   bool _isEditing = false;
   bool _isHidden = true;
   var _addressIds = <String>[];
@@ -44,7 +44,7 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
   TextEditingController _emailController = new TextEditingController();
   TextEditingController _confirmPasswordController =
       new TextEditingController();
-  String _address = "fsd";
+  String? _address;
 
   @override
   void initState() {
@@ -56,6 +56,8 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
       _phoneNumberController.text = userController.selectedUser[0].phoneNumber;
       _addressIDController.text = userController.selectedUser[0].addressId;
       _address = userController.selectedUser[0].addressId;
+      _emailController.text = userController.selectedUser[0].email;
+      _branchIDController.text = userController.selectedUser[0].branchId;
     } else {
       print("Creating a new user");
       _userNameController.text = "";
@@ -263,19 +265,23 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
   }
 
   void getAddresses() async {
-    if (_isEditing) {
-      await userController.getLocations();
-      for (Address address in userController.addresses) {
-        _addressIds.add(address.addressId);
-      }
-    } else {
-      _addressIds.add("default");
-      print(_addressIds);
+    //_addressIds.add("dd");
+    await userController.getLocations();
+
+    for (Address address in userController.addresses) {
+      _addressIds.add(address.addressId.toString());
     }
+    setState(() {});
+
+    //_addressIds.add("default");
+    print(_addressIds);
   }
 
   void register(User user) async {
     await userController.register(user);
+    if (_isEditing) {
+      //await userController.updateProfile(user);
+    } else {}
     // print(_confirmPasswordController);
     // print(_passwordController);
   }

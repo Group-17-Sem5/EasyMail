@@ -39,7 +39,6 @@ class User {
       {required this.username,
       required this.password,
       required this.addressId,
-      // required this.addressDescription,
       required this.phoneNumber,
       required this.branchId,
       required this.status,
@@ -48,7 +47,7 @@ class User {
   String username;
   String password;
   String addressId;
-  // String addressDescription;
+
   String phoneNumber;
   String branchId;
   bool status;
@@ -61,10 +60,9 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) => User(
         username: json["username"],
         password: json["password"],
-        addressId: json["addressID"],
-        // addressDescription: json["addressDescription"],
+        addressId: json["addressId"],
         phoneNumber: json["phoneNumber"],
-        branchId: json["branchID"],
+        branchId: json["branchId"],
         status: json['status'],
         email: json['email'],
       );
@@ -72,10 +70,9 @@ class User {
   Map<String, dynamic> toJson() => {
         "username": username,
         "password": password,
-        "addressID": addressId,
-        // "addressDescription": addressDescription,
+        "addressId": addressId,
         "phoneNumber": phoneNumber,
-        "branchID": branchId,
+        "branchId": branchId,
         "status": status,
         "email": email,
       };
