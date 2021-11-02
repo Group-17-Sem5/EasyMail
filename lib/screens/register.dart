@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:easy_mail_app_frontend/controller/userController.dart';
@@ -23,18 +24,32 @@ import 'package:easy_mail_app_frontend/controller/postManController.dart';
 // import 'package:user_profile_ii_example/widget/textfield_widget.dart';
 
 class RegisterProfilePage extends StatefulWidget {
-  const RegisterProfilePage({Key? key}) : super(key: key);
+  final bool isEditing;
+  const RegisterProfilePage({Key? key, required this.isEditing})
+      : super(key: key);
   static const String route = '/user/register';
 
   @override
   _RegisterProfilePageState createState() => _RegisterProfilePageState();
+  bool getIsEditing() {
+    return this.isEditing;
+  }
 }
 
 class _RegisterProfilePageState extends State<RegisterProfilePage> {
   //PostManController postManController = new PostManController();
+
   bool _isEditing = false;
   bool _isHidden = true;
   var _addressIds = <String>[];
+  var _branchIds = <String>[
+    "Mathugama",
+    "Colombo",
+    "Jaffna",
+    "Galle",
+    "Mathara",
+    "Kandy"
+  ];
   UserController userController = new UserController();
   TextEditingController _userNameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
@@ -59,6 +74,7 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
       _emailController.text = userController.selectedUser[0].email;
       _branchIDController.text = userController.selectedUser[0].branchId;
     } else {
+      print(_isEditing);
       print("Creating a new user");
       _userNameController.text = "";
       _passwordController.text = "";
@@ -98,7 +114,10 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
             SizedBox(
               height: 10,
             ),
-            emailField(),
+            Text("Branch ID"),
+            Row(
+              children: [branchIdField(), branchDropList()],
+            ),
             SizedBox(
               height: 10,
             ),
@@ -118,8 +137,8 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
             SizedBox(
               height: 10,
             ),
-            Text("Branch Id"),
-            branchIdField(),
+            Text("Email Address"),
+            emailField(),
             SizedBox(
               height: 10,
             ),
@@ -174,7 +193,7 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
         readOnly: true,
         decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Address123",
+            hintText: "Select from drop list",
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
       ),
@@ -182,14 +201,17 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
   }
 
   Widget branchIdField() {
-    return TextField(
-      controller: _branchIDController,
-      maxLength: 15,
-      decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Branch 123",
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+    return Expanded(
+      child: TextField(
+        controller: _branchIDController,
+        readOnly: true,
+        maxLength: 15,
+        decoration: InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            hintText: "Select From Drop List",
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+      ),
     );
   }
 
@@ -199,7 +221,7 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
       maxLength: 10,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "01123365487",
+          hintText: "phone number here",
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
@@ -216,6 +238,7 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
     return DropdownButton<String>(
       hint: Text("Select"),
       icon: const Icon(Icons.arrow_drop_down_rounded),
+      onTap: getAddresses,
       iconSize: 24,
       elevation: 16,
       style: const TextStyle(color: Colors.deepPurple),
@@ -239,6 +262,35 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
     );
   }
 
+  Widget branchDropList() {
+    return DropdownButton<String>(
+      hint: Text("Select"),
+      icon: const Icon(Icons.arrow_drop_down_rounded),
+      onTap: getAddresses,
+      iconSize: 24,
+      elevation: 16,
+      style: const TextStyle(color: Colors.deepPurple),
+      underline: Container(
+        height: 2,
+        color: Colors.deepPurpleAccent,
+      ),
+      onChanged: (String? newValue) {
+        setState(() {
+          //dropdownValue = newValue!;
+          getAddressesWithBranch(newValue);
+          _branchIDController.text = newValue!;
+          print(newValue);
+        });
+      },
+      items: _branchIds.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+
   Widget signUpButton(BuildContext context) {
     return Material(
       elevation: 10.0,
@@ -254,7 +306,14 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
             ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Fill The all details')));
           } else {
-            submit(context);
+            if (RegExp(
+                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                .hasMatch(_emailController.text)) {
+              submit(context);
+            } else {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(const SnackBar(content: Text('Invalid Email')));
+            }
           }
         },
         child: Text("Sign up",
@@ -267,7 +326,7 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
   void getAddresses() async {
     //_addressIds.add("dd");
     await userController.getLocations();
-
+    _addressIds.clear();
     for (Address address in userController.addresses) {
       _addressIds.add(address.addressId.toString());
     }
@@ -277,11 +336,33 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
     print(_addressIds);
   }
 
-  void register(User user) async {
-    await userController.register(user);
-    if (_isEditing) {
+  void getAddressesWithBranch(branchId) async {
+    //_addressIds.add("dd");
+    await userController.getLocationsWithBranch(branchId);
+    _addressIds.clear();
+    for (Address address in userController.addresses) {
+      _addressIds.add(address.addressId.toString());
+    }
+    setState(() {});
+
+    //_addressIds.add("default");
+    print(_addressIds);
+  }
+
+  void register(User user, context) async {
+    var result = await userController.register(user);
+    if (result.err == 1) {
       //await userController.updateProfile(user);
-    } else {}
+      var msg = result.msg;
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('$msg')));
+    } else {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => MailsUserPage()));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Successfully registered')));
+    }
     // print(_confirmPasswordController);
     // print(_passwordController);
   }
@@ -338,14 +419,7 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
                                   addressId: _addressIDController.text,
                                   branchId: _branchIDController.text,
                                   password: _passwordController.text);
-                              register(user);
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => MailsUserPage()));
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content:
-                                          Text('Successfully registered')));
+                              register(user, context);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(

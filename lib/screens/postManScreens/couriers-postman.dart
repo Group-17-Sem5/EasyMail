@@ -174,14 +174,15 @@ class _PostManCourierPageState extends State<PostManCourierPage> {
               if (isLoading) {
                 return Text('Loading');
               } else if (postManController.assignedCouriers.isEmpty) {
-                return Text('Empty List');
+                return Text('No Assigned Couriers Yet',
+                    style: GoogleFonts.laila(fontSize: 12));
               } else {
                 return ListView.builder(
                   shrinkWrap: true,
                   itemCount: postManController.assignedCouriers.length,
                   itemBuilder: (context, index) {
                     return Container(
-                      child: tagCard(
+                      child: assignedTagCard(
                           context,
                           postManController.assignedCouriers.value[index],
                           index),
@@ -242,7 +243,8 @@ class _PostManCourierPageState extends State<PostManCourierPage> {
               if (isLoading) {
                 return Text('Loading');
               } else if (postManController.cancelledCouriers.isEmpty) {
-                return Text('Empty List');
+                return Text('No Couriers Yet',
+                    style: GoogleFonts.laila(fontSize: 12));
               } else {
                 return ListView.builder(
                   shrinkWrap: true,
@@ -326,7 +328,8 @@ class _PostManCourierPageState extends State<PostManCourierPage> {
                 showDialog<String>(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
-                    title: const Text('Courier Detai;s'),
+                    title: Text('Courier Details',
+                        style: GoogleFonts.laila(fontSize: 12)),
                     content: SingleChildScrollView(
                       child: Column(
                         children: [
@@ -370,6 +373,95 @@ class _PostManCourierPageState extends State<PostManCourierPage> {
     );
   }
 
+  Widget assignedTagCard(BuildContext context, Courier courier, int index) {
+    return Container(
+      height: 40,
+      color: Colors.greenAccent,
+      child: Row(
+        children: [
+          Container(width: 100, child: Text(courier.id)),
+          //Container(width: 100, child: Text(mail.isDelivered.toString())),
+          Container(width: 100, child: Text(courier.receiverId.toString())),
+          Container(width: 100, child: Text(courier.isDelivered.toString())),
+          // // Container(width: 100, child: Text(tag.subscriber.toString())),
+          // SizedBox(),
+          IconButton(
+              tooltip: "view",
+              icon: Icon(Icons.mail),
+              color: Colors.black,
+              hoverColor: Colors.white,
+              onPressed: () {
+                isTouched = true;
+                selectedCourier.clear();
+                selectedCourier.add(courier);
+                showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: Text('Courier Details',
+                        style: GoogleFonts.laila(fontSize: 12)),
+                    content: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Container(
+                              width: 300,
+                              child: Text("Receiver ID : " +
+                                  selectedCourier[0].receiverId.toString())),
+                          Container(
+                              width: 300,
+                              child: Text("Weight : " +
+                                  selectedCourier[0].weight.toString())),
+                          Container(
+                              width: 300,
+                              child: Text("Delivery Status: " +
+                                  selectedCourier[0].isDelivered.toString())),
+                          Container(
+                              width: 300,
+                              child: Text("Address: " +
+                                  selectedCourier[0].addressId.toString())),
+                          Row(
+                            children: [
+                              IconButton(
+                                  tooltip: "Deliver",
+                                  icon: Icon(Icons.check),
+                                  color: Colors.black,
+                                  hoverColor: Colors.white,
+                                  onPressed: () {
+                                    deliverCourier(courier.id);
+                                  }),
+                              IconButton(
+                                  tooltip: "Cancel",
+                                  icon: Icon(Icons.block),
+                                  color: Colors.black,
+                                  hoverColor: Colors.white,
+                                  onPressed: () {
+                                    cancelDelivery(courier.id);
+                                  }),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      // TextButton(
+                      //   onPressed: () => Navigator.pop(context, 'Cancel'),
+                      //   child: const Text('Cancel'),
+                      // ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context, 'OK');
+                          // _refreshController.requestRefresh();
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+        ],
+      ),
+    );
+  }
+
   //methods
   getCouriers(int num) {
     if (num == 0) {
@@ -384,22 +476,36 @@ class _PostManCourierPageState extends State<PostManCourierPage> {
   Future getAssignedCouriersList() async {
     var msg = await postManController.getAssignedCouriers();
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
     _refreshController.loadComplete();
   }
 
   Future getDeliveredCouriersList() async {
     var msg = await postManController.getDeliveredCouriers();
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
     _refreshController.loadComplete();
   }
 
   Future getCancelledCouriersList() async {
     var msg = await postManController.getCancelledCouriers();
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
     _refreshController.loadComplete();
+  }
+
+  Future deliverCourier(id) async {
+    var msg = await postManController.confirmCourierDelivery(id);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => PostManCourierPage()));
+  }
+
+  Future cancelDelivery(id) async {
+    var msg = await postManController.cancelCourierDelivery(id);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$msg')));
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => PostManCourierPage()));
   }
 
   // Future deliverMail(String mailID) async {

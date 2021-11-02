@@ -189,7 +189,8 @@ class _CancelledMailPageState extends State<CancelledMailPage> {
               if (isLoading) {
                 return Text('Loading');
               } else if (postManController.mails.isEmpty) {
-                return Text('Empty List');
+                return Text('No Cancelled Mails Yet',
+                    style: GoogleFonts.laila(fontSize: 12));
               } else {
                 return SmartRefresher(
                   controller: _refreshController,

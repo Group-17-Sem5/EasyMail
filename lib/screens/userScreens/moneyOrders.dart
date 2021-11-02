@@ -160,7 +160,7 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
               if (isLoading) {
                 return Text('Loading');
               } else if (userController.sentMoneyOrders.isEmpty) {
-                return Text('Empty List',
+                return Text('No sent Money Orders Yet',
                     style: GoogleFonts.laila(fontSize: 12));
               } else {
                 return ListView.builder(
@@ -193,7 +193,8 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
               if (isLoading) {
                 return Text('Loading');
               } else if (userController.receivedMoneyOrders.isEmpty) {
-                return Text('Empty List');
+                return Text('No Received Money orders Yet',
+                    style: GoogleFonts.laila(fontSize: 12));
               } else {
                 return ListView.builder(
                   shrinkWrap: true,

@@ -159,7 +159,8 @@ class _DeliveredMailPageState extends State<DeliveredMailPage> {
               if (isLoading) {
                 return Text('Loading');
               } else if (postManController.mails.isEmpty) {
-                return Text('Empty List');
+                return Text('No Mails Yet',
+                    style: GoogleFonts.laila(fontSize: 12));
               } else {
                 return SmartRefresher(
                   controller: _refreshController,

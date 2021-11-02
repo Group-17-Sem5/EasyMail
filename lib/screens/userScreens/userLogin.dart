@@ -82,6 +82,7 @@ class _UserLoginState extends State<UserLogin> {
     return (TextField(
       controller: _userNameController,
       obscureText: false,
+      maxLength: 30,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "user name",
@@ -94,6 +95,7 @@ class _UserLoginState extends State<UserLogin> {
     return TextField(
       controller: _passwordController,
       obscureText: true,
+      maxLength: 15,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Password",
@@ -176,8 +178,8 @@ class _UserLoginState extends State<UserLogin> {
         minWidth: 25,
         padding: EdgeInsets.all(10),
         onPressed: () async {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => RegisterProfilePage()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => RegisterProfilePage(isEditing: false)));
         },
         child: Text("Sign up",
             textAlign: TextAlign.center,

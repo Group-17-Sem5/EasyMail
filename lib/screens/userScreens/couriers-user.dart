@@ -149,7 +149,8 @@ class _CouriersUserState extends State<CouriersUser> {
               if (isLoading) {
                 return Text('Loading');
               } else if (userController.sentCouriers.isEmpty) {
-                return Text('Empty List');
+                return Text('No Sent Couriers Yet',
+                    style: GoogleFonts.laila(fontSize: 12));
               } else {
                 return ListView.builder(
                   shrinkWrap: true,
@@ -181,7 +182,8 @@ class _CouriersUserState extends State<CouriersUser> {
               if (isLoading) {
                 return Text('Loading');
               } else if (userController.receivedCouriers.isEmpty) {
-                return Text('Empty List');
+                return Text('No Received Couriers Yet',
+                    style: GoogleFonts.laila(fontSize: 12));
               } else {
                 return ListView.builder(
                   shrinkWrap: true,

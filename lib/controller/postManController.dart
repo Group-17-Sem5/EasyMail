@@ -6,7 +6,7 @@ import 'package:easy_mail_app_frontend/model/updatingMsgModel.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../model/mailModel.Dart';
-import '../model/addressModel.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -279,7 +279,7 @@ class PostManController extends GetxController {
 
       var result = MsgRes.fromRawJson(response.body);
 
-      return (result);
+      return (result.msg);
     } on Exception catch (e) {
       print(e);
       return (1);
@@ -298,7 +298,7 @@ class PostManController extends GetxController {
 
       var result = MsgRes.fromRawJson(response.body);
 
-      return (result);
+      return (result.msg);
     } on Exception catch (e) {
       print(e);
       return (1);

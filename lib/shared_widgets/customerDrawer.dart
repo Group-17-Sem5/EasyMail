@@ -1,4 +1,5 @@
 import 'package:easy_mail_app_frontend/screens/postManScreens/marker.dart';
+import 'package:easy_mail_app_frontend/screens/register.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/couriers-user.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/mails-user.dart';
 import 'package:easy_mail_app_frontend/screens/userScreens/moneyOrders.dart';
@@ -48,6 +49,16 @@ Widget userDrawer(BuildContext context) {
         //         MaterialPageRoute(builder: (context) => UserSentMailPage()));
         //   },
         // ),
+        ListTile(
+          title: Text(
+            'Edit My Profile',
+            style: GoogleFonts.laila(fontSize: 18),
+          ),
+          onTap: () {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => RegisterProfilePage(isEditing: true)));
+          },
+        ),
         ListTile(
           title: Text(
             'Mails',

@@ -39,7 +39,8 @@ class MyApp extends StatelessWidget {
 
         PlaceMarkerBody.route: (context) => PlaceMarkerBody(),
         // ProfilePage.route: (context) => ProfilePage(),
-        RegisterProfilePage.route: (context) => RegisterProfilePage(),
+        RegisterProfilePage.route: (context) =>
+            RegisterProfilePage(isEditing: false),
         UserLogin.route: (context) => UserLogin(),
         UserSentMailPage.route: (context) => UserSentMailPage(),
         ReceivedMailPage.route: (context) => ReceivedMailPage(),

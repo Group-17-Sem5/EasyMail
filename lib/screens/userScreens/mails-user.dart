@@ -160,7 +160,8 @@ class _MailsUserPageState extends State<MailsUserPage> {
               if (isLoading) {
                 return Text('Loading');
               } else if (userController.sentMails.isEmpty) {
-                return Text('Empty List');
+                return Text('No Sent Mails Yet',
+                    style: GoogleFonts.laila(fontSize: 12));
               } else {
                 return ListView.builder(
                   shrinkWrap: true,
@@ -192,7 +193,8 @@ class _MailsUserPageState extends State<MailsUserPage> {
               if (isLoading) {
                 return Text('Loading');
               } else if (userController.receivedMails.isEmpty) {
-                return Text('Empty List');
+                return Text('No Received Mails Yet',
+                    style: GoogleFonts.laila(fontSize: 12));
               } else {
                 return ListView.builder(
                   shrinkWrap: true,

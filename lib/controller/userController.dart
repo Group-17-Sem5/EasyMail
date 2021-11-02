@@ -7,7 +7,7 @@ import 'package:easy_mail_app_frontend/model/tokenModel.dart';
 import 'package:easy_mail_app_frontend/model/userModel.dart';
 import 'package:get/get.dart';
 import '../model/mailModel.Dart';
-import '../model/addressModel.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -41,7 +41,7 @@ class UserController extends GetxController {
       userName = user.username;
       print(userName);
       print(token);
-      return result.err;
+      return result;
     } on Exception catch (e) {
       print(e);
       return null;
@@ -250,10 +250,32 @@ class UserController extends GetxController {
     print("getting all locations");
     try {
       var response = await http
-          .get(Uri.parse("http://10.0.2.2:5000/api/user/addresses/"), headers: {
+          .get(Uri.parse("http://10.0.2.2:5000/api/user/addresses"), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         "x-auth-token": "$token"
       });
+
+      var result = AddressList.fromRawJson(response.body);
+      print(result.addresses);
+
+      addresses.addAll(result.addresses);
+      print(addresses.length.toString() + "results found");
+      return (result);
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  Future getLocationsWithBranch(branchId) async {
+    addresses.clear();
+    print("getting all locations");
+    try {
+      var response = await http.get(
+          Uri.parse("http://10.0.2.2:5000/api/user/addresses/$branchId"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "x-auth-token": "$token"
+          });
 
       var result = AddressList.fromRawJson(response.body);
       print(result.addresses);
