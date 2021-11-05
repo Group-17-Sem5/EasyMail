@@ -1,8 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.easy_mail_app_frontend">
+    <uses-permission
+android:name="android.permission.ACCESS_FINE_LOCATION" />
+   <uses-permission
+android:name="android.permission.ACCESS_COARSE_LOCATION" />
    <application
         android:label="easy_mail_app_frontend"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+android:value="AIzaSyD6_ffwy4Z0h4i55YCd0FB6e_5jJDBof6g
+"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
