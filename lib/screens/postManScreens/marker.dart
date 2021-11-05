@@ -576,7 +576,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     Address address = new Address(
         addressId: "Address$markerID",
         description: "default$markerID",
-        branchId: "default$markerID",
+        branchId: "default",
         lng: "80.12186606879841",
         lat: "6.500533840690815",
         userIdList: []);

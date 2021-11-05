@@ -75,6 +75,7 @@ class _PostManLoginState extends State<PostManLogin> {
     return (TextField(
       controller: _emailController,
       obscureText: false,
+      maxLength: 15,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "User Name",
@@ -87,6 +88,7 @@ class _PostManLoginState extends State<PostManLogin> {
     return TextField(
       controller: _passwordController,
       obscureText: true,
+      maxLength: 15,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Password",

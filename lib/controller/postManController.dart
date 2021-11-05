@@ -26,7 +26,7 @@ class PostManController extends GetxController {
     print(username);
     try {
       var response = await http.post(
-        Uri.parse("http://10.0.2.2:5000/api/postman/login"),
+        Uri.parse("https://easy-mail-test.herokuapp.com/api/postman/login"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -52,7 +52,8 @@ class PostManController extends GetxController {
     print("getting all locations");
     try {
       var response = await http.get(
-          Uri.parse("http://10.0.2.2:5000/api/postman/address/$userName"),
+          Uri.parse(
+              "https://easy-mail-test.herokuapp.com/api/postman/address/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -72,7 +73,8 @@ class PostManController extends GetxController {
   Future confirmDelivery(String mailID) async {
     try {
       var response = await http.put(
-          Uri.parse("http://10.0.2.2:5000/api/postman/posts/confirm/$mailID"),
+          Uri.parse(
+              "https://easy-mail-test.herokuapp.com/api/postman/posts/confirm/$mailID"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -90,7 +92,8 @@ class PostManController extends GetxController {
   Future cancelDelivery(String mailID) async {
     try {
       var response = await http.put(
-          Uri.parse("http://10.0.2.2:5000/api/postman/posts/cancel/$mailID"),
+          Uri.parse(
+              "https://easy-mail-test.herokuapp.com/api/postman/posts/cancel/$mailID"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -115,7 +118,8 @@ class PostManController extends GetxController {
     mails.clear();
     try {
       var response = await http.get(
-          Uri.parse("http://10.0.2.2:5000/api/postman/posts/$userName"),
+          Uri.parse(
+              "https://easy-mail-test.herokuapp.com/api/postman/posts/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -141,7 +145,7 @@ class PostManController extends GetxController {
     try {
       var response = await http.get(
           Uri.parse(
-              "http://10.0.2.2:5000/api/postman/delivered-posts/$userName"),
+              "https://easy-mail-test.herokuapp.com/api/postman/delivered-posts/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -167,7 +171,7 @@ class PostManController extends GetxController {
     try {
       var response = await http.get(
           Uri.parse(
-              "http://10.0.2.2:5000/api/postman/cancelled-posts/$userName"),
+              "https://easy-mail-test.herokuapp.com/api/postman/cancelled-posts/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -192,7 +196,8 @@ class PostManController extends GetxController {
     //print(userName);
     try {
       var response = await http.get(
-          Uri.parse("http://10.0.2.2:5000/api/postman/couriers/$userName"),
+          Uri.parse(
+              "https://easy-mail-test.herokuapp.com/api/postman/couriers/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -219,7 +224,7 @@ class PostManController extends GetxController {
     try {
       var response = await http.get(
           Uri.parse(
-              "http://10.0.2.2:5000/api/postman/delivered-couriers/$userName"),
+              "https://easy-mail-test.herokuapp.com/api/postman/delivered-couriers/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -246,7 +251,7 @@ class PostManController extends GetxController {
     try {
       var response = await http.get(
           Uri.parse(
-              "http://10.0.2.2:5000/api/postman/cancelled-couriers/$userName"),
+              "https://easy-mail-test.herokuapp.com/api/postman/cancelled-couriers/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -271,7 +276,7 @@ class PostManController extends GetxController {
     try {
       var response = await http.put(
           Uri.parse(
-              "http://10.0.2.2:5000/api/postman/couriers/confirm/$courierID"),
+              "https://easy-mail-test.herokuapp.com/api/postman/couriers/confirm/$courierID"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -290,7 +295,7 @@ class PostManController extends GetxController {
     try {
       var response = await http.put(
           Uri.parse(
-              "http://10.0.2.2:5000/api/postman/couriers/cancel/$courierID"),
+              "https://easy-mail-test.herokuapp.com/api/postman/couriers/cancel/$courierID"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -311,7 +316,8 @@ class PostManController extends GetxController {
       // var lat = newPosition.latitude;
       // var lng = newPosition.longitude;
       var response = await http.post(
-        Uri.parse("http://10.0.2.2:5000/api/postman/address/add"),
+        Uri.parse(
+            "https://easy-mail-test.herokuapp.com/api/postman/address/add"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           "x-auth-token": "$token"
@@ -334,7 +340,8 @@ class PostManController extends GetxController {
       var lat = newPosition.latitude;
       var lng = newPosition.longitude;
       var response = await http.put(
-          Uri.parse("http://10.0.2.2:5000/api/postman/address/$addressID"),
+          Uri.parse(
+              "https://easy-mail-test.herokuapp.com/api/postman/address/$addressID"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -359,7 +366,8 @@ class PostManController extends GetxController {
   Future removeLocation(String addressID) async {
     try {
       var response = await http.delete(
-        Uri.parse("http://10.0.2.2:5000/api/postman/address/$addressID"),
+        Uri.parse(
+            "https://easy-mail-test.herokuapp.com/api/postman/address/$addressID"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           "x-auth-token": "$token"
@@ -379,7 +387,8 @@ class PostManController extends GetxController {
     //print("$newPosition");
     try {
       var response = await http.put(
-        Uri.parse("http://10.0.2.2:5000/api/postman/address/update/$addressID"),
+        Uri.parse(
+            "https://easy-mail-test.herokuapp.com/api/postman/address/update/$addressID"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           "x-auth-token": "$token"

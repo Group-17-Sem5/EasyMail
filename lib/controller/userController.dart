@@ -29,7 +29,7 @@ class UserController extends GetxController {
     print(user.username);
     try {
       var response = await http.post(
-        Uri.parse("http://10.0.2.2:5000/api/user/register"),
+        Uri.parse("https://easy-mail-test.herokuapp.com/api/user/register"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -52,7 +52,7 @@ class UserController extends GetxController {
     print(username);
     try {
       var response = await http.post(
-        Uri.parse("http://10.0.2.2:5000/api/user/login"),
+        Uri.parse("https://easy-mail-test.herokuapp.com/api/user/login"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -76,7 +76,8 @@ class UserController extends GetxController {
     sentMails.clear();
     try {
       var response = await http.get(
-          Uri.parse("http://10.0.2.2:5000/api/user/sent-mails/$userName"),
+          Uri.parse(
+              "https://easy-mail-test.herokuapp.com/api/user/sent-mails/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "mailID": "mail002",
@@ -103,7 +104,8 @@ class UserController extends GetxController {
     sentMoneyOrders.clear();
     try {
       var response = await http.get(
-          Uri.parse("http://10.0.2.2:5000/api/user/money-order/$userName"),
+          Uri.parse(
+              "https://easy-mail-test.herokuapp.com/api/user/money-order/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -128,7 +130,7 @@ class UserController extends GetxController {
     try {
       var response = await http.get(
           Uri.parse(
-              "http://10.0.2.2:5000/api/user/received-money-order/$userName"),
+              "https://easy-mail-test.herokuapp.com/api/user/received-money-order/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -152,7 +154,8 @@ class UserController extends GetxController {
     receivedMails.clear();
     try {
       var response = await http.get(
-          Uri.parse("http://10.0.2.2:5000/api/user/mailbox/$userName"),
+          Uri.parse(
+              "https://easy-mail-test.herokuapp.com/api/user/mailbox/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -178,7 +181,8 @@ class UserController extends GetxController {
     receivedCouriers.clear();
     try {
       var response = await http.get(
-          Uri.parse("http://10.0.2.2:5000/api/user/sent-couriers/$userName"),
+          Uri.parse(
+              "https://easy-mail-test.herokuapp.com/api/user/sent-couriers/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -205,7 +209,7 @@ class UserController extends GetxController {
     try {
       var response = await http.get(
           Uri.parse(
-              "http://10.0.2.2:5000/api/user/received-couriers/$userName"),
+              "https://easy-mail-test.herokuapp.com/api/user/received-couriers/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -249,11 +253,12 @@ class UserController extends GetxController {
     addresses.clear();
     print("getting all locations");
     try {
-      var response = await http
-          .get(Uri.parse("http://10.0.2.2:5000/api/user/addresses"), headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        "x-auth-token": "$token"
-      });
+      var response = await http.get(
+          Uri.parse("https://easy-mail-test.herokuapp.com/api/user/addresses"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            "x-auth-token": "$token"
+          });
 
       var result = AddressList.fromRawJson(response.body);
       print(result.addresses);
@@ -271,7 +276,8 @@ class UserController extends GetxController {
     print("getting all locations");
     try {
       var response = await http.get(
-          Uri.parse("http://10.0.2.2:5000/api/user/addresses/$branchId"),
+          Uri.parse(
+              "https://easy-mail-test.herokuapp.com/api/user/addresses/$branchId"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
