@@ -191,21 +191,36 @@ class _DeliveredMailPageState extends State<DeliveredMailPage> {
               height: 40,
               color: Colors.lightGreen,
               child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("Mail Id"))),
+                  padding: EdgeInsets.all(5.0),
+                  child: Text("Address ID",
+                      style: GoogleFonts.laila(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      )))),
         ),
         Expanded(
           child: Container(
               height: 40,
               color: Colors.lightGreen,
               child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("receiver ID"))),
+                  padding: EdgeInsets.all(5.0),
+                  child: Text("Receiver ID",
+                      style: GoogleFonts.laila(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      )))),
         ),
         Expanded(
           child: Container(
               height: 40,
               color: Colors.lightGreen,
               child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("Sender Id"))),
+                  padding: EdgeInsets.all(5.0),
+                  child: Text("Sender ID",
+                      style: GoogleFonts.laila(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      )))),
         ),
         Container(height: 40, width: 50, color: Colors.lightGreen),
         // Expanded(
@@ -222,7 +237,7 @@ class _DeliveredMailPageState extends State<DeliveredMailPage> {
       color: Colors.greenAccent,
       child: Row(
         children: [
-          Container(width: 100, child: Text(mail.mailId)),
+          Container(width: 100, child: Text(mail.addressId)),
           //Container(width: 100, child: Text(mail.isDelivered.toString())),
           Container(width: 100, child: Text(mail.receiverId.toString())),
           Container(width: 100, child: Text(mail.senderId.toString())),
@@ -240,7 +255,11 @@ class _DeliveredMailPageState extends State<DeliveredMailPage> {
                 showDialog<String>(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
-                    title: const Text('Mail Details'),
+                    title: Text('Mail Details',
+                        style: GoogleFonts.laila(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        )),
                     content: SingleChildScrollView(
                       child: Column(
                         children: [

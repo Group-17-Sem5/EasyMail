@@ -271,14 +271,24 @@ class _PostManCourierPageState extends State<PostManCourierPage> {
               height: 40,
               color: Colors.lightGreen,
               child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("MoneyOrder ID"))),
+                  padding: EdgeInsets.all(5.0),
+                  child: Text("Address ID",
+                      style: GoogleFonts.laila(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      )))),
         ),
         Expanded(
           child: Container(
               height: 40,
               color: Colors.lightGreen,
               child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("receiver ID"))),
+                  padding: EdgeInsets.all(5.0),
+                  child: Text("receiver ID",
+                      style: GoogleFonts.laila(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      )))),
         ),
         // Expanded(
         //   child: Container(
@@ -293,7 +303,11 @@ class _PostManCourierPageState extends State<PostManCourierPage> {
               color: Colors.lightGreen,
               child: Padding(
                   padding: EdgeInsets.all(5.0),
-                  child: Text("Delivery status"))),
+                  child: Text("Delivery status",
+                      style: GoogleFonts.laila(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      )))),
         ),
         Container(height: 40, width: 50, color: Colors.lightGreen),
         // Expanded(
@@ -318,7 +332,7 @@ class _PostManCourierPageState extends State<PostManCourierPage> {
           // SizedBox(),
           IconButton(
               tooltip: "view",
-              icon: Icon(Icons.mail),
+              icon: Icon(CupertinoIcons.gift_fill),
               color: Colors.black,
               hoverColor: Colors.white,
               onPressed: () {
@@ -379,7 +393,7 @@ class _PostManCourierPageState extends State<PostManCourierPage> {
       color: Colors.greenAccent,
       child: Row(
         children: [
-          Container(width: 100, child: Text(courier.id)),
+          Container(width: 100, child: Text(courier.addressId)),
           //Container(width: 100, child: Text(mail.isDelivered.toString())),
           Container(width: 100, child: Text(courier.receiverId.toString())),
           Container(width: 100, child: Text(courier.isDelivered.toString())),
@@ -387,7 +401,7 @@ class _PostManCourierPageState extends State<PostManCourierPage> {
           // SizedBox(),
           IconButton(
               tooltip: "view",
-              icon: Icon(Icons.mail),
+              icon: Icon(CupertinoIcons.gift_fill),
               color: Colors.black,
               hoverColor: Colors.white,
               onPressed: () {
