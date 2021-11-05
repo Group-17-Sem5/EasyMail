@@ -52,7 +52,7 @@ class PostManController extends GetxController {
     print("getting all locations");
     try {
       var response = await http.get(
-          Uri.parse("http://10.0.2.2:5000/api/postman/address/"),
+          Uri.parse("http://10.0.2.2:5000/api/postman/address/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
