@@ -16,9 +16,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      // appBar: AppBar(
+      //   title: Text(widget.title),
+      // ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -31,24 +31,45 @@ class _MyHomePageState extends State<MyHomePage> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            RaisedButton(
+            TextButton.icon(
+              style: TextButton.styleFrom(
+                textStyle: TextStyle(color: Colors.black),
+                backgroundColor: Colors.grey.shade300,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24.0),
+                ),
+              ),
               onPressed: () {
                 startAsPostMan();
               },
-              hoverColor: Colors.white,
-              child: Text("I'm a postman"),
+              icon: Icon(
+                Icons.account_box_rounded,
+              ),
+              label: Text(
+                'I am a post man',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-              child: RaisedButton(
+              child: TextButton.icon(
+                style: TextButton.styleFrom(
+                  textStyle: TextStyle(color: Colors.blue),
+                  backgroundColor: Colors.grey.shade300,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24.0),
+                  ),
+                ),
                 onPressed: () {
                   startAsCustomer();
                 },
-                hoverColor: Colors.white,
-                child: Text("I'm a user",
-                    style: TextStyle(
-                      decorationColor: Colors.white,
-                    )),
+                icon: Icon(
+                  Icons.account_box,
+                ),
+                label: Text(
+                  'I am a user',
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             ),
           ],

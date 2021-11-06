@@ -101,7 +101,7 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
       PersistentBottomNavBarItem(
         icon: Icon(CupertinoIcons.money_dollar),
         title: ("Received"),
-        activeColorPrimary: CupertinoColors.activeBlue,
+        activeColorPrimary: CupertinoColors.activeGreen,
         inactiveColorPrimary: CupertinoColors.systemGrey,
         //onPressed: _getCouriersList(0),
       ),
@@ -161,7 +161,7 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
                 return Text('Loading');
               } else if (userController.sentMoneyOrders.isEmpty) {
                 return Text('No sent Money Orders Yet',
-                    style: GoogleFonts.laila(fontSize: 12));
+                    style: GoogleFonts.laila(fontSize: 14));
               } else {
                 return ListView.builder(
                   shrinkWrap: true,
@@ -218,17 +218,23 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
       children: [
         Expanded(
           child: Container(
-              height: 40,
+              height: 50,
               color: Colors.lightGreen,
               child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("Sender ID"))),
+                  padding: EdgeInsets.all(5.0),
+                  child: Text("Sender ID",
+                      style: GoogleFonts.laila(
+                          fontSize: 14, fontWeight: FontWeight.bold)))),
         ),
         Expanded(
           child: Container(
-              height: 40,
+              height: 50,
               color: Colors.lightGreen,
               child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("receiver ID"))),
+                  padding: EdgeInsets.all(5.0),
+                  child: Text("receiver ID",
+                      style: GoogleFonts.laila(
+                          fontSize: 14, fontWeight: FontWeight.bold)))),
         ),
         // Expanded(
         //   child: Container(
@@ -239,13 +245,15 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
         // ),
         Expanded(
           child: Container(
-              height: 40,
+              height: 50,
               color: Colors.lightGreen,
               child: Padding(
                   padding: EdgeInsets.all(5.0),
-                  child: Text("Delivery status"))),
+                  child: Text("Delivery status",
+                      style: GoogleFonts.laila(
+                          fontSize: 14, fontWeight: FontWeight.bold)))),
         ),
-        Container(height: 40, width: 50, color: Colors.lightGreen),
+        Container(height: 50, width: 50, color: Colors.lightGreen),
         // Expanded(
         //   child: Text("Address Description"),
         // ),
@@ -257,18 +265,27 @@ class _MoneyOrdersPageState extends State<MoneyOrdersPage> {
   Widget tagCard(BuildContext context, MoneyOrder moneyOrder, int index) {
     return Container(
       height: 40,
-      color: Colors.greenAccent,
+      color: Colors.grey.shade100,
       child: Row(
         children: [
-          Container(width: 100, child: Text(moneyOrder.senderId)),
+          Container(
+              width: 100,
+              child: Text(moneyOrder.senderId,
+                  style: GoogleFonts.laila(fontSize: 14))),
           //Container(width: 100, child: Text(mail.isDelivered.toString())),
-          Container(width: 100, child: Text(moneyOrder.receiverId.toString())),
-          Container(width: 100, child: Text(moneyOrder.isDelivered.toString())),
+          Container(
+              width: 100,
+              child: Text(moneyOrder.receiverId.toString(),
+                  style: GoogleFonts.laila(fontSize: 14))),
+          Container(
+              width: 100,
+              child: Text(moneyOrder.isDelivered.toString(),
+                  style: GoogleFonts.laila(fontSize: 14))),
           // // Container(width: 100, child: Text(tag.subscriber.toString())),
           // SizedBox(),
           IconButton(
               tooltip: "view",
-              icon: Icon(Icons.mail),
+              icon: Icon(CupertinoIcons.money_dollar_circle_fill),
               color: Colors.black,
               hoverColor: Colors.white,
               onPressed: () {

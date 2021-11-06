@@ -216,18 +216,23 @@ class _MailsUserPageState extends State<MailsUserPage> {
       children: [
         Expanded(
           child: Container(
-              height: 40,
-              color: Colors.lightGreen,
-              child:
-                  Padding(padding: EdgeInsets.all(5.0), child: Text("Sender"))),
-        ),
-        Expanded(
-          child: Container(
-              height: 40,
+              height: 50,
               color: Colors.lightGreen,
               child: Padding(
                   padding: EdgeInsets.all(5.0),
-                  child: Text("From the branch"))),
+                  child: Text("Sender",
+                      style: GoogleFonts.laila(
+                          fontSize: 14, fontWeight: FontWeight.bold)))),
+        ),
+        Expanded(
+          child: Container(
+              height: 50,
+              color: Colors.lightGreen,
+              child: Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: Text("From the branch",
+                      style: GoogleFonts.laila(
+                          fontSize: 14, fontWeight: FontWeight.bold)))),
         ),
         // Expanded(
         //   child: Container(
@@ -238,13 +243,15 @@ class _MailsUserPageState extends State<MailsUserPage> {
         // ),
         Expanded(
           child: Container(
-              height: 40,
+              height: 50,
               color: Colors.lightGreen,
               child: Padding(
                   padding: EdgeInsets.all(5.0),
-                  child: Text("Delivery status"))),
+                  child: Text("Delivery status",
+                      style: GoogleFonts.laila(
+                          fontSize: 14, fontWeight: FontWeight.bold)))),
         ),
-        Container(height: 40, width: 50, color: Colors.lightGreen),
+        Container(height: 50, width: 50, color: Colors.lightGreen),
         // Expanded(
         //   child: Text("Address Description"),
         // ),
@@ -256,13 +263,23 @@ class _MailsUserPageState extends State<MailsUserPage> {
   Widget tagCard(BuildContext context, MailModel mail, int index) {
     return Container(
       height: 40,
-      color: Colors.greenAccent,
+      padding: EdgeInsets.only(bottom: 2),
+      color: Colors.grey.shade200,
       child: Row(
         children: [
-          Container(width: 100, child: Text(mail.senderId)),
+          Container(
+              width: 100,
+              child:
+                  Text(mail.senderId, style: GoogleFonts.laila(fontSize: 14))),
           //Container(width: 100, child: Text(mail.isDelivered.toString())),
-          Container(width: 100, child: Text(mail.sourceBranchId.toString())),
-          Container(width: 100, child: Text(mail.isDelivered.toString())),
+          Container(
+              width: 100,
+              child: Text(mail.sourceBranchId.toString(),
+                  style: GoogleFonts.laila(fontSize: 14))),
+          Container(
+              width: 100,
+              child: Text(mail.isDelivered.toString(),
+                  style: GoogleFonts.laila(fontSize: 14))),
           // // Container(width: 100, child: Text(tag.subscriber.toString())),
           // SizedBox(),
           IconButton(

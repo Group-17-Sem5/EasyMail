@@ -234,7 +234,7 @@ class _MailListPageState extends State<MailListPage> {
   Widget tagCard(BuildContext context, MailModel mail, int index) {
     return Container(
       height: 40,
-      color: Colors.greenAccent,
+      color: Colors.green.shade50,
       child: Row(
         children: [
           Container(width: 100, child: Text(mail.addressId)),

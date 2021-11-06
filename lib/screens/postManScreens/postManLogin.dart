@@ -135,8 +135,8 @@ class _PostManLoginState extends State<PostManLogin> {
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => MailListPage()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => MyHomePage(title: "Easy Mail")));
         },
         child: Text("Back",
             textAlign: TextAlign.center,

@@ -324,7 +324,7 @@ class _PostManCourierPageState extends State<PostManCourierPage> {
       color: Colors.greenAccent,
       child: Row(
         children: [
-          Container(width: 100, child: Text(courier.id)),
+          Container(width: 100, child: Text(courier.addressId)),
           //Container(width: 100, child: Text(mail.isDelivered.toString())),
           Container(width: 100, child: Text(courier.receiverId.toString())),
           Container(width: 100, child: Text(courier.isDelivered.toString())),

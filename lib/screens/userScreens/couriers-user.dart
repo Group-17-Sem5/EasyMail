@@ -93,7 +93,7 @@ class _CouriersUserState extends State<CouriersUser> {
       PersistentBottomNavBarItem(
         icon: Icon(CupertinoIcons.gift),
         title: ("Received"),
-        activeColorPrimary: CupertinoColors.activeBlue,
+        activeColorPrimary: CupertinoColors.activeGreen,
         inactiveColorPrimary: CupertinoColors.systemGrey,
         //onPressed: _getCouriersList(0),
       ),
@@ -205,17 +205,23 @@ class _CouriersUserState extends State<CouriersUser> {
       children: [
         Expanded(
           child: Container(
-              height: 40,
+              height: 50,
               color: Colors.lightGreen,
               child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("Sender ID"))),
+                  padding: EdgeInsets.all(5.0),
+                  child: Text("Sender ID",
+                      style: GoogleFonts.laila(
+                          fontSize: 14, fontWeight: FontWeight.bold)))),
         ),
         Expanded(
           child: Container(
-              height: 40,
+              height: 50,
               color: Colors.lightGreen,
               child: Padding(
-                  padding: EdgeInsets.all(5.0), child: Text("receiver ID"))),
+                  padding: EdgeInsets.all(5.0),
+                  child: Text("receiver ID",
+                      style: GoogleFonts.laila(
+                          fontSize: 14, fontWeight: FontWeight.bold)))),
         ),
         // Expanded(
         //   child: Container(
@@ -226,13 +232,15 @@ class _CouriersUserState extends State<CouriersUser> {
         // ),
         Expanded(
           child: Container(
-              height: 40,
+              height: 50,
               color: Colors.lightGreen,
               child: Padding(
                   padding: EdgeInsets.all(5.0),
-                  child: Text("Delivery status"))),
+                  child: Text("Delivery status",
+                      style: GoogleFonts.laila(
+                          fontSize: 14, fontWeight: FontWeight.bold)))),
         ),
-        Container(height: 40, width: 50, color: Colors.lightGreen),
+        Container(height: 50, width: 50, color: Colors.lightGreen),
         // Expanded(
         //   child: Text("Address Description"),
         // ),
@@ -244,18 +252,27 @@ class _CouriersUserState extends State<CouriersUser> {
   Widget tagCard(BuildContext context, Courier courier, int index) {
     return Container(
       height: 40,
-      color: Colors.greenAccent,
+      color: Colors.grey.shade100,
       child: Row(
         children: [
-          Container(width: 100, child: Text(courier.senderId)),
+          Container(
+              width: 100,
+              child: Text(courier.senderId,
+                  style: GoogleFonts.laila(fontSize: 14))),
           //Container(width: 100, child: Text(mail.isDelivered.toString())),
-          Container(width: 100, child: Text(courier.receiverId.toString())),
-          Container(width: 100, child: Text(courier.isDelivered.toString())),
+          Container(
+              width: 100,
+              child: Text(courier.receiverId.toString(),
+                  style: GoogleFonts.laila(fontSize: 14))),
+          Container(
+              width: 100,
+              child: Text(courier.isDelivered.toString(),
+                  style: GoogleFonts.laila(fontSize: 14))),
           // // Container(width: 100, child: Text(tag.subscriber.toString())),
           // SizedBox(),
           IconButton(
               tooltip: "view",
-              icon: Icon(Icons.mail),
+              icon: Icon(CupertinoIcons.gift_fill),
               color: Colors.black,
               hoverColor: Colors.white,
               onPressed: () {
