@@ -74,41 +74,41 @@ class _CancelledMailPageState extends State<CancelledMailPage> {
       children: [
         Expanded(
           child: Container(
-              height: 40,
+              height: 50,
               color: Colors.lightGreen,
               child: Padding(
                   padding: EdgeInsets.all(5.0),
                   child: Text("Address ID",
                       style: GoogleFonts.laila(
                         fontSize: 15,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.bold,
                       )))),
         ),
         Expanded(
           child: Container(
-              height: 40,
+              height: 50,
               color: Colors.lightGreen,
               child: Padding(
                   padding: EdgeInsets.all(5.0),
                   child: Text("receiver ID",
                       style: GoogleFonts.laila(
                         fontSize: 15,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.bold,
                       )))),
         ),
         Expanded(
           child: Container(
-              height: 40,
+              height: 50,
               color: Colors.lightGreen,
               child: Padding(
                   padding: EdgeInsets.all(5.0),
                   child: Text("Sender Id",
                       style: GoogleFonts.laila(
                         fontSize: 15,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.bold,
                       )))),
         ),
-        Container(height: 40, width: 50, color: Colors.lightGreen),
+        Container(height: 50, width: 50, color: Colors.lightGreen),
         // Expanded(
         //   child: Text("Address Description"),
         // ),
@@ -162,22 +162,22 @@ class _CancelledMailPageState extends State<CancelledMailPage> {
                                 selectedMail[0].isDelivered.toString())),
                         Row(
                           children: [
-                            IconButton(
-                                tooltip: "Deliver",
-                                icon: Icon(Icons.check),
-                                color: Colors.black,
-                                hoverColor: Colors.white,
-                                onPressed: () {
-                                  deliverMail(selectedMail[0].mailId);
-                                }),
-                            IconButton(
-                                tooltip: "Cancel",
-                                icon: Icon(Icons.block),
-                                color: Colors.black,
-                                hoverColor: Colors.white,
-                                onPressed: () {
-                                  cancelDelivery(selectedMail[0].mailId);
-                                }),
+                            // IconButton(
+                            //     tooltip: "Deliver",
+                            //     icon: Icon(Icons.check),
+                            //     color: Colors.black,
+                            //     hoverColor: Colors.white,
+                            //     onPressed: () {
+                            //       deliverMail(selectedMail[0].mailId);
+                            //     }),
+                            // IconButton(
+                            //     tooltip: "Cancel",
+                            //     icon: Icon(Icons.block),
+                            //     color: Colors.black,
+                            //     hoverColor: Colors.white,
+                            //     onPressed: () {
+                            //       cancelDelivery(selectedMail[0].mailId);
+                            //     }),
                           ],
                         ),
                       ],
@@ -231,13 +231,22 @@ class _CancelledMailPageState extends State<CancelledMailPage> {
   Widget tagCard(BuildContext context, MailModel mail, int index) {
     return Container(
       height: 40,
-      color: Colors.greenAccent,
+      color: Colors.grey.shade100,
       child: Row(
         children: [
-          Container(width: 100, child: Text(mail.addressId)),
+          Container(
+              width: 110,
+              child:
+                  Text(mail.addressId, style: GoogleFonts.laila(fontSize: 14))),
           //Container(width: 100, child: Text(mail.isDelivered.toString())),
-          Container(width: 100, child: Text(mail.receiverId.toString())),
-          Container(width: 100, child: Text(mail.senderId.toString())),
+          Container(
+              width: 100,
+              child: Text(mail.receiverId.toString(),
+                  style: GoogleFonts.laila(fontSize: 14))),
+          Container(
+              width: 100,
+              child: Text(mail.senderId.toString(),
+                  style: GoogleFonts.laila(fontSize: 14))),
           // // Container(width: 100, child: Text(tag.subscriber.toString())),
           // SizedBox(),
           IconButton(

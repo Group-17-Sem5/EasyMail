@@ -180,7 +180,7 @@ class PostManController extends GetxController {
       // List data = json.decode(response.body);
       // print(data);
       var result = Result.fromRawJson(response.body);
-      //print(result);
+      print(result.msg);
       //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
       mails.addAll(result.mailModel);
       print(mails.length.toString() + "results found");

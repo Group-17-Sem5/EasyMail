@@ -75,41 +75,41 @@ class _MailListPageState extends State<MailListPage> {
       children: [
         Expanded(
           child: Container(
-              height: 40,
+              height: 50,
               color: Colors.lightGreen,
               child: Padding(
                   padding: EdgeInsets.all(5.0),
                   child: Text("Address ID",
                       style: GoogleFonts.laila(
                         fontSize: 15,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.bold,
                       )))),
         ),
         Expanded(
           child: Container(
-              height: 40,
+              height: 50,
               color: Colors.lightGreen,
               child: Padding(
                   padding: EdgeInsets.all(5.0),
                   child: Text("Receiver ID",
                       style: GoogleFonts.laila(
                         fontSize: 15,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.bold,
                       )))),
         ),
         Expanded(
           child: Container(
-              height: 40,
+              height: 50,
               color: Colors.lightGreen,
               child: Padding(
                   padding: EdgeInsets.all(5.0),
                   child: Text("Sender Id",
                       style: GoogleFonts.laila(
                         fontSize: 15,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.bold,
                       )))),
         ),
-        Container(height: 40, width: 50, color: Colors.lightGreen),
+        Container(height: 50, width: 50, color: Colors.lightGreen),
         // Expanded(
         //   child: Text("Address Description"),
         // ),
@@ -237,10 +237,19 @@ class _MailListPageState extends State<MailListPage> {
       color: Colors.green.shade50,
       child: Row(
         children: [
-          Container(width: 100, child: Text(mail.addressId)),
+          Container(
+              width: 100,
+              child:
+                  Text(mail.addressId, style: GoogleFonts.laila(fontSize: 14))),
           //Container(width: 100, child: Text(mail.isDelivered.toString())),
-          Container(width: 100, child: Text(mail.receiverId.toString())),
-          Container(width: 100, child: Text(mail.senderId.toString())),
+          Container(
+              width: 100,
+              child: Text(mail.receiverId.toString(),
+                  style: GoogleFonts.laila(fontSize: 14))),
+          Container(
+              width: 100,
+              child: Text(mail.senderId.toString(),
+                  style: GoogleFonts.laila(fontSize: 14))),
           // // Container(width: 100, child: Text(tag.subscriber.toString())),
           // SizedBox(),
           IconButton(
@@ -277,22 +286,60 @@ class _MailListPageState extends State<MailListPage> {
                                   selectedMail[0].isDelivered.toString())),
                           Row(
                             children: [
-                              IconButton(
-                                  tooltip: "Deliver",
-                                  icon: Icon(Icons.check),
-                                  color: Colors.black,
-                                  hoverColor: Colors.white,
-                                  onPressed: () {
-                                    deliverMail(selectedMail[0].mailId);
-                                  }),
-                              IconButton(
-                                  tooltip: "Cancel",
-                                  icon: Icon(Icons.block),
-                                  color: Colors.black,
-                                  hoverColor: Colors.white,
-                                  onPressed: () {
-                                    cancelDelivery(selectedMail[0].mailId);
-                                  }),
+                              // IconButton(
+                              //     tooltip: "Deliver",
+                              //     icon: Icon(Icons.check),
+                              //     color: Colors.black,
+                              //     hoverColor: Colors.white,
+                              //     onPressed: () {
+                              //       deliverMail(selectedMail[0].mailId);
+                              //     }),
+                              TextButton.icon(
+                                style: TextButton.styleFrom(
+                                  textStyle: TextStyle(color: Colors.black),
+                                  backgroundColor: Colors.grey.shade300,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  deliverMail(selectedMail[0].mailId);
+                                },
+                                icon: Icon(
+                                  Icons.send,
+                                ),
+                                label: Text(
+                                  'Deliver',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              TextButton.icon(
+                                style: TextButton.styleFrom(
+                                  textStyle: TextStyle(color: Colors.black),
+                                  backgroundColor: Colors.grey.shade300,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  cancelDelivery(selectedMail[0].mailId);
+                                },
+                                icon: Icon(
+                                  Icons.send_and_archive_rounded,
+                                ),
+                                label: Text(
+                                  'Cancel',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              // IconButton(
+                              //     tooltip: "Cancel",
+                              //     icon: Icon(Icons.block),
+                              //     color: Colors.black,
+                              //     hoverColor: Colors.white,
+                              //     onPressed: () {
+                              //       cancelDelivery(selectedMail[0].mailId);
+                              //     }),
                             ],
                           ),
                         ],
