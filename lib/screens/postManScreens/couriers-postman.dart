@@ -321,13 +321,22 @@ class _PostManCourierPageState extends State<PostManCourierPage> {
   Widget tagCard(BuildContext context, Courier courier, int index) {
     return Container(
       height: 40,
-      color: Colors.greenAccent,
+      color: Colors.grey.shade100,
       child: Row(
         children: [
-          Container(width: 100, child: Text(courier.addressId)),
+          Container(
+              width: 100,
+              child: Text(courier.addressId,
+                  style: GoogleFonts.laila(fontSize: 14))),
           //Container(width: 100, child: Text(mail.isDelivered.toString())),
-          Container(width: 100, child: Text(courier.receiverId.toString())),
-          Container(width: 100, child: Text(courier.isDelivered.toString())),
+          Container(
+              width: 100,
+              child: Text(courier.receiverId.toString(),
+                  style: GoogleFonts.laila(fontSize: 14))),
+          Container(
+              width: 100,
+              child: Text(courier.isDelivered.toString(),
+                  style: GoogleFonts.laila(fontSize: 14))),
           // // Container(width: 100, child: Text(tag.subscriber.toString())),
           // SizedBox(),
           IconButton(
@@ -390,13 +399,22 @@ class _PostManCourierPageState extends State<PostManCourierPage> {
   Widget assignedTagCard(BuildContext context, Courier courier, int index) {
     return Container(
       height: 40,
-      color: Colors.greenAccent,
+      color: Colors.grey.shade100,
       child: Row(
         children: [
-          Container(width: 100, child: Text(courier.addressId)),
+          Container(
+              width: 100,
+              child: Text(courier.addressId,
+                  style: GoogleFonts.laila(fontSize: 14))),
           //Container(width: 100, child: Text(mail.isDelivered.toString())),
-          Container(width: 100, child: Text(courier.receiverId.toString())),
-          Container(width: 100, child: Text(courier.isDelivered.toString())),
+          Container(
+              width: 100,
+              child: Text(courier.receiverId.toString(),
+                  style: GoogleFonts.laila(fontSize: 14))),
+          Container(
+              width: 100,
+              child: Text(courier.isDelivered.toString(),
+                  style: GoogleFonts.laila(fontSize: 14))),
           // // Container(width: 100, child: Text(tag.subscriber.toString())),
           // SizedBox(),
           IconButton(
@@ -434,22 +452,60 @@ class _PostManCourierPageState extends State<PostManCourierPage> {
                                   selectedCourier[0].addressId.toString())),
                           Row(
                             children: [
-                              IconButton(
-                                  tooltip: "Deliver",
-                                  icon: Icon(Icons.check),
-                                  color: Colors.black,
-                                  hoverColor: Colors.white,
-                                  onPressed: () {
-                                    deliverCourier(courier.id);
-                                  }),
-                              IconButton(
-                                  tooltip: "Cancel",
-                                  icon: Icon(Icons.block),
-                                  color: Colors.black,
-                                  hoverColor: Colors.white,
-                                  onPressed: () {
-                                    cancelDelivery(courier.id);
-                                  }),
+                              // IconButton(
+                              //     tooltip: "Deliver",
+                              //     icon: Icon(Icons.check),
+                              //     color: Colors.black,
+                              //     hoverColor: Colors.white,
+                              //     onPressed: () {
+                              //       deliverCourier(courier.id);
+                              //     }),
+                              // IconButton(
+                              //     tooltip: "Cancel",
+                              //     icon: Icon(Icons.block),
+                              //     color: Colors.black,
+                              //     hoverColor: Colors.white,
+                              //     onPressed: () {
+                              //       cancelDelivery(courier.id);
+                              //     }),
+                              TextButton.icon(
+                                style: TextButton.styleFrom(
+                                  textStyle: TextStyle(color: Colors.black),
+                                  backgroundColor: Colors.grey.shade300,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  deliverCourier(courier.id);
+                                },
+                                icon: Icon(
+                                  Icons.send,
+                                ),
+                                label: Text(
+                                  'Deliver',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              TextButton.icon(
+                                style: TextButton.styleFrom(
+                                  textStyle: TextStyle(color: Colors.black),
+                                  backgroundColor: Colors.grey.shade300,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  cancelDelivery(courier.id);
+                                },
+                                icon: Icon(
+                                  Icons.send_and_archive_rounded,
+                                ),
+                                label: Text(
+                                  'Cancel',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
                             ],
                           ),
                         ],
