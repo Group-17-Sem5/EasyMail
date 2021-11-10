@@ -5,6 +5,8 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:easy_mail_app_frontend/screens/homePage.dart';
+import 'package:easy_mail_app_frontend/shared_widgets/userAppbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -26,5 +28,11 @@ void main() {
     // Verify that our counter has incremented.
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
+  });
+  testWidgets('Home Page test', (WidgetTester tester) async {
+    await tester.pumpWidget(MyHomePage(title: "easymail"));
+    expect(find.text('easymail'), findsOneWidget);
+    expect(find.text("I'm a post man"), findsOneWidget);
+    expect(find.text("I'm a user"), findsOneWidget);
   });
 }

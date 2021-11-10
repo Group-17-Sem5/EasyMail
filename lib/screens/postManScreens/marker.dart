@@ -6,6 +6,7 @@ import 'package:easy_mail_app_frontend/model/addressesModel.dart';
 import 'package:easy_mail_app_frontend/screens/postManScreens/editAddressDetails.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/AppBar.dart';
 import 'package:easy_mail_app_frontend/shared_widgets/postManDrawer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -33,6 +34,8 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
   int _markerIdCounter = 0;
   PostManController postManController = new PostManController();
   RefreshController _refreshController = new RefreshController();
+  var _branchIds = ['Mathugama', "Colombo", "Jaffna", "Galle"];
+  TextEditingController _branchIdController = new TextEditingController();
 
   void _onMapCreated(GoogleMapController controller) {
     this.controller = controller;
@@ -291,15 +294,36 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                       children: <Widget>[
                         Column(
                           children: <Widget>[
-                            TextButton(
-                              child: const Text('add Address'),
+                            TextButton.icon(
+                              icon: Icon(
+                                CupertinoIcons.plus,
+                              ),
+                              style: TextButton.styleFrom(
+                                textStyle: TextStyle(color: Colors.black),
+                                backgroundColor: Colors.grey.shade300,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24.0),
+                                ),
+                              ),
+                              label: const Text('add Address'),
                               onPressed: () {
                                 addNewAddress(
                                     postManController.addresses.length);
                               },
                             ),
-                            TextButton(
-                              child: const Text('Remove address'),
+                            TextButton.icon(
+                              icon: Icon(
+                                CupertinoIcons.minus_circled,
+                                color: Colors.red,
+                              ),
+                              style: TextButton.styleFrom(
+                                textStyle: TextStyle(color: Colors.black),
+                                backgroundColor: Colors.grey.shade300,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24.0),
+                                ),
+                              ),
+                              label: const Text('Remove address'),
                               onPressed: selectedId == null
                                   ? null
                                   : () =>
@@ -309,14 +333,34 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                         ),
                         Column(
                           children: <Widget>[
-                            TextButton(
-                              child: const Text('Drag Location'),
+                            TextButton.icon(
+                              icon: Icon(CupertinoIcons.location,
+                                  color: Colors.yellow),
+                              style: TextButton.styleFrom(
+                                textStyle: TextStyle(color: Colors.black),
+                                backgroundColor: Colors.grey.shade300,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24.0),
+                                ),
+                              ),
+                              label: const Text('Drag Location'),
                               onPressed: selectedId == null
                                   ? null
                                   : () => _toggleDraggable(selectedId),
                             ),
-                            TextButton(
-                                child: const Text('View Details'),
+                            TextButton.icon(
+                                icon: Icon(
+                                  CupertinoIcons.eye,
+                                  color: Colors.black,
+                                ),
+                                style: TextButton.styleFrom(
+                                  textStyle: TextStyle(color: Colors.black),
+                                  backgroundColor: Colors.grey.shade300,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24.0),
+                                  ),
+                                ),
+                                label: const Text('View Details'),
                                 onPressed: selectedId == null
                                     ? null
                                     : () {
@@ -327,8 +371,19 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                                         print(index);
                                         showDetails(index);
                                       }),
-                            TextButton(
-                                child: const Text('Edit'),
+                            TextButton.icon(
+                                icon: Icon(
+                                  CupertinoIcons.pen,
+                                  color: Colors.red,
+                                ),
+                                style: TextButton.styleFrom(
+                                  textStyle: TextStyle(color: Colors.black),
+                                  backgroundColor: Colors.grey.shade300,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24.0),
+                                  ),
+                                ),
+                                label: const Text('Edit Details'),
                                 onPressed: selectedId == null
                                     ? null
                                     : () {
@@ -444,9 +499,10 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
   showEditForm(index) {
     var address = postManController.addresses[index];
     TextEditingController _descriptionController = new TextEditingController();
-    TextEditingController _branchIdController = new TextEditingController();
+
     _descriptionController.text = address.description;
     _branchIdController.text = address.branchId;
+
     // TextEditingController _ =new TextEditingController();
     // TextEditingController _descriptionController =new TextEditingController();
 
@@ -483,7 +539,11 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                           children: [
                             Text("Branch ID",
                                 style: TextStyle(color: Colors.grey)),
-                            TextFormField(controller: _branchIdController)
+                            TextFormField(
+                              controller: _branchIdController,
+                              enabled: false,
+                            ),
+                            branchDropList(),
                           ],
                         ),
                       ),
@@ -526,5 +586,34 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
             ),
           );
         });
+  }
+
+  Widget branchDropList() {
+    return DropdownButton<String>(
+      hint: Text("Select"),
+      icon: const Icon(Icons.arrow_drop_down_rounded),
+      //onTap: getAddresses,
+      iconSize: 24,
+      elevation: 16,
+      style: const TextStyle(color: Colors.deepPurple),
+      underline: Container(
+        height: 2,
+        color: Colors.deepPurpleAccent,
+      ),
+      onChanged: (String? newValue) {
+        setState(() {
+          //dropdownValue = newValue!;
+          //getAddressesWithBranch(newValue);
+          _branchIdController.text = newValue!;
+          print(newValue);
+        });
+      },
+      items: _branchIds.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
   }
 }
