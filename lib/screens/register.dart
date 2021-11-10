@@ -218,6 +218,7 @@ class _RegisterProfilePageState extends State<RegisterProfilePage> {
   Widget phoneNumberField() {
     return TextField(
       controller: _phoneNumberController,
+      keyboardType: TextInputType.number,
       maxLength: 10,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),

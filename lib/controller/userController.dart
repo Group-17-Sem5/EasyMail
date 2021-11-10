@@ -92,7 +92,7 @@ class UserController extends GetxController {
 
       sentMails.addAll(result.mailModel);
       print(sentMails.length.toString() + "results found");
-      return (result.msg);
+      return (result.err);
     } on Exception catch (e) {
       print(e);
     }
@@ -119,7 +119,7 @@ class UserController extends GetxController {
       sentMoneyOrders.addAll(result.moneyOrder);
       print(sentMoneyOrders.length.toString() + "results found");
       print(result);
-      return (result.msg);
+      return (result.err);
     } on Exception catch (e) {
       print(e);
     }
@@ -144,7 +144,7 @@ class UserController extends GetxController {
       receivedMoneyOrders.addAll(result.moneyOrder);
       print(receivedMoneyOrders.length.toString() + "results found");
       print(result);
-      return (result.msg);
+      return (result.err);
     } on Exception catch (e) {
       print(e);
     }
@@ -169,7 +169,7 @@ class UserController extends GetxController {
       receivedMails.addAll(result.mailModel);
       print(receivedMails.length.toString() + "results found");
       print(result.msg);
-      return (result.msg);
+      return (result.err);
     } on Exception catch (e) {
       print(e);
     }
@@ -196,7 +196,7 @@ class UserController extends GetxController {
       receivedCouriers.addAll(result.couriers);
       print(receivedCouriers.length.toString() + "results found");
       print(result.msg);
-      return (result.msg);
+      return (result.err);
     } on Exception catch (e) {
       print(e);
     }
@@ -223,7 +223,7 @@ class UserController extends GetxController {
       sentCouriers.addAll(result.couriers);
       print(sentCouriers.length.toString() + "results found");
       print(result.msg);
-      return (result.msg);
+      return (result.err);
     } on Exception catch (e) {
       print(e);
     }
@@ -265,7 +265,7 @@ class UserController extends GetxController {
 
       addresses.addAll(result.addresses);
       print(addresses.length.toString() + "results found");
-      return (result);
+      return (result.err);
     } on Exception catch (e) {
       print(e);
     }

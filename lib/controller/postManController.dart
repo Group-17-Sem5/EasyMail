@@ -64,7 +64,7 @@ class PostManController extends GetxController {
 
       addresses.addAll(result.addresses);
       print(addresses.length.toString() + "results found");
-      return (result);
+      return (result.err);
     } on Exception catch (e) {
       print(e);
     }
@@ -132,6 +132,7 @@ class PostManController extends GetxController {
       //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
       mails.addAll(result.mailModel);
       print(mails.length.toString() + "results found");
+      return (result.err);
     } on Exception catch (e) {
       print(e);
     }
@@ -158,6 +159,7 @@ class PostManController extends GetxController {
       //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
       mails.addAll(result.mailModel);
       print(mails.length.toString() + "results found");
+      return (result.err);
     } on Exception catch (e) {
       print(e);
     }
@@ -184,6 +186,7 @@ class PostManController extends GetxController {
       //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
       mails.addAll(result.mailModel);
       print(mails.length.toString() + "results found");
+      return (result.err);
     } on Exception catch (e) {
       print(e);
     }
@@ -210,7 +213,7 @@ class PostManController extends GetxController {
       //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
       assignedCouriers.addAll(result.couriers);
       print(assignedCouriers.length.toString() + " results found");
-      return (result.msg);
+      return (result.err);
     } on Exception catch (e) {
       print(e);
     }
@@ -237,7 +240,7 @@ class PostManController extends GetxController {
       //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
       deliveredCouriers.addAll(result.couriers);
       print(deliveredCouriers.length.toString() + " results found");
-      return (result.msg);
+      return (result.err);
     } on Exception catch (e) {
       print(e);
     }
@@ -264,7 +267,7 @@ class PostManController extends GetxController {
       //print("${result.mailModel[0].mailId}jfdsdfsdfdf ");
       cancelledCouriers.addAll(result.couriers);
       print(cancelledCouriers.length.toString() + " results found");
-      return (result.msg);
+      return (result.err);
     } on Exception catch (e) {
       print(e);
     }

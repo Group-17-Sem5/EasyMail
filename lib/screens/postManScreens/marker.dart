@@ -116,26 +116,6 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     final int markerCount = markers.length;
 
     if (markerCount == postManController.addresses.length) {
-      // final String markerIdVal = "default$markerCount";
-      // final String addressID = "default$markerCount";
-      // _markerIdCounter++;
-      // final MarkerId markerId = MarkerId(markerIdVal);
-      // await addNewAddress(markerCount);
-      // final Marker marker = Marker(
-      //   markerId: markerId,
-      //   position: LatLng(6.500533840690815, 80.12186606879841),
-      //   infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
-      //   onTap: () {
-      //     _onMarkerTapped(markerId, addressID);
-      //   },
-      //   onDragEnd: (LatLng position) {
-      //     _onMarkerDragEnd(markerId, position, addressID);
-      //   },
-      // );
-
-      // setState(() {
-      //   markers[markerId] = marker;
-      // });
       return;
     }
 
@@ -176,35 +156,6 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     final String addressID = "default";
     _markerIdCounter++;
     final MarkerId markerId = MarkerId(markerIdVal);
-    // await showDialog<List>(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       return AlertDialog(
-    //           actions: <Widget>[
-    //             TextButton(
-    //               child: const Text('Go back'),
-    //               onPressed: () {
-    //                 Navigator.of(context).pop();
-    //               },
-    //             ),
-    //             TextButton(
-    //               child: const Text('submit'),
-    //               onPressed: () {
-    //                 Navigator.of(context).pop();
-    //               },
-    //             )
-    //           ],
-    //           content: Padding(
-    //               padding: const EdgeInsets.symmetric(vertical: 66),
-    //               child: Column(
-    //                 mainAxisSize: MainAxisSize.min,
-    //                 children: <Widget>[
-    //                   TextField(),
-    //                   TextField(),
-    //                   Text('press the button to change the address'),
-    //                 ],
-    //               )));
-    //     });
 
     final Marker marker = Marker(
       markerId: markerId,
@@ -238,47 +189,6 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     //remove the location
   }
 
-  // void _changePosition(MarkerId markerId) {
-  //   final Marker marker = markers[markerId]!;
-  //   final LatLng current = marker.position;
-  //   final Offset offset = Offset(
-  //     center.latitude - current.latitude,
-  //     center.longitude - current.longitude,
-  //   );
-  //   setState(() {
-  //     markers[markerId] = marker.copyWith(
-  //       positionParam: LatLng(
-  //         center.latitude + offset.dy,
-  //         center.longitude + offset.dx,
-  //       ),
-  //     );
-  //   });
-  // }
-
-  // void _changeAnchor(MarkerId markerId) {
-  //   final Marker marker = markers[markerId]!;
-  //   final Offset currentAnchor = marker.anchor;
-  //   final Offset newAnchor = Offset(1.0 - currentAnchor.dy, currentAnchor.dx);
-  //   setState(() {
-  //     markers[markerId] = marker.copyWith(
-  //       anchorParam: newAnchor,
-  //     );
-  //   });
-  // }
-
-  // Future<void> _changeInfoAnchor(MarkerId markerId) async {
-  //   final Marker marker = markers[markerId]!;
-  //   final Offset currentAnchor = marker.infoWindow.anchor;
-  //   final Offset newAnchor = Offset(1.0 - currentAnchor.dy, currentAnchor.dx);
-  //   setState(() {
-  //     markers[markerId] = marker.copyWith(
-  //       infoWindowParam: marker.infoWindow.copyWith(
-  //         anchorParam: newAnchor,
-  //       ),
-  //     );
-  //   });
-  // }
-
   Future<void> _toggleDraggable(MarkerId markerId) async {
     final Marker marker = markers[markerId]!;
     setState(() {
@@ -296,47 +206,6 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
       );
     });
   }
-
-  // Future<void> _changeInfo(MarkerId markerId) async {
-  //   final Marker marker = markers[markerId]!;
-  //   final String newSnippet = marker.infoWindow.snippet! + '*';
-  //   setState(() {
-  //     markers[markerId] = marker.copyWith(
-  //       infoWindowParam: marker.infoWindow.copyWith(
-  //         snippetParam: newSnippet,
-  //       ),
-  //     );
-  //   });
-  // }
-
-  // Future<void> _changeAlpha(MarkerId markerId) async {
-  //   final Marker marker = markers[markerId]!;
-  //   final double current = marker.alpha;
-  //   setState(() {
-  //     markers[markerId] = marker.copyWith(
-  //       alphaParam: current < 0.1 ? 1.0 : current * 0.75,
-  //     );
-  //   });
-  // }
-
-  // Future<void> _changeRotation(MarkerId markerId) async {
-  //   final Marker marker = markers[markerId]!;
-  //   final double current = marker.rotation;
-  //   setState(() {
-  //     markers[markerId] = marker.copyWith(
-  //       rotationParam: current == 330.0 ? 0.0 : current + 30.0,
-  //     );
-  //   });
-  // }
-
-  // Future<void> _toggleVisible(MarkerId markerId) async {
-  //   final Marker marker = markers[markerId]!;
-  //   setState(() {
-  //     markers[markerId] = marker.copyWith(
-  //       visibleParam: !marker.visible,
-  //     );
-  //   });
-  // }
 
   Future<void> _changeZIndex(MarkerId markerId) async {
     final Marker marker = markers[markerId]!;
@@ -391,17 +260,22 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Center(
+          Container(
+            padding: EdgeInsets.all(8),
             child: SizedBox(
               width: 300.0,
-              height: 380.0,
-              child: GoogleMap(
-                onMapCreated: _onMapCreated,
-                initialCameraPosition: const CameraPosition(
-                  target: LatLng(6.500533840690815, 80.12186606879841),
-                  zoom: 11.0,
+              height: 360.0,
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                child: GoogleMap(
+                  onMapCreated: _onMapCreated,
+                  initialCameraPosition: const CameraPosition(
+                    target: LatLng(6.500533840690815, 80.12186606879841),
+                    zoom: 11.0,
+                  ),
+                  markers: Set<Marker>.of(markers.values),
                 ),
-                markers: Set<Marker>.of(markers.values),
               ),
             ),
           ),
@@ -431,40 +305,10 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                                   : () =>
                                       _remove(selectedId, selectedaddressID),
                             ),
-                            // TextButton(
-                            //   child: const Text('change Name'),
-                            //   onPressed: selectedId == null
-                            //       ? null
-                            //       : () => _changeInfo(selectedId),
-                            // ),
-                            // TextButton(
-                            //   child: const Text('change info anchor'),
-                            //   onPressed: selectedId == null
-                            //       ? null
-                            //       : () => _changeInfoAnchor(selectedId),
-                            // ),
                           ],
                         ),
                         Column(
                           children: <Widget>[
-                            // TextButton(
-                            //   child: const Text('change alpha'),
-                            //   onPressed: selectedId == null
-                            //       ? null
-                            //       : () => _changeAlpha(selectedId),
-                            // ),
-                            // TextButton(
-                            //   child: const Text('add new address'),
-                            //   onPressed: selectedId == null
-                            //       ? null
-                            //       : () => _createNewAddress(),
-                            // ),
-                            // TextButton(
-                            //   child: const Text('change anchor'),
-                            //   onPressed: selectedId == null
-                            //       ? null
-                            //       : () => _changeAnchor(selectedId),
-                            // ),
                             TextButton(
                               child: const Text('Drag Location'),
                               onPressed: selectedId == null
@@ -495,42 +339,6 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                                         print(index);
                                         showEditForm(index);
                                       }),
-                            // TextButton(
-                            //   child: const Text('change position'),
-                            //   onPressed: selectedId == null
-                            //       ? null
-                            //       : () => _changePosition(selectedId),
-                            // ),
-                            // TextButton(
-                            //   child: const Text('change rotation'),
-                            //   onPressed: selectedId == null
-                            //       ? null
-                            //       : () => _changeRotation(selectedId),
-                            // ),
-                            // TextButton(
-                            //   child: const Text('toggle visible'),
-                            //   onPressed: selectedId == null
-                            //       ? null
-                            //       : () => _toggleVisible(selectedId),
-                            // ),
-                            // TextButton(
-                            //   child: const Text('change zIndex'),
-                            //   onPressed: selectedId == null
-                            //       ? null
-                            //       : () => _changeZIndex(selectedId),
-                            // ),
-                            // TextButton(
-                            //   child: const Text('set marker icon'),
-                            //   onPressed: selectedId == null
-                            //       ? null
-                            //       : () {
-                            //           _getAssetIcon(context).then(
-                            //             (BitmapDescriptor icon) {
-                            //               _setMarkerIcon(selectedId, icon);
-                            //             },
-                            //           );
-                            //         },
-                            // ),
                           ],
                         ),
                       ],
@@ -601,7 +409,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: const Text('Mail Details'),
+        title: const Text('About the Address'),
         content: SingleChildScrollView(
           child: Column(
             children: [
@@ -611,30 +419,12 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
                   width: 300,
                   child: Text("Description : " + address.description)),
               Container(
-                  width: 300,
-                  child: Text("Branch ID ID : " + address.branchId)),
+                  width: 300, child: Text("Branch ID : " + address.branchId)),
               Container(
                   width: 300,
                   child: Text("Users: " + address.userIdList.toString())),
               Row(
-                children: [
-                  // IconButton(
-                  //     tooltip: "Deliver",
-                  //     icon: Icon(Icons.check),
-                  //     color: Colors.black,
-                  //     hoverColor: Colors.white,
-                  //     onPressed: () {
-                  //       deliverMail(selectedMail[0].mailId);
-                  //     }),
-                  // IconButton(
-                  //     tooltip: "Cancel",
-                  //     icon: Icon(Icons.block),
-                  //     color: Colors.black,
-                  //     hoverColor: Colors.white,
-                  //     onPressed: () {
-                  //       cancelDelivery(selectedMail[0].mailId);
-                  //     }),
-                ],
+                children: [],
               ),
             ],
           ),
@@ -664,6 +454,8 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0))),
             content: ListView(
               shrinkWrap: true,
               //overflow: Overflow.visible,

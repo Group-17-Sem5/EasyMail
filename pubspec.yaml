@@ -24,6 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: any
+  localstore: any
   material_floating_search_bar: ^0.3.4
   get: any
   http: any
