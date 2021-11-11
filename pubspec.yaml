@@ -28,6 +28,7 @@ dependencies:
   material_floating_search_bar: ^0.3.4
   get: any
   http: any
+  provider: any
   shared_preferences: any
   google_maps_flutter: ^0.5.30
   location: ^3.0.2

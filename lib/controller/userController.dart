@@ -29,7 +29,7 @@ class UserController extends GetxController {
     print(user.username);
     try {
       var response = await http.post(
-        Uri.parse("https://easy-mail-test.herokuapp.com/api/user/register"),
+        Uri.parse("https://easy-mails.herokuapp.com/api/user/register"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -52,7 +52,7 @@ class UserController extends GetxController {
     print(username);
     try {
       var response = await http.post(
-        Uri.parse("https://easy-mail-test.herokuapp.com/api/user/login"),
+        Uri.parse("https://easy-mails.herokuapp.com/api/user/login"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -77,7 +77,7 @@ class UserController extends GetxController {
     try {
       var response = await http.get(
           Uri.parse(
-              "https://easy-mail-test.herokuapp.com/api/user/sent-mails/$userName"),
+              "https://easy-mails.herokuapp.com/api/user/sent-mails/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "mailID": "mail002",
@@ -105,7 +105,7 @@ class UserController extends GetxController {
     try {
       var response = await http.get(
           Uri.parse(
-              "https://easy-mail-test.herokuapp.com/api/user/money-order/$userName"),
+              "https://easy-mails.herokuapp.com/api/user/money-order/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -130,7 +130,7 @@ class UserController extends GetxController {
     try {
       var response = await http.get(
           Uri.parse(
-              "https://easy-mail-test.herokuapp.com/api/user/received-money-order/$userName"),
+              "https://easy-mails.herokuapp.com/api/user/received-money-order/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -155,7 +155,7 @@ class UserController extends GetxController {
     try {
       var response = await http.get(
           Uri.parse(
-              "https://easy-mail-test.herokuapp.com/api/user/mailbox/$userName"),
+              "https://easy-mails.herokuapp.com/api/user/mailbox/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -182,7 +182,7 @@ class UserController extends GetxController {
     try {
       var response = await http.get(
           Uri.parse(
-              "https://easy-mail-test.herokuapp.com/api/user/sent-couriers/$userName"),
+              "https://easy-mails.herokuapp.com/api/user/sent-couriers/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -209,7 +209,7 @@ class UserController extends GetxController {
     try {
       var response = await http.get(
           Uri.parse(
-              "https://easy-mail-test.herokuapp.com/api/user/received-couriers/$userName"),
+              "https://easy-mails.herokuapp.com/api/user/received-couriers/$userName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -254,7 +254,7 @@ class UserController extends GetxController {
     print("getting all locations");
     try {
       var response = await http.get(
-          Uri.parse("https://easy-mail-test.herokuapp.com/api/user/addresses"),
+          Uri.parse("https://easy-mails.herokuapp.com/api/user/addresses"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
@@ -277,7 +277,7 @@ class UserController extends GetxController {
     try {
       var response = await http.get(
           Uri.parse(
-              "https://easy-mail-test.herokuapp.com/api/user/addresses/$branchId"),
+              "https://easy-mails.herokuapp.com/api/user/addresses/$branchId"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             "x-auth-token": "$token"
